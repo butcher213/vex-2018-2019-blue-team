@@ -12,57 +12,57 @@
  * from where it left off.
  */
  // start facing other robot, twords top
- define MAT = 22.1
- drive foward MAT inches
- drive backwords MAT*2 inches
+ #define MAT 22.1
+ moveI(MAT);
+ moveI(-MAT*2);
  turn 90 degrees right
- drive foward MAT*2
- grab cap
- drive backwords MAT*2 inches
+ moveI(MAT*2);
+ getCap();
+ moveI(-MAT*2)
  turn 90 degrees left
- drive foward MAT*2 inches
- flip cap
- drive backwords MAT*1.5 inches
+ moveI(MAT*2);
+ flipCap();
+ moveI(-MAT*1.5);
  turn 90 degrees left
- drive fowards MAT*.5
- put on pole
- drive backwords MAT*.5
+ moveI(MAT*.5);
+ putOnPole();
+ moveI()-MAT*.5);
  turn right 90 degrees
- drive foward MAT*.5 inches
+ moveI(MAT*.5);
  turn right 90 degrees
- drive foward MAT*2 inches
- grab cap
+ moveI(MAT*2);
+ getCap();
  turn 180 degrees
- drive foward MAT
+ moveI(MAT);
  turn left 90
- drive foward MAT*1.5
- put cap
- drive backwords MAT*.5
+ moveI(MAT*1.5);
+ putOnPole();
+ moveI(-MAT*.5);
  turn right 90
- drive foward MAT
+ moveI(MAT);
  turn right 90
- drive foward MAT*3
+ moveI(MAT*3);
  turn right 90
- drive foward MAT*2
- grab cap
+ moveI(MAT*2);
+ grabCap();
  turn 180
- drive foward MAT*2.5
+ moveI(MAT*2.5);
  turn left 90
- drive foward MAT*.5
+ moveI(MAT*.5);
  turn right 90
- place cap
+ placeCap();
  turn right 90
- drive foward MAT*1.5
+ moveI(MAT*1.5);
  turn right 90
- drive foward MAT*1.5
- grab cap
- drive backwords MAT
+ moveI(MAT*1.5);
+ grabCap();
+ moveI(-MAT);
  turn right 90
- drive foward MAT*2
- flip cap
- drive foward MAT*2
- drop cap
- drivebackwords MAT
+ moveI(MAT*2);
+ flipCap();
+ moveI(MAT*2);
+ dropCap();
+ moveI(-MAT);
  turn left 90
 
 
