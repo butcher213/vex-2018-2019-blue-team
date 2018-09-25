@@ -1,5 +1,5 @@
-#include "main.h"
-
+#include "Main.h"
+#include "Sensors.h"
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -11,4 +11,10 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+  moveIn(12);
+  //get_ball_from_capper();
+  //load_ball();
+  //shoot_balls();
+  /*Assuming we shoot from the wall*/
+}

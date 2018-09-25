@@ -1,6 +1,6 @@
 #include "main.h"
 
-using namespace pros::literals;
+//using namespace pros::literals;
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -16,7 +16,15 @@ using namespace pros::literals;
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
+/*	static bool pressed = false;
+	pressed = !pressed;
+	if (pressed) {
+		pros::lcd::set_text(2, "I was pressed!");
+	} else {
+		pros::lcd::clear_line(2);
+	}*/
+}
+/*	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	auto left_mtr = 1_mtr;
 	pros::Motor right_mtr(2);
 	while (true) {
@@ -29,5 +37,4 @@ void opcontrol() {
 		left_mtr = left;
 		right_mtr = right;
 		pros::delay(20);
-	}
-}
+	}*/

@@ -1,6 +1,8 @@
 #ifndef _SENSORS_H_
 #define _SENSORS_H_
 
+#define WHEEL_DIAMETER 3
+#define PI 3.1415
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
  * Argument:		inches = amount of inches to move

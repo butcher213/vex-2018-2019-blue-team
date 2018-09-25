@@ -1,15 +1,10 @@
-#include "main.h"
-
+#include "Main.h"
+#include "Init.h"
+#include "Mymotors.h"
+#include "Sensors.h"
 void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
 
+}
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -17,10 +12,15 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
-
-	pros::lcd::register_btn1_cb(on_center_button);
+	motor_set_gearing(1, E_MOTOR_GEARSET_18);
+  motor_set_reversed(1, false);
+  motor_set_encoder_units(1, E_MOTOR_ENCODER_DEGREES);
+	motor_set_gearing(2, E_MOTOR_GEARSET_18);
+	motor_set_reversed(2, true);
+	motor_set_encoder_units(2, E_MOTOR_ENCODER_DEGREES);
+	//initMotor(MOTOR_LEFT, 1);
+	//initMotor(MOTOR_RIGHT, 1);
+	moveIn(12);
 }
 
 /**
