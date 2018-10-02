@@ -1,6 +1,8 @@
 #include "main.h"
+#include "misc.h"
 
 int getControllerProperty(int controllerNumber, int property) {
+
     switch (property) {
         case (int) controller_analog_e_t.E_CONTROLLER_ANALOG_LEFT_X:
             break;
