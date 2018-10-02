@@ -12,8 +12,6 @@
  * from where it left off.
  */
 void autonomous() {
-  int inches = 12;
-	moveIn(inches);
   //moveIn(6);
   //get_ball_from_capper();
   //load_ball();

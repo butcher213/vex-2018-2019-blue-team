@@ -24,11 +24,11 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/initialize.c.o",
-            "src\\initialize.c"
+            "bin/opcontrol.c.o",
+            "src\\opcontrol.c"
         ],
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\initialize.c"
+        "file": "src\\opcontrol.c"
     },
     {
         "arguments": [
@@ -86,10 +86,10 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/opcontrol.c.o",
-            "src\\opcontrol.c"
+            "bin/initialize.c.o",
+            "src\\initialize.c"
         ],
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\opcontrol.c"
+        "file": "src\\initialize.c"
     }
 ]
