@@ -2,10 +2,12 @@
 #include "math.h"
 
 int updatePID(PID_properties_t *prop) {
-	prop->error = prop->motor_get_position(prop->motorPorts[0]);
+	int speed, i;
+	
+	prop->error = prop->target - motor_get_position(prop->motorPorts[0]);
 	prop->integral += prop->error;
 
-	if (prop->error = 0)
+	if (prop->error == 0)
 		prop->integral = 0;
 	if (abs(prop->error) > prop->startSlowingValue)
 		prop->integral = 0;
@@ -13,9 +15,8 @@ int updatePID(PID_properties_t *prop) {
 	prop->derivative = prop->error - prop->previousError;
 	prop->previousError = prop->error;
 
-	int speed = prop->Kp * prop->error + prop->Ki * prop->integral + prop->Kd * prop->derivative;
-
-	int i;
+	speed = prop->Kp * prop->error + prop->Ki * prop->integral + prop->Kd * prop->derivative;
+	
 	for (i = 0; i < prop->numMotorPorts; ++i)
 		motor_move(prop->motorPorts[i], speed);
 
