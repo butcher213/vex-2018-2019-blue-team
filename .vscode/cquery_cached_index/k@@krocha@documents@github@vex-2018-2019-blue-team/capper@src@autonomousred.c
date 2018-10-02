@@ -26,7 +26,7 @@
  turn 90 degrees left
  moveI(MAT*.5);
  putOnPole();
- moveI()-MAT*.5);
+ moveI(-MAT*.5);
  turn right 90 degrees
  moveI(MAT*.5);
  turn right 90 degrees
