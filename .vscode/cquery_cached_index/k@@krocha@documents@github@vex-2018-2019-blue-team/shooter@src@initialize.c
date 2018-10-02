@@ -1,7 +1,7 @@
-#include "Main.h"
-#include "Init.h"
-#include "Mymotors.h"
-#include "Sensors.h"
+#include "../include/Main.h"
+#include "../include/Init.h"
+#include "../include/Mymotors.h"
+#include "../include/Sensors.h"
 void on_center_button() {
 
 }
@@ -11,16 +11,17 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
 void initialize() {
 	motor_set_gearing(1, E_MOTOR_GEARSET_18);
-  motor_set_reversed(1, false);
+  motor_set_reversed(1, 0);
   motor_set_encoder_units(1, E_MOTOR_ENCODER_DEGREES);
 	motor_set_gearing(2, E_MOTOR_GEARSET_18);
-	motor_set_reversed(2, true);
+	motor_set_reversed(2, 0);
 	motor_set_encoder_units(2, E_MOTOR_ENCODER_DEGREES);
 	//initMotor(MOTOR_LEFT, 1);
 	//initMotor(MOTOR_RIGHT, 1);
-	moveIn(12);
+
 }
 
 /**

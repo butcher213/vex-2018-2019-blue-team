@@ -6,7 +6,7 @@
  * Argument:		inches = amount of inches to move
  * Returns:			N/A
  */
-void moveIn(float inches);
+void moveIn(int inches);
 
 /* Function:		rotateTo
  * Purpose:			rotates the robot to the specified degree
@@ -15,7 +15,7 @@ void moveIn(float inches);
  */
 void rotateTo(float targetDeg);
 
-
+void PID_control();
 
 #include "Sensors.c"
 #endif // _SENSORS_H_
