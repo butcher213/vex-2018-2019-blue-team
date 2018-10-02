@@ -55,11 +55,11 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/autonomous.c.o",
-            "src\\autonomous.c"
+            "bin/initialize.c.o",
+            "src\\initialize.c"
         ],
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\autonomous.c"
+        "file": "src\\initialize.c"
     },
     {
         "arguments": [
@@ -86,10 +86,10 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/initialize.c.o",
-            "src\\initialize.c"
+            "bin/autonomous.c.o",
+            "src\\autonomous.c"
         ],
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\initialize.c"
+        "file": "src\\autonomous.c"
     }
 ]

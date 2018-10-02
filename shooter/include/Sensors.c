@@ -45,13 +45,13 @@ void PID_control() {
   motor_set_zero_position(2,0);
   motor_set_zero_position(1,0);
   float K_p = .5;
-  float K_i = 0;
-  float K_d = 0;
+  float K_i = 0.000009;
+  float K_d = 0.009;
   double integral_left = 0;
   double integral_right = 0;
   float prev_error_left = 0;
   float prev_error_right = 0;
-  float pid_target = (12 * (360 / (PI * 2)));
+  float pid_target = (40 * (360 / (PI * 2)));
   while(1) {
     double error_left = pid_target - motor_get_position(1);
     printf("error left %.2f\n", error_left);
@@ -67,11 +67,11 @@ void PID_control() {
     }
     double deriv_left = error_left - prev_error_left;
     prev_error_left = error_left;
-    float pid_speed_left = K_p * error_left;// + (K_i * integral_left + K_d * deriv_left);
+    float pid_speed_left = K_p * error_left + (K_i * integral_left + K_d * deriv_left);
     printf("%f left speed\n", pid_speed_left);
     double deriv_right = error_right - prev_error_right;
     prev_error_right = error_right;
-    float pid_speed_right = K_p * error_right; // + (K_i * integral_right + K_d * deriv_right);
+    float pid_speed_right = K_p * error_right + (K_i * integral_right + K_d * deriv_right);
     printf("%f right speed\n", pid_speed_right);
     motor_move_velocity(1,(int) pid_speed_left);
     motor_move_velocity(2,(int) pid_speed_right);
