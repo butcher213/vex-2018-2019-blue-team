@@ -11,6 +11,7 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
 void initialize() {
 	motor_set_gearing(1, E_MOTOR_GEARSET_18);
   motor_set_reversed(1, false);
@@ -20,7 +21,7 @@ void initialize() {
 	motor_set_encoder_units(2, E_MOTOR_ENCODER_DEGREES);
 	//initMotor(MOTOR_LEFT, 1);
 	//initMotor(MOTOR_RIGHT, 1);
-	moveIn(12);
+
 }
 
 /**
