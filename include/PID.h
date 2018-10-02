@@ -15,7 +15,7 @@ typedef struct {
 	int startSlowingValue;
 } PID_properties_t;
 
-void updatePID(PID_properties_t prop);
+void updatePID(PID_properties_t *prop);
 
 PID_properties_t createPID(int *motorPorts, int numMotorPorts, int startSlowingValue);
 
