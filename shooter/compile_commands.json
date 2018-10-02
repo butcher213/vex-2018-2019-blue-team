@@ -8,9 +8,9 @@
             "-fno-ms-extensions",
             "-fno-ms-compatibility",
             "-fno-delayed-template-parsing",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
             "-iquote./include",
             "-iquote./include/./",
             "-mcpu=cortex-a9",
@@ -27,7 +27,11 @@
             "bin/opcontrol.c.o",
             "src\\opcontrol.c"
         ],
+<<<<<<< HEAD
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
+=======
+        "directory": "K:\\krocha\\Documents\\GitHub\\vex-2018-2019-blue-team\\shooter",
+>>>>>>> c6f5e1b703d7508cd691b17cb498ddf3845c4789
         "file": "src\\opcontrol.c"
     },
     {
@@ -39,9 +43,9 @@
             "-fno-ms-extensions",
             "-fno-ms-compatibility",
             "-fno-delayed-template-parsing",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
             "-iquote./include",
             "-iquote./include/./",
             "-mcpu=cortex-a9",
@@ -58,8 +62,13 @@
             "bin/initialize.c.o",
             "src\\initialize.c"
         ],
+<<<<<<< HEAD
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
         "file": "src\\initialize.c"
+=======
+        "directory": "K:\\krocha\\Documents\\GitHub\\vex-2018-2019-blue-team\\shooter",
+        "file": "src\\autonomous.c"
+>>>>>>> c6f5e1b703d7508cd691b17cb498ddf3845c4789
     },
     {
         "arguments": [
@@ -70,9 +79,9 @@
             "-fno-ms-extensions",
             "-fno-ms-compatibility",
             "-fno-delayed-template-parsing",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
+            "-isystemk:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
             "-iquote./include",
             "-iquote./include/./",
             "-mcpu=cortex-a9",
@@ -86,10 +95,18 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
+<<<<<<< HEAD
             "bin/autonomous.c.o",
             "src\\autonomous.c"
         ],
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
         "file": "src\\autonomous.c"
+=======
+            "bin/initialize.c.o",
+            "src\\initialize.c"
+        ],
+        "directory": "K:\\krocha\\Documents\\GitHub\\vex-2018-2019-blue-team\\shooter",
+        "file": "src\\initialize.c"
+>>>>>>> c6f5e1b703d7508cd691b17cb498ddf3845c4789
     }
 ]
