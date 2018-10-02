@@ -12,7 +12,9 @@
  * from where it left off.
  */
 void autonomous() {
-  moveIn(12);
+  int inches = 12;
+	moveIn(inches);
+  //moveIn(6);
   //get_ball_from_capper();
   //load_ball();
   //shoot_balls();
