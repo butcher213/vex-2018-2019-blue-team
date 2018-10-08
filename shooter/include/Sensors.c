@@ -71,15 +71,10 @@ void PID_control() {
     printf("%f left speed\n", pid_speed_left);
     double deriv_right = error_right - prev_error_right;
     prev_error_right = error_right;
-<<<<<<< HEAD
     float pid_speed_right = K_p * error_right + (K_i * integral_right + K_d * deriv_right);
     printf("%f right speed\n", pid_speed_right);
-    motor_move_velocity(1,(int) pid_speed_left);
-    motor_move_velocity(2,(int) pid_speed_right);
-=======
     pid_speed_right = K_p * error_right + K_i * integral_right + K_d * deriv_right;
     motor_move(1,pid_speed_left);
-    motor_move(1,pid_speed_right);
->>>>>>> c6f5e1b703d7508cd691b17cb498ddf3845c4789
+    motor_move(2,pid_speed_right);
   }
 }
