@@ -15,7 +15,7 @@ void moveIn(int inches);
  */
 void rotateTo(float targetDeg);
 
-void PID_control();
+void PID_control(float target);
 
 #include "Sensors.c"
 #endif // _SENSORS_H_
