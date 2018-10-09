@@ -41,7 +41,7 @@ void moveIn(int inches) {
 void rotateTo(float targetDeg) {
 
 }
-void PID_control() {
+void PID_control(float target) {
   motor_set_zero_position(2,0);
   motor_set_zero_position(1,0);
   float K_p = .5;
@@ -51,7 +51,7 @@ void PID_control() {
   double integral_right = 0;
   float prev_error_left = 0;
   float prev_error_right = 0;
-  float pid_target = (40 * (360 / (PI * 2)));
+  float pid_target = motor_get_position(1) + (target * (360 / (PI * 2)));
   while(1) {
     double error_left = pid_target - motor_get_position(1);
     printf("error left %.2f\n", error_left);
@@ -76,5 +76,8 @@ void PID_control() {
     pid_speed_right = K_p * error_right + K_i * integral_right + K_d * deriv_right;
     motor_move(1,pid_speed_left);
     motor_move(2,pid_speed_right);
+    if(error_left == 0 && error_right == 0) {
+      break;
+    }
   }
 }

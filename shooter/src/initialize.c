@@ -1,14 +1,12 @@
-<<<<<<< HEAD
-#include "Main.h"
+/*#include "Main.h"
 #include "Init.h"
-#include "Mymotors.h"
+#include "Mymotors.h"*/
 /*#include "Sensors.h"*/
-=======
+
 #include "../include/Main.h"
 #include "../include/Init.h"
 #include "../include/Mymotors.h"
 #include "../include/Sensors.h"
->>>>>>> c6f5e1b703d7508cd691b17cb498ddf3845c4789
 void on_center_button() {
 
 }
@@ -26,7 +24,7 @@ void initialize() {
 	motor_set_gearing(2, E_MOTOR_GEARSET_18);
 	motor_set_reversed(2, 0);
 	motor_set_encoder_units(2, E_MOTOR_ENCODER_DEGREES);
-	PID_control();
+	PID_control(40);
 	//initMotor(MOTOR_LEFT, 1);
 	//initMotor(MOTOR_RIGHT, 1);
 
