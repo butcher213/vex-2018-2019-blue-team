@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../include/main.h"
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -10,8 +10,10 @@
  * If the robot is disabled or communications is lost, the autonomous task
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
- */
+
  // start facing other robot, twords top
+
+ /*
  #define MAT 22.1
  moveI(MAT);
  moveI(-MAT*2);
@@ -64,6 +66,65 @@
  dropCap();
  moveI(-MAT);
  turn left 90
-
+*/
+<<<<<<< HEAD
 
 void autonomous() {}
+=======
+#define MAT 22.1
+void autonomous() {
+
+moveIn(MAT*1.5);
+moveIn((-MAT)*2.5);
+rotateTo(float -90);
+moveIn(MAT*2);
+getCap();
+moveIn(-MAT*2)
+rotateTo(float 90);
+moveIn(MAT*3);
+flipCap();
+moveIn(-MAT*2.5);
+rotateTo(float 90);
+moveIn(MAT*.5);
+putOnPole();
+moveIn(-MAT*.5);
+//back in same startinbg pos
+rotateTo(float -90);
+moveIn(MAT*.5);
+rotateTo(float -90);
+moveIn(MAT*2);
+getCap();
+rotateTo(float 180);
+moveIn(MAT);
+rotateTo(float 90);
+moveIn(MAT*1.5);
+putOnPole();
+moveIn(-MAT*.5);
+rotateTo(float -90);
+moveIn(MAT);
+rotateTo(float -90);
+moveIn(MAT*3);
+rotateTo(float -90);
+moveIn(MAT*2);
+getCap();
+rotateTo(float 180);
+moveIn(MAT*2.5);
+rotateTo(float 90);
+moveIn(MAT*.5);
+rotateTo(float -90);
+putOnPole();
+rotateTo(float -90);
+moveIn(MAT*1.5);
+rotateTo(float -90);
+moveIn(MAT*1.5);
+grabCap();
+moveIn(-MAT);
+rotateTo(float -90);
+moveIn(MAT*2);
+flipCap();
+moveIn(MAT*2);
+dropCap();
+moveIn(-MAT);
+rotateTo(float 90);
+}
+>>>>>>> 1eb80a86a0577875bf0a856bbb27dcf78de63cab

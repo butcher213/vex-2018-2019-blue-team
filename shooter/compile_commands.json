@@ -29,6 +29,7 @@
         ],
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
         "file": "src\\initialize.c"
+        "file": "src\\opcontrol.c"
     },
     {
         "arguments": [
@@ -59,8 +60,7 @@
             "src\\autonomous.c"
         ],
         "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\autonomous.c"
-    },
+        "file": "src\\autonomous.c"    },
     {
         "arguments": [
             "clang++",
