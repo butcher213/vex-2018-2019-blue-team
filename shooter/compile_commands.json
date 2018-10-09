@@ -24,20 +24,11 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/initialize.c.o",
-            "src\\initialize.c"
+            "bin\\opcontrol_S.c.o",
+            "src\\opcontrol_S.c"
         ],
-<<<<<<< HEAD
         "directory": "C:\\Users\\Daniel\\Documents\\#PROS\\2018-2019\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\initialize.c"
-=======
-<<<<<<< HEAD
-        "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-=======
-        "directory": "K:\\krocha\\Documents\\GitHub\\vex-2018-2019-blue-team\\shooter",
->>>>>>> c6f5e1b703d7508cd691b17cb498ddf3845c4789
-        "file": "src\\opcontrol.c"
->>>>>>> 1eb80a86a0577875bf0a856bbb27dcf78de63cab
+        "file": "src\\opcontrol_S.c"
     },
     {
         "arguments": [
@@ -64,24 +55,11 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-<<<<<<< HEAD
-            "bin/opcontrol.c.o",
-            "src\\opcontrol.c"
+            "bin/autonomous_S.c.o",
+            "src\\autonomous_S.c"
         ],
         "directory": "C:\\Users\\Daniel\\Documents\\#PROS\\2018-2019\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\opcontrol.c"
-=======
-            "bin/initialize.c.o",
-            "src\\initialize.c"
-        ],
-<<<<<<< HEAD
-        "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\initialize.c"
-=======
-        "directory": "K:\\krocha\\Documents\\GitHub\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\autonomous.c"
->>>>>>> c6f5e1b703d7508cd691b17cb498ddf3845c4789
->>>>>>> 1eb80a86a0577875bf0a856bbb27dcf78de63cab
+        "file": "src\\autonomous_S.c"
     },
     {
         "arguments": [
@@ -108,26 +86,10 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-<<<<<<< HEAD
-            "bin/autonomous.c.o",
-            "src\\autonomous.c"
+            "bin/initialize_S.c.o",
+            "src\\initialize_S.c"
         ],
         "directory": "C:\\Users\\Daniel\\Documents\\#PROS\\2018-2019\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\autonomous.c"
-=======
-<<<<<<< HEAD
-            "bin/autonomous.c.o",
-            "src\\autonomous.c"
-        ],
-        "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\autonomous.c"
-=======
-            "bin/initialize.c.o",
-            "src\\initialize.c"
-        ],
-        "directory": "K:\\krocha\\Documents\\GitHub\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\initialize.c"
->>>>>>> c6f5e1b703d7508cd691b17cb498ddf3845c4789
->>>>>>> 1eb80a86a0577875bf0a856bbb27dcf78de63cab
+        "file": "src\\initialize_S.c"
     }
 ]
