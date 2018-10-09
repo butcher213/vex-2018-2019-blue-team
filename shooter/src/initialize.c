@@ -1,7 +1,9 @@
-#include "../include/Main.h"
+#include "../include/main.h"
 #include "../include/Init.h"
 #include "../include/Mymotors.h"
 #include "../include/Sensors.h"
+#include "../../include/PID.h"
+
 void on_center_button() {
 
 }
@@ -13,6 +15,7 @@ void on_center_button() {
  */
 
 void initialize() {
+	/*
 	motor_set_gearing(1, E_MOTOR_GEARSET_18);
   motor_set_reversed(1, 0);
   motor_set_encoder_units(1, E_MOTOR_ENCODER_DEGREES);
@@ -21,7 +24,7 @@ void initialize() {
 	motor_set_encoder_units(2, E_MOTOR_ENCODER_DEGREES);
 	//initMotor(MOTOR_LEFT, 1);
 	//initMotor(MOTOR_RIGHT, 1);
-
+*/
 }
 
 /**

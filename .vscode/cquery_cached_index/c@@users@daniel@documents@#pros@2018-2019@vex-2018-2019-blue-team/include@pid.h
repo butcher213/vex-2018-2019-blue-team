@@ -5,11 +5,11 @@ typedef struct {
 	double Kp;
 	double Ki;
 	double Kd;
-	int error;
+	double error;
 	int integral;
 	int derivative;
-	int target;
-	int previousError;
+	double target;
+	double previousError;
 	int *motorPorts;
 	int numMotorPorts;
 	int startSlowingValue;
@@ -20,7 +20,7 @@ typedef struct {
  * Argument:		prop = the property to be updated
  * Return:			N/A
  */
-void updatePID(PID_properties_t *prop);
+PID_properties_t updatePID(PID_properties_t prop);
 
 /* Function:		createPID
  * Purpose:			Generates a new PID_properties_t object using the parameters
@@ -29,7 +29,7 @@ void updatePID(PID_properties_t *prop);
 					startSlowingValue = the error value where the motors will start to slow down
  * Return:			The created PID_properties_t object
  */
-PID_properties_t *createPID(int *motorPorts, int numMotorPorts, int startSlowingValue);
+PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, int startSlowingValue);
 
 #include "PID.c"
 #endif // _PID_H_

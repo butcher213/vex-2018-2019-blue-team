@@ -1,5 +1,5 @@
-#include "Sensors.h"
-#include "main.h"
+#include "../include/Sensors.h"
+#include "../include/main.h"
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
  * Argument:		inches = amount of inches to move

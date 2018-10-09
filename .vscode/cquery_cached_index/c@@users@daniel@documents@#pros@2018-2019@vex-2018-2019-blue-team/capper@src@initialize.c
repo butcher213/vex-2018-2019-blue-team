@@ -1,13 +1,8 @@
-#include "main.h"
+#include "../include/main.h"
+#include "../../include/PID.h"
 
 void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
+	
 }
 
 /**
@@ -17,10 +12,14 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	int leftPorts[] = {1};
+	PID_properties_t left = createPID(.5, .000009, .009, leftPorts, 1, 40);
 
-	pros::lcd::register_btn1_cb(on_center_button);
+	left.target = 1000;
+	while (left.error > 0)
+		left = updatePID(left);
+
+	printf("%-7.2f", motor_get_position(left.motorPorts[0]));
 }
 
 /**

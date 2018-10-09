@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../include/main.h"
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -12,6 +12,8 @@
  * from where it left off.
  */
  // start facing other robot, twords top
+
+ /*
  #define MAT 22.1
  moveI(MAT);
  moveI(-MAT*2);
@@ -64,6 +66,6 @@
  dropCap();
  moveI(-MAT);
  turn left 90
-
+*/
 
 void autonomous() {}
