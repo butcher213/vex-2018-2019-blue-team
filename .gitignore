@@ -16,3 +16,5 @@ shooter/include/okapi/
 shooter/include/pros/
 shooter/include/display/
 shooter/Makefile
+capper/compile_commands.json
+shooter/compile_commands.json
