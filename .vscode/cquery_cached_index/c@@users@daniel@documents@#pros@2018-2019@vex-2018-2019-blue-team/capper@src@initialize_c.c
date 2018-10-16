@@ -12,14 +12,28 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	motor_set_gearing(1, E_MOTOR_GEARSET_18);
+	motor_set_reversed(1, 0);
+	motor_set_encoder_units(1, E_MOTOR_ENCODER_DEGREES);
+	motor_set_gearing(2, E_MOTOR_GEARSET_18);
+	motor_set_reversed(2, 0);
+	motor_set_encoder_units(2, E_MOTOR_ENCODER_DEGREES);
+printf("setup motor\n");
+
 	int leftPorts[] = {1};
 	PID_properties_t left = createPID(.5, .000009, .009, leftPorts, 1, 40);
+printf("setup PID_properties_t\n");
 
 	left.target = 1000;
-	while (left.error > 0)
+printf("Starting loop\n");
+	while (left.error > 0) {
 		left = updatePID(left);
+printf("err: %5f | itgrl: %5f\n",
+		left.error,
+		left.integral);
+	}
 
-	printf("%-7.2f", motor_get_position(left.motorPorts[0]));
+printf("%-7.2f", motor_get_position(left.motorPorts[0]));
 }
 
 /**
