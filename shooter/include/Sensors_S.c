@@ -41,9 +41,12 @@ void moveIn(int inches) {
  * Argument:		deg = degree to move to
  * Return:			N/A
  */
-void rotateTo(float targetDeg) {
-
-}
+ void rotateTo(float targetDeg) {
+    float Wheel_Spread = 14.625;
+    float Max_Speed = 63;
+    motor_move_relative(1, ((Wheel_Spread*PI*targetDeg)/(4*PI)), Max_Speed);
+    motor_move_relative(2, -((Wheel_Spread*PI*targetDeg)/(4*PI)), Max_Speed);
+  }
 
 void PID_control() {
  /* float K_p = .5;

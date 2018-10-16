@@ -14,116 +14,118 @@
  // start facing other robot, twords top
 
  /*
- #define MAT 22.1
- moveI(MAT);
- moveI(-MAT*2);
+ #define MAT_Size_Size 22.1
+ moveI(MAT_Size);
+ moveI(-MAT_Size*2);
  turn 90 degrees right
- moveI(MAT*2);
+ moveI(MAT_Size*2);
  getCap();
- moveI(-MAT*2)
+ moveI(-MAT_Size*2)
  turn 90 degrees left
- moveI(MAT*2);
+ moveI(MAT_Size*2);
  flipCap();
- moveI(-MAT*1.5);
+ moveI(-MAT_Size*1.5);
  turn 90 degrees left
- moveI(MAT*.5);
+ moveI(MAT_Size*.5);
  putOnPole();
- moveI()-MAT*.5);
+ moveI()-MAT_Size*.5);
  turn right 90 degrees
- moveI(MAT*.5);
+ moveI(MAT_Size*.5);
  turn right 90 degrees
- moveI(MAT*2);
+ moveI(MAT_Size*2);
  getCap();
  turn 180 degrees
- moveI(MAT);
+ moveI(MAT_Size);
  turn left 90
- moveI(MAT*1.5);
+ moveI(MAT_Size*1.5);
  putOnPole();
- moveI(-MAT*.5);
+ moveI(-MAT_Size*.5);
  turn right 90
- moveI(MAT);
+ moveI(MAT_Size);
  turn right 90
- moveI(MAT*3);
+ moveI(MAT_Size*3);
  turn right 90
- moveI(MAT*2);
+ moveI(MAT_Size*2);
  grabCap();
  turn 180
- moveI(MAT*2.5);
+ moveI(MAT_Size*2.5);
  turn left 90
- moveI(MAT*.5);
+ moveI(MAT_Size*.5);
  turn right 90
  placeCap();
  turn right 90
- moveI(MAT*1.5);
+ moveI(MAT_Size*1.5);
  turn right 90
- moveI(MAT*1.5);
+ moveI(MAT_Size*1.5);
  grabCap();
- moveI(-MAT);
+ moveI(-MAT_Size);
  turn right 90
- moveI(MAT*2);
+ moveI(MAT_Size*2);
  flipCap();
- moveI(MAT*2);
+ moveI(MAT_Size*2);
  dropCap();
- moveI(-MAT);
+ moveI(-MAT_Size);
  turn left 90
 */
 
 
 /*
-#define MAT 22.1
+
 void autonomous() {
 
-moveIn(MAT*1.5);
-moveIn((-MAT)*2.5);
+moveIn(MAT_Size*1.5);
+moveIn((-MAT_Size)*2.5);
 rotateTo(float -90);
-moveIn(MAT*2);
+moveIn(MAT_Size*2);
 getCap();
-moveIn(-MAT*2)
+moveIn(-MAT_Size*2);
 rotateTo(float 90);
-moveIn(MAT*3);
+moveIn(MAT_Size*3);
 flipCap();
-moveIn(-MAT*2.5);
+moveIn(-MAT_Size*2.5);
 rotateTo(float 90);
-moveIn(MAT*.5);
+moveIn(MAT_Size*.5);
 putOnPole();
-moveIn(-MAT*.5);
+moveIn(-MAT_Size*.5);
 //back in same startinbg pos
 rotateTo(float -90);
-moveIn(MAT*.5);
+moveIn(MAT_Size*.5);
 rotateTo(float -90);
-moveIn(MAT*2);
+moveIn(MAT_Size*2);
 getCap();
 rotateTo(float 180);
-moveIn(MAT);
+moveIn(MAT_Size);
 rotateTo(float 90);
-moveIn(MAT*1.5);
+moveIn(MAT_Size*1.5);
 putOnPole();
-moveIn(-MAT*.5);
+moveIn(-MAT_Size*.5);
 rotateTo(float -90);
-moveIn(MAT);
+moveIn(MAT_Size);
 rotateTo(float -90);
-moveIn(MAT*3);
+moveIn(MAT_Size*3);
 rotateTo(float -90);
-moveIn(MAT*2);
+moveIn(MAT_Size*2);
 getCap();
 rotateTo(float 180);
-moveIn(MAT*2.5);
+moveIn(MAT_Size*2);
 rotateTo(float 90);
-moveIn(MAT*.5);
+moveIn(MAT_Size*.5);
 rotateTo(float -90);
-putOnPole();
+moveIn(MAT_Size *.5);
+putOnBigPole();
 rotateTo(float -90);
-moveIn(MAT*1.5);
+moveIn(MAT_Size*1.5);
 rotateTo(float -90);
-moveIn(MAT*1.5);
+moveIn(MAT_Size*1.5);
 grabCap();
-moveIn(-MAT);
+moveIn(-MAT_Size);
 rotateTo(float -90);
-moveIn(MAT*2);
+moveIn(MAT_Size*3);
+rotateTo(float 180);
+moveIn(MAT_Size*1);
 flipCap();
-moveIn(MAT*2);
 dropCap();
-moveIn(-MAT);
+moveIn(-MAT_Size);
 rotateTo(float 90);
 }
 */
