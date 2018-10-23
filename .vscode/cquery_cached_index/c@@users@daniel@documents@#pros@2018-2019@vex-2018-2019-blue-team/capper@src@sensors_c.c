@@ -40,3 +40,23 @@ void moveIn(float inches) {
 void rotateTo(float targetDeg) {
 
 }
+
+void getCap(){
+	
+}
+
+void putOnPole() { 
+
+}
+
+void putOnBigPole() { 
+
+}
+
+void flipCap(){
+	
+}
+
+void dropCap(){ 
+
+}

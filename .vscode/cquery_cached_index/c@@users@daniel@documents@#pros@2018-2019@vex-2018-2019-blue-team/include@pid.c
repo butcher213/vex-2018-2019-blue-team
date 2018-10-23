@@ -31,7 +31,30 @@ PID_properties_t updatePID(PID_properties_t prop) {
 
 PID_properties_t moveTarget(PID_properties_t prop, double targetDelta) {
     prop.target += targetDelta;
+    prop.error += targetDelta;
     return prop;
+}
+
+PID_array_t rotateDrive(PID_properties_t left, PID_properties_t right, double target) {
+    right = moveTarget(right, target);
+    left = moveTarget(left, -target);
+
+    do {
+        updatePID(right);
+        updatePID(left);
+    } while (abs(right.error) > 0 || abs(left.error) > 0);
+
+    PID_properties_t *drive = malloc(sizeof(PID_properties_t) * 2);
+    drive[0] = left;
+    drive[1] = right;
+    return drive;
+}
+
+int atTarget(PID_properties_t prop) {
+    if (abs(prop.error) < 5)
+        return 1;
+    else
+        return 0;
 }
 
 PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, int startSlowingValue) {
