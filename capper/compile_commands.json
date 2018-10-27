@@ -24,11 +24,11 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/opcontrol_C.c.o",
-            "src\\opcontrol_C.c"
+            "bin/autonomousRed_C.c.o",
+            "src\\autonomousRed_C.c"
         ],
-        "directory": "C:\\Users\\Daniel\\Documents\\#PROS\\2018-2019\\vex-2018-2019-blue-team\\capper",
-        "file": "src\\opcontrol_C.c"
+        "directory": "D:\\Vex 2018\\vex\\vex-2018-2019-blue-team\\capper",
+        "file": "src\\autonomousRed_C.c"
     },
     {
         "arguments": [
@@ -58,7 +58,7 @@
             "bin/Sensors_C.c.o",
             "src\\Sensors_C.c"
         ],
-        "directory": "C:\\Users\\Daniel\\Documents\\#PROS\\2018-2019\\vex-2018-2019-blue-team\\capper",
+        "directory": "D:\\Vex 2018\\vex\\vex-2018-2019-blue-team\\capper",
         "file": "src\\Sensors_C.c"
     },
     {
@@ -86,11 +86,11 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/autonomousRed_C.c.o",
-            "src\\autonomousRed_C.c"
+            "bin/opcontrol_C.c.o",
+            "src\\opcontrol_C.c"
         ],
-        "directory": "C:\\Users\\Daniel\\Documents\\#PROS\\2018-2019\\vex-2018-2019-blue-team\\capper",
-        "file": "src\\autonomousRed_C.c"
+        "directory": "D:\\Vex 2018\\vex\\vex-2018-2019-blue-team\\capper",
+        "file": "src\\opcontrol_C.c"
     },
     {
         "arguments": [
@@ -120,7 +120,7 @@
             "bin/initialize_C.c.o",
             "src\\initialize_C.c"
         ],
-        "directory": "C:\\Users\\Daniel\\Documents\\#PROS\\2018-2019\\vex-2018-2019-blue-team\\capper",
+        "directory": "D:\\Vex 2018\\vex\\vex-2018-2019-blue-team\\capper",
         "file": "src\\initialize_C.c"
     }
 ]
