@@ -14,8 +14,11 @@
 
 #ifndef _PROS_MAIN_H_
 #define _PROS_MAIN_H_
-long int pid_target = 0;
-long int pid_speed = 0;
+<<<<<<< HEAD
+// long int pid_target = 0;
+// long int pid_speed = 0;
+=======
+>>>>>>> 1eb80a86a0577875bf0a856bbb27dcf78de63cab
 /**
  * If defined, some commonly used enums will have preprocessor macros which give
  * a shorter,
