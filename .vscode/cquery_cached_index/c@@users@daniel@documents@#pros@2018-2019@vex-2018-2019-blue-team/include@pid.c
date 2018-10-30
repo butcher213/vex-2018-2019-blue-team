@@ -1,7 +1,7 @@
 #include "PID.h"
 #include "main.h"
 
-PID_properties_t updatePID(PID_properties_t prop) {
+PID_properties_t generateNextPID(PID_properties_t prop) {
 	int speed, i;
 
 	prop.error = prop.target - motor_get_position(prop.motorPorts[0]);
@@ -29,19 +29,19 @@ PID_properties_t updatePID(PID_properties_t prop) {
     return prop;
 }
 
-PID_properties_t moveTarget(PID_properties_t prop, double targetDelta) {
+PID_properties_t generateMovedPID(PID_properties_t prop, double targetDelta) {
     prop.target += targetDelta;
     prop.error += targetDelta;
     return prop;
 }
 
-PID_array_t rotateDrive(PID_properties_t left, PID_properties_t right, double target) {
-    right = moveTarget(right, target);
-    left = moveTarget(left, -target);
+PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, double target) {
+    right = generateMovedPID(right, target);
+    left = generateMovedPID(left, -target);
 
     do {
-        updatePID(right);
-        updatePID(left);
+        right = generateNextPID(right);
+        left = generateNextPID(left);
     } while (abs(right.error) > 0 || abs(left.error) > 0);
 
     PID_properties_t *drive = malloc(sizeof(PID_properties_t) * 2);

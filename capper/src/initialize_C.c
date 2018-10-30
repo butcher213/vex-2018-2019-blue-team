@@ -29,11 +29,11 @@ printf("setup motor\n");
     PID_properties_t right = createPID(Kp, Ki, Kd, rightPorts, 1, 40);
 printf("setup PID_properties_t\n");
 
-    left = moveTarget(left, 360);
-    right = moveTarget(right, 360);
+    left = generateMovedPID(left, 360);
+    right = generateMovedPID(right, 360);
     while (abs(left.error) || abs(right.error) > 0) {
-        left = updatePID(left);
-        right = updatePID(right);
+        left = generateNextPID(left);
+        right = generateNextPID(right);
 printf("left   err: %5.2f | itgrl: %5d | drv: %5d\n",
 				left.error,
 				left.integral,
