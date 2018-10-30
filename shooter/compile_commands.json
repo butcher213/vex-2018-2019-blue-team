@@ -24,12 +24,10 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/initialize.c.o",
-            "src\\initialize.c"
+            "bin\\opcontrol_S.c.o",
+            "src\\opcontrol_S.c"
         ],
-        "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\initialize.c"
-        "file": "src\\opcontrol.c"
+        "directory": "D:\\Vex 2018\\vex\\vex-2018-2019-blue-team\\shooter",
     },
     {
         "arguments": [
@@ -56,11 +54,13 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/autonomous.c.o",
-            "src\\autonomous.c"
+            "bin/autonomous_S.c.o",
+            "src\\autonomous_S.c"
         ],
-        "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\autonomous.c"    },
+        "directory": "D:\\Vex 2018\\vex\\vex-2018-2019-blue-team\\shooter",
+        "file": "src\\autonomous_S.c"
+    },
+        ],
     {
         "arguments": [
             "clang++",
@@ -86,10 +86,10 @@
             "-fdiagnostics-color",
             "--std=gnu11",
             "-o",
-            "bin/opcontrol.c.o",
-            "src\\opcontrol.c"
+            "bin/initialize_S.c.o",
+            "src\\initialize_S.c"
         ],
-        "directory": "D:\\Vex 2018\\vex-2018-2019-blue-team\\shooter",
-        "file": "src\\opcontrol.c"
+        "directory": "D:\\Vex 2018\\vex\\vex-2018-2019-blue-team\\shooter",
+        "file": "src\\initialize_S.c"
     }
 ]
