@@ -8,33 +8,33 @@
  * Argument:		inches = amount of inches to move
  * Returns:			N/A
  */
-void moveIn(int inches) {
-  motor_set_zero_position(2,0);
-  int speed = 30;
-  double rightpos = 0;
-  while(rightpos < (inches * (360 / (PI * 2)))) {
-    // if(rightpos > (.9 * 12 * (360/(PI * 4)))) {
-    //   speed = - 500 * inches * (rightpos - inches);
-    // }
-    rightpos =  motor_get_position(2);
-//    printf("value: %f\n", motor_get_actual_velocity(2));
-    double leftpos = motor_get_position(1);
-    if(leftpos > rightpos) {
-      motor_move(2, speed);
-      motor_move(1,speed * .9);
-    } else {
-      motor_move(2, speed);
-      motor_move(1,speed * .9);
-    }
-  }
-  motor_set_zero_position(2,0);
-  while( 0 - motor_get_actual_velocity(2) > 0) {
-    motor_move(2,-50);
-    motor_move(1,-50);
-  }
-  motor_move(1, 0);
-  motor_move(2, 0);
-}
+// void moveIn(int inches) {
+//   motor_set_zero_position(2,0);
+//   int speed = 30;
+//   double rightpos = 0;
+//   while(rightpos < (inches * (360 / (PI * 2)))) {
+//     // if(rightpos > (.9 * 12 * (360/(PI * 4)))) {
+//     //   speed = - 500 * inches * (rightpos - inches);
+//     // }
+//     rightpos =  motor_get_position(2);
+// //    printf("value: %f\n", motor_get_actual_velocity(2));
+//     double leftpos = motor_get_position(1);
+//     if(leftpos > rightpos) {
+//       motor_move(2, speed);
+//       motor_move(1,speed * .9);
+//     } else {
+//       motor_move(2, speed);
+//       motor_move(1,speed * .9);
+//     }
+//   }
+//   motor_set_zero_position(2,0);
+//   while( 0 - motor_get_actual_velocity(2) > 0) {
+//     motor_move(2,-50);
+//     motor_move(1,-50);
+//   }
+//   motor_move(1, 0);
+//   motor_move(2, 0);
+// }
 
 /* Function:		rotateTo
  * Purpose:			rotates the robot to the specified degree
