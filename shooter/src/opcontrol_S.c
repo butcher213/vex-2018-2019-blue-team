@@ -1,5 +1,4 @@
 #include "../include/main_S.h"
-#include "../include/Mymotors_S.h"
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -14,6 +13,8 @@
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-  PID_array_t drive = initDrive(.5, .000009,.009);
-  moveIn(drive, 4, 4);
+  //motor_move(1, 1000);
+  //printf("test1");
+  //PID_array_t drive = initDrive(.5, .000009,.009);
+  //moveIn(drive, 4, 4);
 }
