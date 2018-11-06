@@ -1,10 +1,16 @@
 #include "PID.h"
 #include "main.h"
 
+
 PID_properties_t generateNextPID(PID_properties_t prop) {
 	int speed, i;
 
-	prop.error = prop.target - motor_get_position(prop.motorPorts[0]);
+    int avgErr = 0;
+    for (int i = 0; i < prop.numMotorPorts; i++)
+        avgErr += motor_get_position(prop.motorPorts[i]);
+    avgErr /= prop.numMotorPorts;
+
+	prop.error = prop.target - avgErr;
 	prop.integral += prop.error;
 
 	if (prop.error == 0)
@@ -24,7 +30,6 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	for (i = 0; i < prop.numMotorPorts; ++i)
 		motor_move(prop.motorPorts[i], speed);
-    // printf("spd: %d | ", speed);
 
     return prop;
 }
@@ -67,6 +72,12 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 	prop.motorPorts = motorPorts;
 	prop.startSlowingValue = startSlowingValue;
 
+    prop.target = 0;
+    prop.error = 0;
+    prop.previousError = 0;
+    prop.derivative = 0;
+    prop.integral = 0;
+
 	return prop;
 }
 
@@ -81,4 +92,32 @@ PID_properties_t applyRealTimeCorrection(PID_properties_t prop) {
     }
 
     return prop;
+}
+
+PID_properties_t findKpid(int* motorPorts, int numMotorPorts, int startSlowingValue, int target) {
+    PID_properties_t prop = createPID(0, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
+
+    int runSimulation = 1;
+    int constToChange = 0;
+
+    for (int n = 0; runSimulation; n++) {
+        prop.target = n%2 * target; // swap between driving forward and backward
+
+        switch (constToChange) {
+            case 0:
+                prop.Kp += .05;
+                break;
+            case 1:
+
+                break;
+            case 2:
+                break;
+        }
+
+        for (int i = 0; i < 1000; i++)
+            prop = generateNextPID(prop);
+
+        for (int port: motorPorts)
+
+    }
 }

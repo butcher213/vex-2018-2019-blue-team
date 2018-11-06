@@ -11,39 +11,71 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+void setMotorStuff(int port, int reversed) {
+	motor_set_gearing(port, E_MOTOR_GEARSET_18);
+	motor_set_reversed(port, reversed);
+	motor_set_encoder_units(port, E_MOTOR_ENCODER_DEGREES);
+    motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
+}
 void initialize() {
-	motor_set_gearing(1, E_MOTOR_GEARSET_36);
-	motor_set_reversed(1, 0);
-	motor_set_encoder_units(1, E_MOTOR_ENCODER_DEGREES);
-	motor_set_gearing(2, E_MOTOR_GEARSET_36);
-	motor_set_reversed(2, 1);
-	motor_set_encoder_units(2, E_MOTOR_ENCODER_DEGREES);
-printf("setup motor\n");
+    setMotorStuff(1, 1);
+    setMotorStuff(2, 1);
+    setMotorStuff(11, 0);
+    setMotorStuff(12, 0);
 
-	int leftPorts[] = {1};
-    int rightPorts[] = {2};
-	double 	Kp = 0.5,
-			Ki = 0.00005,
-			Kd = 0.1;
-	PID_properties_t left = createPID(Kp, Ki, Kd, leftPorts, 1, 40);
-    PID_properties_t right = createPID(Kp, Ki, Kd, rightPorts, 1, 40);
-printf("setup PID_properties_t\n");
-
-    left = generateMovedPID(left, 360);
-    right = generateMovedPID(right, 360);
-    while (abs(left.error) || abs(right.error) > 0) {
-        left = generateNextPID(left);
-        right = generateNextPID(right);
-printf("left   err: %5.2f | itgrl: %5d | drv: %5d\n",
-				left.error,
-				left.integral,
-                left.derivative);
-printf("right  err: %5.2f | itgrl: %5d | drv: %5d\n",
-				right.error,
-				right.integral,
-                right.derivative);
+    int a = 1;
+    while (a) {
+        motor_move(1, 60);
+        motor_move(2, 60);
+        motor_move(11, 60);
+        motor_move(12, 60);
     }
 
+printf("button: %d\n", adi_port_set_config('A', E_ADI_DIGITAL_IN));
+printf("setup motor\n");
+
+	int leftPorts[] = {11, 12};
+    int rightPorts[] = {1, 2};
+	double 	Kp = .8,
+			Ki = 0,
+			Kd = .55;
+    int dist = 20 * (360 / 12.566368);
+
+    PID_properties_t left, right;
+    // for (; !adi_digital_read('A'); Kd += .1) {
+    	left = createPID(Kp, Ki, Kd, leftPorts, 1, 40);
+        right = createPID(Kp, Ki, Kd, rightPorts, 1, 40);
+printf("setup PID_properties_t\n");
+        // PID_array_t pids = generateRotatedDrive(left, right, dist * 90 / (3.1415 * 15));
+        // left = pids[0];
+        // right = pids[1];
+
+        left = generateMovedPID(left, dist);
+        right = generateMovedPID(right, dist);
+
+        int i;
+        // for (; i < 1000 && (!atTarget(left) || !atTarget(right)); i++) {
+        for (i = 0; (!atTarget(left) || !atTarget(right)) && i < 200; i++) {
+            left = generateNextPID(left);
+            right = generateNextPID(right);
+printf("%7.2f | %7.2f\n", left.integral, right.integral);
+// printf("%7.5f | %7.5f | %7.5f\n", Kp, Ki, Kd);
+// printf("left   er: %5.2f : %5.2f | i: %12d | d: %12d | t: %5d : %5d\n",
+// 		left.error,
+//         left.previousError,
+// 		left.integral,
+//         left.derivative,
+//         left.target,
+//         motor_get_position(11));
+// printf("right  er: %5.2f : %5.2f | i: %12d | d: %12d | t: %5d : %5d\n",
+// 		right.error,
+//         right.previousError,
+// 		right.integral,
+//         right.derivative,
+//         right.target,
+//         motor_get_position(1));
+        }
+    // }
     // PID_properties_t *drive = rotateDrive(left, right, 360);
     // left = drive[0];
     // right = drive[1];
@@ -60,7 +92,7 @@ printf("err: %5.2f | itgrl: %5d | drv: %5d\n",
     } while (1 || (int) abs(left.error) > 0);
 	motor_move(1, 0);
 */
-printf(">> %-7.2f\n", left.error);
+printf(">> %-7.2f | %-7.2f\n", left.error, right.error);
 printf("END");
 }
 
