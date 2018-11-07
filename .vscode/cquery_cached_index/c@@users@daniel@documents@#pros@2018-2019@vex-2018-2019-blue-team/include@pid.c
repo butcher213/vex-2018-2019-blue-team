@@ -5,12 +5,12 @@
 PID_properties_t generateNextPID(PID_properties_t prop) {
 	int speed, i;
 
-    int avgErr = 0;
+    int avgPosition = 0;
     for (int i = 0; i < prop.numMotorPorts; i++)
-        avgErr += motor_get_position(prop.motorPorts[i]);
-    avgErr /= prop.numMotorPorts;
+        avgPosition += motor_get_position(prop.motorPorts[i]);
+    avgPosition /= prop.numMotorPorts;
 
-	prop.error = prop.target - avgErr;
+	prop.error = prop.target - avgPosition;
 	prop.integral += prop.error;
 
 	if (prop.error == 0)
