@@ -7,7 +7,6 @@
  *              direction: 0 if normal, 1 if reversed
  * Returns:			N/A
  */
-void initMotor(int motorPort, int direction);
 
 
 #include "Init_S.c"

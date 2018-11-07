@@ -16,3 +16,4 @@ shooter/include/okapi/
 shooter/include/pros/
 shooter/include/display/
 shooter/Makefile
+*.o

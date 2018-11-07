@@ -1,33 +1,35 @@
 #include "PID.h"
-#include "math.h"
+#include "main.h"
 
-int updatePID(PID_properties_t *prop) {
+PID_properties_t updatePID(PID_properties_t prop) {
 	int speed, i;
-	
-	prop->error = prop->target - motor_get_position(prop->motorPorts[0]);
-	prop->integral += prop->error;
 
-	if (prop->error == 0)
-		prop->integral = 0;
-	if (abs(prop->error) > prop->startSlowingValue)
-		prop->integral = 0;
+	prop.error = prop.target - motor_get_position(prop.motorPorts[0]);
+	prop.integral += prop.error;
 
-	prop->derivative = prop->error - prop->previousError;
-	prop->previousError = prop->error;
+	if (prop.error == 0)
+		prop.integral = 0;
+	if (abs(prop.error) > prop.startSlowingValue)
+		prop.integral = 0;
 
-	speed = prop->Kp * prop->error + prop->Ki * prop->integral + prop->Kd * prop->derivative;
-	
-	for (i = 0; i < prop->numMotorPorts; ++i)
-		motor_move(prop->motorPorts[i], speed);
+	prop.derivative = prop.error - prop.previousError;
+	prop.previousError = prop.error;
 
-	return speed;
+	speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
+
+	for (i = 0; i < prop.numMotorPorts; ++i)
+		motor_move(prop.motorPorts[i], speed);
 }
 
-PID_properties_t *createPID(int *motorPorts, int startSlowingValue) {
-	PID_properties_t *prop;
+PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, int startSlowingValue) {
+	PID_properties_t prop;
 
-	prop->motorPorts = motorPorts;
-	prop->startSlowingValue = startSlowingValue;
+	prop.Kp = Kp;
+	prop.Ki = Ki;
+	prop.Kd = Kd;
+	prop.numMotorPorts = numMotorPorts;
+	prop.motorPorts = motorPorts;
+	prop.startSlowingValue = startSlowingValue;
 
 	return prop;
 }

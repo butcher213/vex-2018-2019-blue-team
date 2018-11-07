@@ -1,5 +1,5 @@
-#include "Main.h"
-#include "Sensors.h"
+#include "../include/main.h"
+#include "../include/Sensors.h"
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -12,8 +12,6 @@
  * from where it left off.
  */
 void autonomous() {
-  int inches = 12;
-	moveIn(inches);
   //moveIn(6);
   //get_ball_from_capper();
   //load_ball();
