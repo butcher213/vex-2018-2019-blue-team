@@ -56,7 +56,7 @@ PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, 
 }
 
 int atTarget(PID_properties_t prop) {
-    if (abs(prop.error) < 5)
+    if (prop.derivative == 0 && abs(prop.error) < 5)
         return 1;
     else
         return 0;
@@ -84,40 +84,95 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 PID_properties_t applyRealTimeCorrection(PID_properties_t prop) {
     if (prop.derivative == 0) {
         if (prop.error < 0) { // robot went too far; derivative is too high
-            prop.Kd -= .005;
+            prop.Ki -= .0000000001;
         }
         else if (prop.error > 0) { // robot did not go far enough; derivative is too low
-            prop.Kd += .005;
+            prop.Ki += .0000000001;
         }
     }
 
     return prop;
 }
 
-PID_properties_t findKpid(int* motorPorts, int numMotorPorts, int startSlowingValue, int target) {
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startSlowingValue, int target) {
+    /* part 1 of PDF -
+     *  Set Kp, Ki, Kd to 0. This will disable them for now.
+    */
     PID_properties_t prop = createPID(0, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
 
-    int runSimulation = 1;
-    int constToChange = 0;
+    int dir = 1;
 
-    for (int n = 0; runSimulation; n++) {
-        prop.target = n%2 * target; // swap between driving forward and backward
+    while (1) {
+        prop.target = target * dir;
+        dir = 1 - dir;
 
-        switch (constToChange) {
-            case 0:
-                prop.Kp += .05;
-                break;
-            case 1:
+        prop.Kp += .05;
 
-                break;
-            case 2:
-                break;
-        }
-
-        for (int i = 0; i < 1000; i++)
+        int lastDir = 2 * dir - 1;
+        int lastPeriodMeasured; // first measurement will be bad
+        do {
             prop = generateNextPID(prop);
 
-        for (int port: motorPorts)
+            // is this pass the start of a new period measurement?
+            int currentDir = (prop.derivative > 1)? 1: -1;
 
+            // if (changed direction of motion && direction starts new period)
+            if (currentDir == -lastDir && currentDir == 2 * dir - 1) {
+                // set priod to be new measured value
+                int now = millis();
+                int period = now - lastPeriodMeasured;
+                lastPeriodMeasured = now;
+
+                // print new period to console
+                printf("Pu=%6d | Ku=%5.2f\n", period, prop.Kp);
+            }
+
+            lastDir = currentDir;
+        } while (!atTarget(prop));
+
+        delay(3000); // wait for robot to settle
     }
+}
+
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSlowingValue, int target) {
+    /* part 1 of PDF -
+     *  Set Kp, Ki, Kd to 0. This will disable them for now.
+    */
+    PID_properties_t prop = createPID(0, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
+
+    int dir = 1; // 1 for forward, 0 for return to starts. switch w/ dir = 1-dir;
+
+    // the Kp, Ki, Kd tuning constants, acceptable errors
+    double tuningVars[3][2] = { {.5,            20}, // for Kp
+                                {.002,          10}, // for Kd
+                                {.0000000001,   5}}; // for Ki
+
+    for (int i = 0; i < 3; i++) {
+        do {
+            prop.target = target * dir;
+            prop.error = target; // error must be at max to begin with
+            dir = 1 - dir;
+
+            switch (i) {
+                case 0:
+                    prop.Kp += tuningVars[0][0];
+                    break;
+                case 1:
+                    prop.Kd += tuningVars[1][0];
+                    break;
+                case 2:
+                    prop.Ki += tuningVars[2][0];
+                    break;
+            }
+
+            for (int j = 0; j < 1000 && abs(prop.error) > tuningVars[i][1]; j++)
+                prop = generateNextPID(prop);
+
+            delay(3000); // wait for robot to settle
+        } while (abs(prop.error) > tuningVars[i][1]);
+    }
+
+    // print out values
+    while (1)
+        printf("Kpid=%5.2f | %5.2f | %5.2f\n", prop.Kp, prop.Ki, prop.Kd);
 }

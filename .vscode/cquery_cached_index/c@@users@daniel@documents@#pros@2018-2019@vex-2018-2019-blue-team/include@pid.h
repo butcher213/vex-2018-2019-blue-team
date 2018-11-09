@@ -68,5 +68,25 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
  */
 PID_properties_t applyRealTimeCorrection(PID_properties_t prop);
 
+/* Function:        findKpid_Ziegler
+ * Purpose:         find the constants for PID using Ziegler-Nichols method
+ * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
+                    numMotorPorts = the length of numMotorPorts
+                    startSlowingValue = the error value where teh motors will start to slow down
+                    target = the distance to move the motor for testing
+ * Return:          the created PID_properties_t object
+ */
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startSlowingValue, int target);
+
+/* Function:        findKpid_manual
+ * Purpose:         find the constants for PID using manual method
+ * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
+                    numMotorPorts = the length of numMotorPorts
+                    startSlowingValue = the error value where teh motors will start to slow down
+                    target = the distance to move the motor for testing
+ * Return:          the created PID_properties_t object
+ */
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSlowingValue, int target);
+
 #include "PID.c"
 #endif // _PID_H_
