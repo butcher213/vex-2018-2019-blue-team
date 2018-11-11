@@ -41,25 +41,26 @@ PID_properties_t generateMovedPID(PID_properties_t prop, double targetDelta) {
 }
 
 PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, double target) {
-    right = generateMovedPID(right, target);
     left = generateMovedPID(left, -target);
+    right = generateMovedPID(right, target);
 
     do {
-        right = generateNextPID(right);
         left = generateNextPID(left);
-    } while (abs(right.error) > 0 || abs(left.error) > 0);
+        right = generateNextPID(right);
+    } while (!atTarget(left) || !atTarget(right));
 
-    PID_properties_t *drive = malloc(sizeof(PID_properties_t) * 2);
+    PID_array_t drive = malloc(sizeof(PID_properties_t) * 2);
     drive[0] = left;
     drive[1] = right;
     return drive;
 }
 
 int atTarget(PID_properties_t prop) {
-    if (prop.derivative == 0 && abs(prop.error) < 5)
-        return 1;
-    else
-        return 0;
+    return isStopped(prop) && abs(prop.error) < 5;
+}
+
+int isStopped(PID_properties_t prop) {
+    return prop.derivative == 0;
 }
 
 PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, int startSlowingValue) {
@@ -82,7 +83,7 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 }
 
 PID_properties_t applyRealTimeCorrection(PID_properties_t prop) {
-    if (prop.derivative == 0) {
+    if (isStopped(prop)) {
         if (prop.error < 0) { // robot went too far; derivative is too high
             prop.Ki -= .0000000001;
         }
@@ -95,26 +96,21 @@ PID_properties_t applyRealTimeCorrection(PID_properties_t prop) {
 }
 
 PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startSlowingValue, int target) {
-    /* part 1 of PDF -
-     *  Set Kp, Ki, Kd to 0. This will disable them for now.
-    */
-    PID_properties_t prop = createPID(0, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
+    PID_properties_t prop = createPID(.05, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
 
     int dir = 1;
 
     while (1) {
         prop.target = target * dir;
-        dir = 1 - dir;
-
-        prop.Kp += .05;
+        prop.error = target; // error can only be at max to begin with
 
         int lastDir = 2 * dir - 1;
         int lastPeriodMeasured; // first measurement will be bad
-        do {
+        for (int i = 0; i < 100 && !atTarget(prop);) {
             prop = generateNextPID(prop);
 
             // is this pass the start of a new period measurement?
-            int currentDir = (prop.derivative > 1)? 1: -1;
+            int currentDir = (prop.derivative > 0)? 1: -1;
 
             // if (changed direction of motion && direction starts new period)
             if (currentDir == -lastDir && currentDir == 2 * dir - 1) {
@@ -128,16 +124,22 @@ PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startS
             }
 
             lastDir = currentDir;
-        } while (!atTarget(prop));
 
+            // determine if the robot is no longer going to move
+            if (isStopped(prop))
+                i++;
+            else
+                i = 0;
+        }
+
+        prop.Kp += .05;
+
+        dir = 1 - dir; // switch directions
         delay(3000); // wait for robot to settle
     }
 }
 
 PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSlowingValue, int target) {
-    /* part 1 of PDF -
-     *  Set Kp, Ki, Kd to 0. This will disable them for now.
-    */
     PID_properties_t prop = createPID(0, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
 
     int dir = 1; // 1 for forward, 0 for return to starts. switch w/ dir = 1-dir;
@@ -150,8 +152,7 @@ PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSl
     for (int i = 0; i < 3; i++) {
         do {
             prop.target = target * dir;
-            prop.error = target; // error must be at max to begin with
-            dir = 1 - dir;
+            prop.error = target; // error can only be at max to begin with
 
             switch (i) {
                 case 0:
@@ -165,9 +166,17 @@ PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSl
                     break;
             }
 
-            for (int j = 0; j < 1000 && abs(prop.error) > tuningVars[i][1]; j++)
+            for (int j = 0; j < 100 && abs(prop.error) > tuningVars[i][1];) {
                 prop = generateNextPID(prop);
 
+                // determine if the robot is no longer going to move
+                if (isStopped(prop))
+                    i++;
+                else
+                    i = 0;
+            }
+
+            dir = 1 - dir; // switch directions
             delay(3000); // wait for robot to settle
         } while (abs(prop.error) > tuningVars[i][1]);
     }

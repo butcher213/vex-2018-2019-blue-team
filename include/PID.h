@@ -44,9 +44,16 @@ PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, 
 /* Function:		atTarget
  * Purpose:			determines whether the motor has successfully moved to the target
  * Argument:		prop = the property to test
- * Return:			1 if the magnitude of error is less than 5, 0 therwise
+ * Return:			true if the magnitude of error is less than 5 and isStopped() is true, false therwise
  */
 int atTarget(PID_properties_t prop);
+
+/* Function:		isStopped
+ * Purpose:			determines whether the motors have stopped moving based on derivative
+ * Argument:		prop = the property to test
+ * Return:			1 if the derivative is 0, 0 therwise
+ */
+int isStopped(PID_properties_t prop);
 
 /* Function:		createPID
  * Purpose:			Generates a new PID_properties_t object using the parameters
