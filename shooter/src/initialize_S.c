@@ -45,6 +45,11 @@ void initialize() {
       a[0] = generateNextPID(a[0]);
       a[1] = generateNextPID(a[1]);
     }
+    /*int motorPorts[] = {1,2,3,4};
+    int numMotorPorts = 4;
+    int startSlowingValue = 40;
+    int target = 360;
+    PID_properties_t ziegler = findKpid_Ziegler(motorPorts, numMotorPorts, startSlowingValue, target);*/
 }
 
 /**

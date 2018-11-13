@@ -17,36 +17,43 @@ typedef struct {
 
 typedef PID_properties_t *PID_array_t;
 
-/* Function:		updatePID
+/* Function:		generateNextPID
  * Purpose:			Updates the PID_properties_t by running through one pass of the PID algorithm
  * Argument:		prop = the property to be updated
  * Return:			the next PID_properties_t object
  */
-PID_properties_t updatePID(PID_properties_t prop);
+PID_properties_t generateNextPID(PID_properties_t prop);
 
-/* Function:		moveTarget
+/* Function:		generateMovedPID
  * Purpose:			moves the target property of prop by targetDelta
  * Argument:		prop = the property to which the target will be moved
  *                  targetDelta = amount to add to prop's target
  * Return:			the updated PID_properties_t object
  */
-PID_properties_t moveTarget(PID_properties_t prop, double targetDelta);
+PID_properties_t generateMovedPID(PID_properties_t prop, double targetDelta);
 
-/* Function:        rotateDrive
+/* Function:        generateRotatedDrive
  * Purpose:         rotates the robot's drive by addint the targets of right and left to target and -target respectively
  * Argument:        left = the properties of the left side of the drive train
  *                  right = the properties of the right side of the drive train
  *                  target = the amount to add to right and subtract from left
  * Return:          the array of PID_properties_t where index 0 is left and index 1 is right
  */
-PID_array_t rotateDrive(PID_properties_t left, PID_properties_t right, double target);
+PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, double target);
 
 /* Function:		atTarget
  * Purpose:			determines whether the motor has successfully moved to the target
  * Argument:		prop = the property to test
- * Return:			1 if the magnitude of error is less than 5, 0 therwise
+ * Return:			true if the magnitude of error is less than 5 and isStopped() is true, false therwise
  */
 int atTarget(PID_properties_t prop);
+
+/* Function:		isStopped
+ * Purpose:			determines whether the motors have stopped moving based on derivative
+ * Argument:		prop = the property to test
+ * Return:			1 if the derivative is 0, 0 therwise
+ */
+int isStopped(PID_properties_t prop);
 
 /* Function:		createPID
  * Purpose:			Generates a new PID_properties_t object using the parameters
@@ -67,6 +74,26 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
  * Return:			the next PID_properties_t object
  */
 PID_properties_t applyRealTimeCorrection(PID_properties_t prop);
+
+/* Function:        findKpid_Ziegler
+ * Purpose:         find the constants for PID using Ziegler-Nichols method
+ * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
+                    numMotorPorts = the length of numMotorPorts
+                    startSlowingValue = the error value where teh motors will start to slow down
+                    target = the distance to move the motor for testing
+ * Return:          the created PID_properties_t object
+ */
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startSlowingValue, int target);
+
+/* Function:        findKpid_manual
+ * Purpose:         find the constants for PID using manual method
+ * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
+                    numMotorPorts = the length of numMotorPorts
+                    startSlowingValue = the error value where teh motors will start to slow down
+                    target = the distance to move the motor for testing
+ * Return:          the created PID_properties_t object
+ */
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSlowingValue, int target);
 
 #include "PID.c"
 #endif // _PID_H_
