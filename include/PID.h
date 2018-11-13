@@ -5,14 +5,14 @@ typedef struct {
 	double Kp;
 	double Ki;
 	double Kd;
-	double error;
-	double integral;
-	double derivative;
-	double target;
-	double previousError;
+	long long error;
+	long long integral;
+	long long derivative;
+	long long target;
+	long long previousError;
 	int *motorPorts;
 	int numMotorPorts;
-	int startSlowingValue;
+	long long startSlowingValue;
 } PID_properties_t;
 
 typedef PID_properties_t *PID_array_t;
@@ -30,7 +30,7 @@ PID_properties_t generateNextPID(PID_properties_t prop);
  *                  targetDelta = amount to add to prop's target
  * Return:			the updated PID_properties_t object
  */
-PID_properties_t generateMovedPID(PID_properties_t prop, double targetDelta);
+PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta);
 
 /* Function:        generateRotatedDrive
  * Purpose:         rotates the robot's drive by addint the targets of right and left to target and -target respectively
@@ -39,7 +39,7 @@ PID_properties_t generateMovedPID(PID_properties_t prop, double targetDelta);
  *                  target = the amount to add to right and subtract from left
  * Return:          the array of PID_properties_t where index 0 is left and index 1 is right
  */
-PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, double target);
+PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, long long target);
 
 /* Function:		atTarget
  * Purpose:			determines whether the motor has successfully moved to the target
@@ -65,7 +65,7 @@ int isStopped(PID_properties_t prop);
 					startSlowingValue = the error value where the motors will start to slow down
  * Return:			The created PID_properties_t object
  */
-PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, int startSlowingValue);
+PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, long long startSlowingValue);
 
 /* !EXPERIMENTAL!
  * Function:		applyRealTimeCorrection
@@ -83,7 +83,7 @@ PID_properties_t applyRealTimeCorrection(PID_properties_t prop);
                     target = the distance to move the motor for testing
  * Return:          the created PID_properties_t object
  */
-PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startSlowingValue, int target);
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
 
 /* Function:        findKpid_manual
  * Purpose:         find the constants for PID using manual method
@@ -93,7 +93,7 @@ PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startS
                     target = the distance to move the motor for testing
  * Return:          the created PID_properties_t object
  */
-PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSlowingValue, int target);
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
 
 #include "PID.c"
 #endif // _PID_H_
