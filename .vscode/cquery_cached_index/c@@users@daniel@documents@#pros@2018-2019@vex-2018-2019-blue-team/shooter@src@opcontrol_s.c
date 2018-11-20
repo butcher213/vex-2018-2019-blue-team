@@ -1,5 +1,5 @@
 #include "../include/main_S.h"
-
+//#include "../include/Mymotors_S.h"
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -14,5 +14,17 @@
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-
+  /*while(1){
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1){
+      motor_move(MOTOR_CATAPULT_LEFT, 127);
+      delay(2000);
+      motor_move(MOTOR_CATAPULT_LEFT, 0);
+    }
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
+      motor_move(MOTOR_INTAKE, 127);
+    }
+    else{
+      motor_move(MOTOR_INTAKE, 0);
+    }
+  }*/
 }

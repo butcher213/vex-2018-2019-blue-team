@@ -1,8 +1,7 @@
 #include "../include/main_S.h"
 #include "../include/Init_S.h"
 #include "../include/Mymotors_S.h"
-// #include "../include/Sensors_S.h"
-#include "../../include/PID.h"
+//#include "../../include/PID.h"
 
 void on_center_button() {
 
@@ -10,22 +9,82 @@ void on_center_button() {
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
- *
+ *``
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	/*
-	motor_set_gearing(1, E_MOTOR_GEARSET_18);
-  motor_set_reversed(1, 0);
-  motor_set_encoder_units(1, E_MOTOR_ENCODER_DEGREES);
-	motor_set_gearing(2, E_MOTOR_GEARSET_18);
-	motor_set_reversed(2, 0);
-	motor_set_encoder_units(2, E_MOTOR_ENCODER_DEGREES);
-	PID_control();
-	//initMotor(MOTOR_LEFT, 1);
-	//initMotor(MOTOR_RIGHT, 1);
-*/
+  motor_set_gearing(MOTOR_FRONT_LEFT, E_MOTOR_GEARSET_18);
+  motor_set_reversed(MOTOR_FRONT_LEFT, 0);
+  motor_set_encoder_units(MOTOR_FRONT_LEFT, E_MOTOR_ENCODER_DEGREES);
+  motor_set_gearing(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_18);
+  motor_set_reversed(MOTOR_FRONT_RIGHT, 1);
+  motor_set_encoder_units(MOTOR_FRONT_RIGHT, E_MOTOR_ENCODER_DEGREES);
+  motor_set_gearing(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_18);
+  motor_set_reversed(MOTOR_BACK_RIGHT, 1);
+  motor_set_encoder_units(MOTOR_BACK_RIGHT, E_MOTOR_ENCODER_DEGREES);
+  motor_set_gearing(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18);
+  motor_set_reversed(MOTOR_BACK_LEFT, 0);
+  motor_set_encoder_units(MOTOR_BACK_LEFT, E_MOTOR_ENCODER_DEGREES);
+  motor_set_gearing(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18);
+  motor_set_reversed(MOTOR_CATAPULT_LEFT, 0);
+  motor_set_encoder_units(MOTOR_CATAPULT_LEFT, E_MOTOR_ENCODER_DEGREES);
+  motor_set_gearing(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18);
+  motor_set_reversed(MOTOR_CATAPULT_RIGHT, 0);
+  motor_set_encoder_units(MOTOR_CATAPULT_RIGHT, E_MOTOR_ENCODER_DEGREES);
+
+  while(1){
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R1) == 1){
+      motor_move(MOTOR_BACK_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
+      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
+      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
+      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
+    }
+    else{
+      motor_move(MOTOR_BACK_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
+      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
+      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
+      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
+    }
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1){
+      motor_move(MOTOR_CATAPULT_LEFT, 127);
+      motor_move(MOTOR_BACK_LEFT, 0);
+      motor_move(MOTOR_FRONT_LEFT, 0);
+      motor_move(MOTOR_BACK_RIGHT, 0);
+      motor_move(MOTOR_FRONT_RIGHT, 0);
+      delay(1400);
+      motor_move(MOTOR_CATAPULT_LEFT, 0);
+    }
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
+      motor_move(MOTOR_INTAKE, 127);
+    }
+    else{
+      motor_move(MOTOR_INTAKE, 0);
+    }
+  }
+
+  /*int left[2] = {MOTOR_FRONT_LEFT, MOTOR_BACK_LEFT};
+  int right[2] = {MOTOR_FRONT_RIGHT, MOTOR_BACK_RIGHT};
+
+
+  double kp = 5, ki = 0, kd = 0;
+
+  PID_properties_t PIDs[2] = {createPID(kp,ki,kd, left, 2, 40), createPID(kp,ki,kd, right, 2, 40)};
+
+  double leftDist = 12;
+  double rightDist = 12;
+  printf("go\n");
+  PID_properties_t a[2] = {generateMovedPID(PIDs[0], 360/(4*PI)*leftDist), generateMovedPID(PIDs[1], 360/(4*PI)*rightDist)};
+    while (true) {
+      printf("%d, %f\n", atTarget(a[0]), a[0].error);
+      a[0] = generateNextPID(a[0]);
+      a[1] = generateNextPID(a[1]);
+    }
+    /*int motorPorts[] = {1,2,3,4};
+    int numMotorPorts = 4;
+    int startSlowingValue = 40;
+    int target = 360;
+    PID_properties_t ziegler = findKpid_Ziegler(motorPorts, numMotorPorts, startSlowingValue, target);*/
 }
 
 /**
