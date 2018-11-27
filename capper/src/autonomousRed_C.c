@@ -1,4 +1,4 @@
-#include "../include/main_C.h"
+#include "../include/autonomousRed_C.h"
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -10,11 +10,9 @@
  * If the robot is disabled or communications is lost, the autonomous task
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
-
- // start facing other robot, twords top
+**/
 
  /*
- #define MAT_Size_Size 22.1
  moveI(MAT_Size);
  moveI(-MAT_Size*2);
  turn 90 degrees right
@@ -69,63 +67,81 @@
 */
 
 
-/*
-
 void autonomous() {
+    // start facing other robot, twords top
+// give preload to shooter
+    moveIn(MAT_Size*1.5);
+    moveIn((-MAT_Size)*2.5);
+    rotateTo(-90);
 
-moveIn(MAT_Size*1.5);
-moveIn((-MAT_Size)*2.5);
-rotateTo(float -90);
-moveIn(MAT_Size*2);
-getCap();
-moveIn(-MAT_Size*2);
-rotateTo(float 90);
-moveIn(MAT_Size*3);
-flipCap();
-moveIn(-MAT_Size*2.5);
-rotateTo(float 90);
-moveIn(MAT_Size*.5);
-putOnPole();
-moveIn(-MAT_Size*.5);
-//back in same startinbg pos
-rotateTo(float -90);
-moveIn(MAT_Size*.5);
-rotateTo(float -90);
-moveIn(MAT_Size*2);
-getCap();
-rotateTo(float 180);
-moveIn(MAT_Size);
-rotateTo(float 90);
-moveIn(MAT_Size*1.5);
-putOnPole();
-moveIn(-MAT_Size*.5);
-rotateTo(float -90);
-moveIn(MAT_Size);
-rotateTo(float -90);
-moveIn(MAT_Size*3);
-rotateTo(float -90);
-moveIn(MAT_Size*2);
-getCap();
-rotateTo(float 180);
-moveIn(MAT_Size*2);
-rotateTo(float 90);
-moveIn(MAT_Size*.5);
-rotateTo(float -90);
-moveIn(MAT_Size *.5);
-putOnBigPole();
-rotateTo(float -90);
-moveIn(MAT_Size*1.5);
-rotateTo(float -90);
-moveIn(MAT_Size*1.5);
-grabCap();
-moveIn(-MAT_Size);
-rotateTo(float -90);
-moveIn(MAT_Size*3);
-rotateTo(float 180);
-moveIn(MAT_Size*1);
-flipCap();
-dropCap();
-moveIn(-MAT_Size);
-rotateTo(float 90);
+// get pole-side-blue cap
+    moveIn(MAT_Size*2);
+    getCap();
+
+// give pole-side-blue cap balls to shooter
+    moveIn(-MAT_Size*2);
+    rotateTo(90);
+    moveIn(MAT_Size*3);
+    flipCap();
+
+// place first cap on pole
+    moveIn(-MAT_Size*1.5); // moveIn(-MAT_Size*2.5); (OLD)
+    rotateTo(90);
+    moveIn(MAT_Size*.5);
+    putOnPole();
+
+// get pole-side-red cap
+    moveIn(-MAT_Size*.5);
+    //back in same startinbg pos
+    rotateTo(-90);
+    moveIn(MAT_Size*.5);
+    rotateTo(-90);
+    moveIn(MAT_Size*2);
+    getCap();
+
+// place second cap on pole
+    rotateTo(180);
+    moveIn(MAT_Size);
+    rotateTo(90);
+    moveIn(MAT_Size*1.5);
+    putOnPole();
+
+// get net-side-red cap
+    moveIn(-MAT_Size*.5);
+    rotateTo(-90);
+    moveIn(MAT_Size);
+    rotateTo(-90);
+    moveIn(MAT_Size*3);
+    rotateTo(-90);
+    moveIn(MAT_Size*2);
+    getCap();
+
+// place third cap on pole
+    rotateTo(180);
+    moveIn(MAT_Size*2);
+    rotateTo(90);
+    moveIn(MAT_Size*.5);
+    rotateTo(-90);
+    moveIn(MAT_Size *.5);
+    putOnBigPole();
+
+// grab net-side-blue cap
+    rotateTo(-90);
+    moveIn(MAT_Size*1.5);
+    rotateTo(-90);
+    moveIn(MAT_Size*1.5);
+    grabCap();
+
+// give net-side-blue balls to shooter
+    moveIn(-MAT_Size);
+    rotateTo(-90);
+    moveIn(MAT_Size*3);
+    rotateTo(180);
+    moveIn(MAT_Size*1);
+    flipCap();
+
+// 
+    dropCap();
+    moveIn(-MAT_Size);
+    rotateTo(90);
 }
-*/
