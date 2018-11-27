@@ -1,5 +1,5 @@
 #include "../include/main_S.h"
-//#include "../include/Mymotors_S.h"
+#include "../include/Mymotors_S.h"
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -14,6 +14,35 @@
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+  while(1){
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R1) == 1){
+      motor_move(MOTOR_BACK_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
+      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
+      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
+      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
+    }
+    else{
+      motor_move(MOTOR_BACK_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
+      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
+      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
+      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
+    }
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1){
+      motor_move(MOTOR_CATAPULT_LEFT, 127);
+      motor_move(MOTOR_BACK_LEFT, 0);
+      motor_move(MOTOR_FRONT_LEFT, 0);
+      motor_move(MOTOR_BACK_RIGHT, 0);
+      motor_move(MOTOR_FRONT_RIGHT, 0);
+      delay(1400);
+      motor_move(MOTOR_CATAPULT_LEFT, 0);
+    }
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
+      motor_move(MOTOR_INTAKE, 127);
+    }
+    else{
+      motor_move(MOTOR_INTAKE, 0);
+    }
+  }
   /*while(1){
     if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1){
       motor_move(MOTOR_CATAPULT_LEFT, 127);

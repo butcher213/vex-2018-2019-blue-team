@@ -17,15 +17,11 @@
  * from where it left off.
  */
 void autonomous() {
-  int motorPorts[] = {MOTOR_BACK_RIGHT, MOTOR_FRONT_RIGHT};
-  PID_properties_t rightMotors = createPID(0.5, 0.000009, 0.009, motorPorts, 2, 40);
-  PID_Properties_t leftMotors = createPID(0.5, 0.000009, 0.009, motorPorts, 2, 40);
-  moveIn(3 + MAT_Size);
 
+  //moveIn(3 + MAT_Size);
 
-  //moveIn(6);
-  //get_ball_from_capper();
-  //load_ball();
-  //shoot_balls();
-  /*Assuming we shoot from the wall*/
+  double leftDist = 12;
+  double rightDist = 12;
+  printf("go\n");
+  moveIn(leftDist, rightDist);
 }

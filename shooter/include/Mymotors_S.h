@@ -19,8 +19,12 @@
 
 //void initMotors(int motor, int gearset, bool reversed);
 //PID_array_t initDrive(double Kp, double Ki, double Kd);
-//PID_array_t moveIn(PID_properties_t *PIDs, double left, double right);
 
+void initPID();
+
+void moveIn(double left, double right);
+
+void turnDeg(double deg);
 
 /* Function:		leftWheels
  * Purpose:			moves the left side of the robot forward
