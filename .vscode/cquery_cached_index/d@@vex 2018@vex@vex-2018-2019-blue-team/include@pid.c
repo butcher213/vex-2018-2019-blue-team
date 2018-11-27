@@ -15,7 +15,7 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	if (prop.error == 0)
 		prop.integral = 0;
-	if (abs(prop.error) > prop.startSlowingValue)
+	if (abs(prop.error) < prop.startSlowingValue)
 		prop.integral = 0;
 
 	prop.derivative = prop.error - prop.previousError;
