@@ -68,6 +68,7 @@
 
 
 void autonomous() {
+    /*
     // start facing other robot, twords top
 // give preload to shooter
     moveIn(MAT_Size*1.5);
@@ -140,8 +141,9 @@ void autonomous() {
     moveIn(MAT_Size*1);
     flipCap();
 
-// 
+//
     dropCap();
     moveIn(-MAT_Size);
     rotateTo(90);
+    */
 }

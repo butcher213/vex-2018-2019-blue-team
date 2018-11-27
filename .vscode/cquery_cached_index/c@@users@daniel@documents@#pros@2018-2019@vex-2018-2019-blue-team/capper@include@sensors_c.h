@@ -1,15 +1,18 @@
 #ifndef _SENSORS_H_
 #define _SENSORS_H_
 
-#include "../../include/PID.h"
-
 #define WHEEL_DIAMETER 3
 #define PI 3.1415
 #define Pole_Hight_Small 23.0
 #define Pole_Hight_Large 34.0
 #define MAT_Size 22.1
 
-PID_properties_t leftWheels, rightWheels;
+/* Function:		initializePID
+ * Purpose:			initializes the PID objects for the robot
+ * Argument:		N/A
+ * Returns:			N/A
+ */
+void initializePIDs();
 
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
@@ -26,5 +29,4 @@ void moveIn(float inches);
 void rotateTo(float targetDeg);
 
 
-#include "../src/Sensors_C.c"
 #endif // _SENSORS_H_

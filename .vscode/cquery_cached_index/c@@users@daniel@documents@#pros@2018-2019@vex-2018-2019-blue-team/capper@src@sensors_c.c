@@ -1,5 +1,18 @@
 #include "../include/Sensors_C.h"
 #include "../include/main_C.h"
+#include "../../include/PID.h"
+
+PID_properties_t leftWheels, rightWheels;
+
+void initializePIDs() {
+    int leftWheelPorts[] = {11, 12};
+    int rightWheelPorts[] = {1, 2};
+    float driveKp = 0.2;
+    float driveKi = 0.00000035;
+    float driveKd = 0.0001;
+    leftWheels  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, 20);
+    rightWheels = createPID(driveKp, driveKi, driveKd, rightWheelPorts, 2, 20);
+}
 
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
@@ -7,12 +20,12 @@
  * Returns:			N/A
  */
 void moveIn(float inches) {
-    
+
 
 /*  float deg_per_inch = 360 / (PI * WHEEL_DIAMETER);
   float targetDegrees = inches * deg_per_inch;
   int startPositionLeft = motor_get_position(LEFT_MOTOR);
-  int startPositionRight = motor_get_position(RIGHT_MOTOR);
+  int startPositionRight = motor_get_position( RIGHT_MOTOR);
   while(motor_get_position(LEFT_MOTOR) - startPositionLeft < targetDegrees) {
     float speed = .5;
     int leftPos = motor_get_position(LEFT_MOTOR) - startPositionLeft;
