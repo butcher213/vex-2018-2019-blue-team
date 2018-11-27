@@ -34,13 +34,13 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
     return prop;
 }
 
-PID_properties_t generateMovedPID(PID_properties_t prop, double targetDelta) {
+PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta) {
     prop.target += targetDelta;
     prop.error += targetDelta;
     return prop;
 }
 
-PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, double target) {
+PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, long long target) {
     left = generateMovedPID(left, -target);
     right = generateMovedPID(right, target);
 
@@ -63,7 +63,7 @@ int isStopped(PID_properties_t prop) {
     return prop.derivative == 0;
 }
 
-PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, int startSlowingValue) {
+PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, long long startSlowingValue) {
 	PID_properties_t prop;
 
 	prop.Kp = Kp;
@@ -95,7 +95,7 @@ PID_properties_t applyRealTimeCorrection(PID_properties_t prop) {
     return prop;
 }
 
-PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startSlowingValue, int target) {
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target) {
     PID_properties_t prop = createPID(.05, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
 
     int dir = 1;
@@ -105,8 +105,8 @@ PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startS
         prop.error = target; // error can only be at max to begin with
 
         int lastDir = 2 * dir - 1;
-        int lastPeriodMeasured; // first measurement will be bad
-        for (int i = 0; i < 100 && !atTarget(prop);) {
+        long lastPeriodMeasured; // first measurement will be bad
+        for (int i = 0; i < 1000 && !atTarget(prop);) {
             prop = generateNextPID(prop);
 
             // is this pass the start of a new period measurement?
@@ -115,8 +115,8 @@ PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startS
             // if (changed direction of motion && direction starts new period)
             if (currentDir == -lastDir && currentDir == 2 * dir - 1) {
                 // set priod to be new measured value
-                int now = millis();
-                int period = now - lastPeriodMeasured;
+                long now = millis();
+                long period = now - lastPeriodMeasured;
                 lastPeriodMeasured = now;
 
                 // print new period to console
@@ -125,7 +125,7 @@ PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startS
 
             lastDir = currentDir;
 
-            // determine if the robot is no longer going to move
+            // determine if the robot is no long longer going to move
             if (isStopped(prop))
                 i++;
             else
@@ -135,17 +135,17 @@ PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, int startS
         prop.Kp += .05;
 
         dir = 1 - dir; // switch directions
-        delay(3000); // wait for robot to settle
+        delay(1500); // wait for robot to settle
     }
 }
 
-PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSlowingValue, int target) {
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target) {
     PID_properties_t prop = createPID(0, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
 
     int dir = 1; // 1 for forward, 0 for return to starts. switch w/ dir = 1-dir;
 
     // the Kp, Ki, Kd tuning constants, acceptable errors
-    double tuningVars[3][2] = { {.5,            20}, // for Kp
+    double tuningVars[3][2] = { {.03,            20}, // for Kp
                                 {.002,          10}, // for Kd
                                 {.0000000001,   5}}; // for Ki
 
@@ -154,32 +154,40 @@ PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, int startSl
             prop.target = target * dir;
             prop.error = target; // error can only be at max to begin with
 
+printf("> ");
             switch (i) {
                 case 0:
                     prop.Kp += tuningVars[0][0];
+printf("p%f | ", prop.Kp);
                     break;
                 case 1:
                     prop.Kd += tuningVars[1][0];
+printf("d%f | ", prop.Kd);
                     break;
                 case 2:
                     prop.Ki += tuningVars[2][0];
+printf("i%f | ", prop.Ki);
                     break;
             }
 
-            for (int j = 0; j < 100 && abs(prop.error) > tuningVars[i][1];) {
+printf("%d | %f | %f -> ", i, prop.error, prop.Kp);
+            for (int j = 0; j < 1000 && abs(prop.error) > tuningVars[i][1];) {
                 prop = generateNextPID(prop);
 
-                // determine if the robot is no longer going to move
+                // determine if the robot is no long longer going to move
                 if (isStopped(prop))
-                    i++;
+                    j++;
                 else
-                    i = 0;
+                    j = 0;
+printf(" j%d|d%f", j, prop.derivative);
             }
+printf("%f | %f\n", prop.error, prop.Kp);
 
             dir = 1 - dir; // switch directions
-            delay(3000); // wait for robot to settle
+            delay(1500); // wait for robot to settle
         } while (abs(prop.error) > tuningVars[i][1]);
     }
+
 
     // print out values
     while (1)

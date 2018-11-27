@@ -1,7 +1,7 @@
 #include "../include/main_S.h"
 #include "../include/Init_S.h"
 #include "../include/Mymotors_S.h"
-#include "../../include/PID.h"
+//#include "../../include/PID.h"
 
 void on_center_button() {
 
@@ -26,9 +26,44 @@ void initialize() {
   motor_set_gearing(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18);
   motor_set_reversed(MOTOR_BACK_LEFT, 0);
   motor_set_encoder_units(MOTOR_BACK_LEFT, E_MOTOR_ENCODER_DEGREES);
+  motor_set_gearing(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18);
+  motor_set_reversed(MOTOR_CATAPULT_LEFT, 0);
+  motor_set_encoder_units(MOTOR_CATAPULT_LEFT, E_MOTOR_ENCODER_DEGREES);
+  motor_set_gearing(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18);
+  motor_set_reversed(MOTOR_CATAPULT_RIGHT, 0);
+  motor_set_encoder_units(MOTOR_CATAPULT_RIGHT, E_MOTOR_ENCODER_DEGREES);
 
+  while(1){
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R1) == 1){
+      motor_move(MOTOR_BACK_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
+      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
+      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
+      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
+    }
+    else{
+      motor_move(MOTOR_BACK_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
+      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
+      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
+      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
+    }
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1){
+      motor_move(MOTOR_CATAPULT_LEFT, 127);
+      motor_move(MOTOR_BACK_LEFT, 0);
+      motor_move(MOTOR_FRONT_LEFT, 0);
+      motor_move(MOTOR_BACK_RIGHT, 0);
+      motor_move(MOTOR_FRONT_RIGHT, 0);
+      delay(1400);
+      motor_move(MOTOR_CATAPULT_LEFT, 0);
+    }
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
+      motor_move(MOTOR_INTAKE, 127);
+    }
+    else{
+      motor_move(MOTOR_INTAKE, 0);
+    }
+  }
 
-  int left[2] = {MOTOR_FRONT_LEFT, MOTOR_BACK_LEFT};
+  /*int left[2] = {MOTOR_FRONT_LEFT, MOTOR_BACK_LEFT};
   int right[2] = {MOTOR_FRONT_RIGHT, MOTOR_BACK_RIGHT};
 
 
