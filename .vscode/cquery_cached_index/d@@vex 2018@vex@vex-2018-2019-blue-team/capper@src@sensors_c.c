@@ -7,7 +7,7 @@
  * Returns:			N/A
  */
 void moveIn(float inches) {
-/*  float deg_per_inch = 360 / (PI * WHEEL_DIAMETER);
+  float deg_per_inch = 360 / (PI * WHEEL_DIAMETER);
   float targetDegrees = inches * deg_per_inch;
   int startPositionLeft = motor_get_position(LEFT_MOTOR);
   int startPositionRight = motor_get_position(RIGHT_MOTOR);
@@ -29,7 +29,7 @@ void moveIn(float inches) {
 
   }
   leftWheels(0);
-  rightWheels(0);*/
+  rightWheels(0);
 }
 
 /* Function:		rotateTo

@@ -1,4 +1,4 @@
-// #include "../include/Sensors_C.h"
+#include "../include/Sensors_C.h"
 #include "../include/main_C.h"
 
 /* Function:		moveIn
@@ -7,6 +7,8 @@
  * Returns:			N/A
  */
 void moveIn(float inches) {
+    
+
 /*  float deg_per_inch = 360 / (PI * WHEEL_DIAMETER);
   float targetDegrees = inches * deg_per_inch;
   int startPositionLeft = motor_get_position(LEFT_MOTOR);
@@ -54,21 +56,21 @@ void rotateDeg(float targetDeg,PID_properties_t leftMotors, PID_properties_t rig
 }
 
 void getCap(){
-	
-}
-
-void putOnPole() { 
 
 }
 
-void putOnBigPole() { 
+void putOnPole() {
+
+}
+
+void putOnBigPole() {
 
 }
 
 void flipCap(){
-	
+
 }
 
-void dropCap(){ 
+void dropCap(){
 
 }
