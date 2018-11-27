@@ -37,7 +37,19 @@ void moveIn(float inches) {
  * Argument:		deg = degree to move to
  * Return:			N/A
  */
-void rotateTo(float targetDeg) {
+void rotateDeg(float targetDeg,PID_properties_t leftMotors, PID_properties_t rightMotors) {
+	float angle = 0
+	float angleTarget = (algle*((16+(5/8))/2)/2)
+	leftMotors = generateMovedPID(leftMotors,angleTarget);
+	rightMotors = generateMovedPID(rightMotors,angleTarget);
+	while ! (atTarget(leftMotors)){
+		leftMotors = generateNextPID(leftMotors);
+		rightMotors = generateNextPID(rightMotors);
+	}
+	delay(1000);
+		
+	
+	
 
 }
 
