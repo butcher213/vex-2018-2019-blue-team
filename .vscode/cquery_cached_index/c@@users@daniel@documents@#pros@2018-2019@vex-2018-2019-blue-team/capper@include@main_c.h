@@ -38,6 +38,11 @@
 
 #include "api_C.h"
 
+#include "autonomousRed_C.h"
+#include "Sensors_C.h"
+#include "../../include/PID.h"
+
+
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor,

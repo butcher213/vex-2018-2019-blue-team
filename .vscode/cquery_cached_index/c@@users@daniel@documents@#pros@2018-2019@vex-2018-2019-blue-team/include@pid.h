@@ -1,5 +1,6 @@
 #ifndef _PID_H_
 #define _PID_H_
+// #warning "In PID header"
 
 typedef struct {
 	double Kp;
@@ -16,6 +17,7 @@ typedef struct {
 } PID_properties_t;
 
 typedef PID_properties_t *PID_array_t;
+
 
 /* Function:		generateNextPID
  * Purpose:			Updates the PID_properties_t by running through one pass of the PID algorithm
@@ -94,5 +96,8 @@ PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long 
  * Return:          the created PID_properties_t object
  */
 PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
+
+
+#include "PID.c"
 
 #endif // _PID_H_

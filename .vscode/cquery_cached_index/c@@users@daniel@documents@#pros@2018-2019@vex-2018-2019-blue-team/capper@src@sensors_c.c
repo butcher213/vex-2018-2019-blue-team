@@ -1,6 +1,9 @@
-#include "../include/Sensors_C.h"
+// #include "../include/Sensors_C.h"
+// #include "../../include/PID.h"
 #include "../include/main_C.h"
-#include "../../include/PID.h"
+#ifdef _PID_H_
+#warning "SENSORS: PID DEFINED"
+#endif
 
 PID_properties_t leftWheels, rightWheels;
 
@@ -14,11 +17,13 @@ void initializePIDs() {
     rightWheels = createPID(driveKp, driveKi, driveKd, rightWheelPorts, 2, 20);
 }
 
-/* Function:		moveIn
- * Purpose:			moves the robot a specified amount of inches
- * Argument:		inches = amount of inches to move
- * Returns:			N/A
- */
+void setupMotor(int port, int reversed, int gearset) {
+	motor_set_gearing(port, gearset);
+	motor_set_reversed(port, reversed);
+	motor_set_encoder_units(port, E_MOTOR_ENCODER_COUNTS);
+    motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
+}
+
 void moveIn(float inches) {
 
 
@@ -47,11 +52,6 @@ void moveIn(float inches) {
   rightWheels(0);*/
 }
 
-/* Function:		rotateTo
- * Purpose:			rotates the robot to the specified degree
- * Argument:		deg = degree to move to
- * Return:			N/A
- */
 void rotateTo(float targetDeg) {
 
 }

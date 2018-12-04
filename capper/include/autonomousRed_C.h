@@ -1,9 +1,6 @@
 #ifndef _AUTONOMOUS_RED_C_H
 #define _AUTONOMOUS_RED_C_H
 
-#include "../include/main_C.h"
-#define MAT_Size 23.5
-
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via

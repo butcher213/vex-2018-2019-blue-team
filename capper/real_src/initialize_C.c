@@ -1,51 +1,59 @@
+// #include "../../include/PID.h"
+// #include "../include/Sensors_C.h"
 #include "../include/main_C.h"
-#include "../../include/PID.h"
-#include "../include/Sensors_C.h"
+// #ifdef _PID_H_
+// #warning "INITIALIZE: PID DEFINED"
+// #endif
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
- */
-void setMotorStuff(int port, int reversed) {
-	motor_set_gearing(port, E_MOTOR_GEARSET_18);
-	motor_set_reversed(port, reversed);
-	motor_set_encoder_units(port, E_MOTOR_ENCODER_DEGREES);
-    motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
-}
+**/
 void initialize() {
-    // initializePIDs();
+    initializePIDs();
+
+    setupMotor(1, 1, E_MOTOR_GEARSET_18);
+    setupMotor(2, 1, E_MOTOR_GEARSET_18);
+    setupMotor(11, 0, E_MOTOR_GEARSET_18);
+    setupMotor(12, 0, E_MOTOR_GEARSET_18);
+
+    // motor_move(1, 127);
+    // motor_move(2, 127);
+    // motor_move(11, 127);
+    // motor_move(12, 127);
+
+    moveIn(24);
+    while (1) {
+        printf("DONE");
+        delay(100);
+    }
 
 
 
-    setMotorStuff(1, 1);
-    setMotorStuff(2, 1);
-    setMotorStuff(11, 0);
-    setMotorStuff(12, 0);
-		int leftPorts[] = {11, 12};
-		int rightPorts[] = {1, 2};
-		PID_properties_t left, right;
-		float Kp = .2;
-		float Ki = .00000035;
-		float Kd =  0.0001;
-		// left = createPID(Kp, Ki, Kd, leftPorts, 2, 20);
-	  // right = createPID(Kp, Ki, Kd, rightPorts, 2, 20);
-		// left = generateMovedPID(left, 24 * (360 / (PI * 3.6)));
-		// right = generateMovedPID(right, 24 * (360 / (PI * 3.6)));
-		while(1) { //&& !atTarget(right)) {
-			// left = generateNextPID(left);
-			// right = generateNextPID(right);
-			printf("%7.2f\n", left.error);
-		}
-	/*	motor_move(1, 0);
 
-		motor_move(2, 0);
-
-		motor_move(11, 0);
-
-		motor_move(12, 0);
-		/*    int a = 1;
+	// int leftPorts[] = {11, 12};
+	// int rightPorts[] = {1, 2};
+	// PID_properties_t left, right;
+	// float Kp = .2;
+	// float Ki = .00000035;
+	// float Kd =  0.0001;
+	// left = createPID(Kp, Ki, Kd, leftPorts, 2, 20);
+    // right = createPID(Kp, Ki, Kd, rightPorts, 2, 20);
+	// left = generateMovedPID(left, 24 * (360 / (PI * 3.6)));
+	// right = generateMovedPID(right, 24 * (360 / (PI * 3.6)));
+	// while(1) { //&& !atTarget(right)) {
+	// 	left = generateNextPID(left);
+	// 	right = generateNextPID(right);
+	// 	printf("%7.2f\n", left.error);
+	// }
+	/*
+    motor_move(1, 0);
+	motor_move(2, 0);
+	motor_move(11, 0);
+	motor_move(12, 0);
+    int a = 1;
     while (a) {
         motor_move(1, 60);
         motor_move(2, 60);

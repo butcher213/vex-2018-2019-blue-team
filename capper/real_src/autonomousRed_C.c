@@ -1,4 +1,9 @@
-#include "../include/autonomousRed_C.h"
+// #include "../include/autonomousRed_C.h"
+// #include "../include/Sensors_C.h"
+#include "../include/main_C.h"
+// #ifdef _PID_H_
+// #warning "AUTON R: PID DEFINED"
+// #endif
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -68,6 +73,7 @@
 
 
 void autonomous() {
+
     /*
     // start facing other robot, twords top
 // give preload to shooter

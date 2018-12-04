@@ -1,6 +1,8 @@
+#include "../include/main_C.h"
+// #ifdef _PID_H_
+// #warning "TELE: PID DEFINED"
+// #endif
 
-
-void opcontrol() {
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -14,4 +16,6 @@ void opcontrol() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+void opcontrol() {
+
 }
