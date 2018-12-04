@@ -98,6 +98,6 @@ PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long 
 PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
 
 
-#include "PID.c"
+#include "../src_real/PID.c"
 
 #endif // _PID_H_

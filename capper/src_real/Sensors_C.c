@@ -34,7 +34,7 @@ void moveRaw(long raw) {
     }
 }
 void moveIn(float inches) {
-    moveRaw(MOTOR_COUNTS_PER_INCH);
+    moveRaw(inches * MOTOR_COUNTS_PER_INCH);
 }
 
 void rotateTo(float targetDeg) {
