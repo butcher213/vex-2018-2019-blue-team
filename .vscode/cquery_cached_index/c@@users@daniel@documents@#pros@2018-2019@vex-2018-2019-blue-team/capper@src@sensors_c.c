@@ -1,36 +1,18 @@
-// #include "../include/Sensors_C.h"
-// #include "../../include/PID.h"
+#include "../include/Sensors_C.h"
 #include "../include/main_C.h"
-#ifdef _PID_H_
-#warning "SENSORS: PID DEFINED"
-#endif
 
-PID_properties_t leftWheels, rightWheels;
-
-void initializePIDs() {
-    int leftWheelPorts[] = {11, 12};
-    int rightWheelPorts[] = {1, 2};
-    float driveKp = 0.2;
-    float driveKi = 0.00000035;
-    float driveKd = 0.0001;
-    leftWheels  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, 20);
-    rightWheels = createPID(driveKp, driveKi, driveKd, rightWheelPorts, 2, 20);
-}
-
-void setupMotor(int port, int reversed, int gearset) {
-	motor_set_gearing(port, gearset);
-	motor_set_reversed(port, reversed);
-	motor_set_encoder_units(port, E_MOTOR_ENCODER_COUNTS);
-    motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
-}
-
+/* Function:		moveIn
+ * Purpose:			moves the robot a specified amount of inches
+ * Argument:		inches = amount of inches to move
+ * Returns:			N/A
+ */
 void moveIn(float inches) {
-
+    
 
 /*  float deg_per_inch = 360 / (PI * WHEEL_DIAMETER);
   float targetDegrees = inches * deg_per_inch;
   int startPositionLeft = motor_get_position(LEFT_MOTOR);
-  int startPositionRight = motor_get_position( RIGHT_MOTOR);
+  int startPositionRight = motor_get_position(RIGHT_MOTOR);
   while(motor_get_position(LEFT_MOTOR) - startPositionLeft < targetDegrees) {
     float speed = .5;
     int leftPos = motor_get_position(LEFT_MOTOR) - startPositionLeft;
@@ -52,7 +34,24 @@ void moveIn(float inches) {
   rightWheels(0);*/
 }
 
-void rotateTo(float targetDeg) {
+/* Function:		rotateTo
+ * Purpose:			rotates the robot to the specified degree
+ * Argument:		deg = degree to move to
+ * Return:			N/A
+ */
+void rotateDeg(float targetDeg,PID_properties_t leftMotors, PID_properties_t rightMotors) {
+	float angle = 0
+	float angleTarget = (algle*((16+(5/8))/2)/2)
+	leftMotors = generateMovedPID(leftMotors,angleTarget);
+	rightMotors = generateMovedPID(rightMotors,angleTarget);
+	while ! (atTarget(leftMotors)){
+		leftMotors = generateNextPID(leftMotors);
+		rightMotors = generateNextPID(rightMotors);
+	}
+	delay(1000);
+		
+	
+	
 
 }
 

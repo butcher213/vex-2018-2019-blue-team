@@ -67,10 +67,6 @@
  moveI(-MAT);
  turn left 90
 */
-<<<<<<< HEAD
-
-void autonomous() {}
-=======
 #define MAT 22.1
 void autonomous() {
 
@@ -127,4 +123,3 @@ dropCap();
 moveIn(-MAT);
 rotateTo(float 90);
 }
->>>>>>> 1eb80a86a0577875bf0a856bbb27dcf78de63cab
