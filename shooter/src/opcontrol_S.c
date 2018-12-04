@@ -97,14 +97,10 @@ void opcontrol() {
     }
     if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
       motor_move(MOTOR_INTAKE, 127);
-    }
-    else{
-      motor_move(MOTOR_INTAKE, 0);
-    }
-    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R1) == 1){
       motor_move(MOTOR_BELT, 127);
     }
     else{
+      motor_move(MOTOR_INTAKE, 0);
       motor_move(MOTOR_BELT, 0);
     }
     if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_B) == 1){

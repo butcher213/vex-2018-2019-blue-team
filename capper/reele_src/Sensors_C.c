@@ -31,7 +31,7 @@ void moveRaw(long raw) {
     while (!atTarget(leftWheels) && !atTarget(rightWheels)) {
         leftWheels = generateNextPID(leftWheels);
         rightWheels = generateNextPID(rightWheels);
-printf("l:%.2f | r:%.2f", leftWheels.error, rightWheels.error);
+printf("l:%d | r:%d", leftWheels.error, rightWheels.error);
     }
 }
 void moveIn(float inches) {
