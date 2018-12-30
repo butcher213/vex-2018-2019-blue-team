@@ -27,18 +27,5 @@ void moveIn(double left, double right);
 
 void turnDeg(double deg);
 
-/* Function:		leftWheels
- * Purpose:			moves the left side of the robot forward
- * Arguments:	  speed: the speed of the motors
- * Returns:			N/A
- */
-//void myleftWheels(float speed);
-
-/* Function:		rightWheels
- * Purpose:			moves the right side of the robot forward
- * Arguments:	  speed: the speed of the motors
- * Returns:			N/A
- */
-//void myrightWheels(float speed);
 #include "Mymotors_S.c"
 #endif // _MYMOTORS_H_
