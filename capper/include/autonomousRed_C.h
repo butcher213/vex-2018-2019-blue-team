@@ -1,6 +1,8 @@
 #ifndef _AUTONOMOUS_RED_C_H
 #define _AUTONOMOUS_RED_C_H
 
+#include "PID.h"
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -22,6 +24,27 @@ void putOnBigPole();
 void grabCap();
 void dropCap();
 
+
+
+void getCap(){
+
+}
+
+void putOnPole() {
+
+}
+
+void putOnBigPole() {
+
+}
+
+void flipCap(){
+
+}
+
+void dropCap(){
+
+}
 
 
 #endif // _AUTONOMOUS_RED_C_H

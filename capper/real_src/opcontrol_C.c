@@ -1,7 +1,4 @@
 #include "../include/main_C.h"
-// #ifdef _PID_H_
-// #warning "TELE: PID DEFINED"
-// #endif
 
 /**
  * Runs the operator control code. This function will be started in its own task

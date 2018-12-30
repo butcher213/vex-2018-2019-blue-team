@@ -1,9 +1,4 @@
-// #include "../include/Sensors_C.h"
-// #include "../../include/PID.h"
 #include "../include/main_C.h"
-// #ifdef _PID_H_
-// #warning "SENSORS: PID DEFINED"
-// #endif
 
 PID_properties_t leftWheels, rightWheels;
 
@@ -29,34 +24,20 @@ void moveRaw(long raw) {
     rightWheels = generateMovedPID(rightWheels, raw);
 
     while (!atTarget(leftWheels) && !atTarget(rightWheels)) {
+printf("<LEFT> ");
         leftWheels = generateNextPID(leftWheels);
+printf("<RIGHT> ");
         rightWheels = generateNextPID(rightWheels);
+printf("speed: %d, %d\n", leftWheels.speed, rightWheels.speed);
     }
 }
 void moveIn(float inches) {
     moveRaw(inches * MOTOR_COUNTS_PER_INCH);
 }
+void moveMats(float mats) {
+    moveIn(mats * INCHES_PER_MAT);
+}
 
 void rotateTo(float targetDeg) {
-
-}
-
-void getCap(){
-
-}
-
-void putOnPole() {
-
-}
-
-void putOnBigPole() {
-
-}
-
-void flipCap(){
-
-}
-
-void dropCap(){
 
 }

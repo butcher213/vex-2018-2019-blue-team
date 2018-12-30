@@ -1,9 +1,4 @@
-// #include "../include/autonomousRed_C.h"
-// #include "../include/Sensors_C.h"
 #include "../include/main_C.h"
-// #ifdef _PID_H_
-// #warning "AUTON R: PID DEFINED"
-// #endif
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -17,68 +12,13 @@
  * from where it left off.
 **/
 
- /*
- moveI(MAT_Size);
- moveI(-MAT_Size*2);
- turn 90 degrees right
- moveI(MAT_Size*2);
- getCap();
- moveI(-MAT_Size*2)
- turn 90 degrees left
- moveI(MAT_Size*2);
- flipCap();
- moveI(-MAT_Size*1.5);
- turn 90 degrees left
- moveI(MAT_Size*.5);
- putOnPole();
- moveI()-MAT_Size*.5);
- turn right 90 degrees
- moveI(MAT_Size*.5);
- turn right 90 degrees
- moveI(MAT_Size*2);
- getCap();
- turn 180 degrees
- moveI(MAT_Size);
- turn left 90
- moveI(MAT_Size*1.5);
- putOnPole();
- moveI(-MAT_Size*.5);
- turn right 90
- moveI(MAT_Size);
- turn right 90
- moveI(MAT_Size*3);
- turn right 90
- moveI(MAT_Size*2);
- grabCap();
- turn 180
- moveI(MAT_Size*2.5);
- turn left 90
- moveI(MAT_Size*.5);
- turn right 90
- placeCap();
- turn right 90
- moveI(MAT_Size*1.5);
- turn right 90
- moveI(MAT_Size*1.5);
- grabCap();
- moveI(-MAT_Size);
- turn right 90
- moveI(MAT_Size*2);
- flipCap();
- moveI(MAT_Size*2);
- dropCap();
- moveI(-MAT_Size);
- turn left 90
-*/
-
 
 void autonomous() {
-
     /*
     // start facing other robot, twords top
 // give preload to shooter
-    moveIn(MAT_Size*1.5);
-    moveIn((-MAT_Size)*2.5);
+    moveMats(1.5);
+    moveMats(-2.5);
     rotateTo(-90);
 
 // get pole-side-blue cap
