@@ -7,11 +7,11 @@
  * Arguments:	  motor: motor ports, gearset: gearset, reversed, should the motor be reversed
  * Returns:			N/A
  */
-// void initMotors(int motor, int gearset, bool reversed) {
-//   motor_set_gearing(motor, gearset);
-//   motor_set_reversed(motor, reversed);
-//   motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
-// }
+void initMotors(int motor, int gearset, bool reversed) {
+   motor_set_gearing(motor, gearset);
+   motor_set_reversed(motor, reversed);
+   motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
+ }
 
 
 /* Function:		initDrive

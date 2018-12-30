@@ -21,5 +21,5 @@ void autonomous() {
   double leftDist = 12;
   double rightDist = 12;
   printf("go\n");
-  moveIn(leftDist, rightDist);
+//  moveIn(leftDist, rightDist);
 }

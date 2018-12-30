@@ -1,5 +1,4 @@
 #include "../include/main_S.h"
-#include "../include/Init_S.h"
 #include "../include/Mymotors_S.h"
 //#include "../../include/PID.h"
 
@@ -14,28 +13,18 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  motor_set_gearing(MOTOR_FRONT_LEFT, E_MOTOR_GEARSET_18);
-  motor_set_reversed(MOTOR_FRONT_LEFT, 0);
-  motor_set_encoder_units(MOTOR_FRONT_LEFT, E_MOTOR_ENCODER_DEGREES);
-  motor_set_gearing(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_18);
-  motor_set_reversed(MOTOR_FRONT_RIGHT, 1);
-  motor_set_encoder_units(MOTOR_FRONT_RIGHT, E_MOTOR_ENCODER_DEGREES);
-  motor_set_gearing(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_18);
-  motor_set_reversed(MOTOR_BACK_RIGHT, 1);
-  motor_set_encoder_units(MOTOR_BACK_RIGHT, E_MOTOR_ENCODER_DEGREES);
-  motor_set_gearing(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18);
-  motor_set_reversed(MOTOR_BACK_LEFT, 0);
-  motor_set_encoder_units(MOTOR_BACK_LEFT, E_MOTOR_ENCODER_DEGREES);
-  motor_set_gearing(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18);
-  motor_set_reversed(MOTOR_CATAPULT_LEFT, 0);
-  motor_set_encoder_units(MOTOR_CATAPULT_LEFT, E_MOTOR_ENCODER_DEGREES);
-  motor_set_gearing(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18);
-  motor_set_reversed(MOTOR_CATAPULT_RIGHT, 1);
-  motor_set_encoder_units(MOTOR_CATAPULT_RIGHT, E_MOTOR_ENCODER_DEGREES);
-  motor_set_gearing(MOTOR_BELT, E_MOTOR_GEARSET_18);
-  motor_set_reversed(MOTOR_BELT, 0);
-  motor_set_encoder_units(MOTOR_BELT, E_MOTOR_ENCODER_DEGREES);
+  initMotors(MOTOR_FRONT_LEFT, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
   }
+
+
+  /* Move Inches Prototype */
 
   /*int left[2] = {MOTOR_FRONT_LEFT, MOTOR_BACK_LEFT};
   int right[2] = {MOTOR_FRONT_RIGHT, MOTOR_BACK_RIGHT};
