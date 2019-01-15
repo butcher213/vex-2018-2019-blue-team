@@ -13,6 +13,7 @@
 // ~23.42 inches per mat
 #define INCHES_PER_MAT (WALL_TO_WALL_INCHES / WALL_TO_WALL_MATS)
 
+
 /* Function:		initializePID
  * Purpose:			Initializes the PID objects for the robot.
  * Argument:		N/A
@@ -42,6 +43,13 @@ void moveRaw(long raw);
  * Returns:			N/A
  */
 void moveIn(float inches);
+
+/* Function:		moveMats
+ * Purpose:			moves the robot a specified amount of mats
+ * Argument:		mats = amount of mats to move
+ * Returns:			N/A
+ */
+void moveMats(float mats);
 
 /* Function:		rotateTo
  * Purpose:			rotates the robot to the specified degree

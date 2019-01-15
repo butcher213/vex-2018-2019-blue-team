@@ -3,11 +3,18 @@
 PID_properties_t leftWheels, rightWheels;
 
 void initializePIDs() {
+    setupMotor(1, 1, E_MOTOR_GEARSET_18);
+    setupMotor(2, 1, E_MOTOR_GEARSET_18);
+    setupMotor(11, 0, E_MOTOR_GEARSET_18);
+    setupMotor(12, 0, E_MOTOR_GEARSET_18);
+
     int leftWheelPorts[] = {11, 12};
     int rightWheelPorts[] = {1, 2};
+
     float driveKp = 0.2;
     float driveKi = 0.00000035;
     float driveKd = 0.0001;
+
     leftWheels  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, 20);
     rightWheels = createPID(driveKp, driveKi, driveKd, rightWheelPorts, 2, 20);
 }
@@ -24,11 +31,11 @@ void moveRaw(long raw) {
     rightWheels = generateMovedPID(rightWheels, raw);
 
     while (!atTarget(leftWheels) && !atTarget(rightWheels)) {
-printf("<LEFT> ");
+ printf("<LEFT> ");
         leftWheels = generateNextPID(leftWheels);
-printf("<RIGHT> ");
+ printf("<RIGHT> ");
         rightWheels = generateNextPID(rightWheels);
-printf("speed: %d, %d\n", leftWheels.speed, rightWheels.speed);
+ printf("speed: %d, %d\n", leftWheels.speed, rightWheels.speed);
     }
 }
 void moveIn(float inches) {

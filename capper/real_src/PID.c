@@ -2,12 +2,11 @@
 #include "../include/main_C.h"
 
 PID_properties_t generateNextPID(PID_properties_t prop) {
-    int i;
-
     prop.error = calculateError(prop);
  /* =================================================
   * = Replaced with calculateError(), needs testing =
   * =================================================
+
  printf("1: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
     int avgPosition = 0;
     for (int i = 0; i < prop.numMotorPorts; i++)
@@ -18,10 +17,8 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
  	prop.error = prop.target - avgPosition;
  */
 
-
-
  printf("3: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
-	if ((prop.error == 0) || (abs(prop.error) < prop.startSlowingValue))
+	if (abs(prop.error) <= prop.startSlowingValue)
 		prop.integral = 0;
     else
     	prop.integral += prop.error;
@@ -41,18 +38,17 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
  printf("7: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
     // printf("motor ports: ");
-	for (i = 0; i < prop.numMotorPorts; ++i) {
+	for (int i = 0; i < prop.numMotorPorts; i++) {
 		motor_move(prop.motorPorts[i], prop.speed);
         // printf("%d(%d), ", prop.motorPorts[i], i);
     }
     // printf("\n");
 
-printf("8: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ printf("8: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
     return prop;
 }
 
 int calculateError(PID_properties_t prop) {
-    int i;
  printf("1: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
 
     int avgPosition = 0;
@@ -64,15 +60,15 @@ int calculateError(PID_properties_t prop) {
 	return prop.target - avgPosition;
 }
 
+#warning "Untested function: generateNextPID()"
 PID_array_t generateNextSSPID(PID_array_t pids, int length) {
-    int i;
     // calculate errors of each PID
     int totalErrors[length];
-    for (i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
         totalErrors[i] = calculateError(pids[i]);
 
     // calulate each PID's distance sum from other PIDs
-    for (i = 0; i < length; i++) {
+    for (int i = 0; i < length; i++) {
         // add on errors from other PIDs in system
         for (int j = 0; j < length; j++) {
             if (i == j) // no need to calculate for current PID
@@ -85,11 +81,11 @@ PID_array_t generateNextSSPID(PID_array_t pids, int length) {
     }
 
     // store total errors back into their respective PID
-    for (i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
         pids[i].error = totalErrors[i];
 
     // calculate PID speed normally from here
- #warning "[PID.c ~92] SSPID not completed"
+ #warning "[PID.c ~92] SSPID not implemented"
 }
 
 PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta) {
@@ -127,16 +123,17 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 	prop.Kp = Kp;
 	prop.Ki = Ki;
 	prop.Kd = Kd;
-	prop.numMotorPorts = numMotorPorts;
-	prop.motorPorts = motorPorts;
-	prop.startSlowingValue = startSlowingValue;
 
-    prop.target = 0;
+    prop.speed = 0;
     prop.error = 0;
-    prop.previousError = 0;
-    prop.derivative = 0;
     prop.integral = 0;
+    prop.derivative = 0;
+    prop.target = 0;
+    prop.previousError = 0;
 
+	prop.motorPorts = motorPorts;
+	prop.numMotorPorts = numMotorPorts;
+	prop.startSlowingValue = startSlowingValue;
 
     // printf("ports: %d, %d\n", prop.motorPorts[0], prop.motorPorts[1]);
 	return prop;

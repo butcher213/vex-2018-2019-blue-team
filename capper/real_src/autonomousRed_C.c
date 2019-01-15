@@ -12,84 +12,152 @@
  * from where it left off.
 **/
 
-
 void autonomous() {
-    /*
     // start facing other robot, twords top
-// give preload to shooter
+    initial_shooter_feed();
+
+    get_pole_side_blue_cap();
+    give_pole_side_blue_cap_balls_to_shooter();
+    place_first_cap_on_pole();
+
+    get_pole_side_red_cap();
+    place_second_cap_on_pole();
+    get_net_side_red_cap();
+
+    place_third_cap_on_pole();
+    grab_net_side_blue_cap();
+    feed_net_side_balls_to_shooter();
+
+    return_to_start();
+}
+
+
+void initial_shooter_feed() {
     moveMats(1.5);
     moveMats(-2.5);
     rotateTo(-90);
+}
 
-// get pole-side-blue cap
-    moveIn(MAT_Size*2);
+void get_pole_side_blue_cap() {
+    moveMats(2);
     getCap();
+}
 
-// give pole-side-blue cap balls to shooter
-    moveIn(-MAT_Size*2);
+void give_pole_side_blue_cap_balls_to_shooter() {
+    moveMats(-2);
     rotateTo(90);
-    moveIn(MAT_Size*3);
+    moveMats(3);
     flipCap();
+}
 
-// place first cap on pole
-    moveIn(-MAT_Size*1.5); // moveIn(-MAT_Size*2.5); (OLD)
+void place_first_cap_on_pole() {
+    moveMats(-1.5); // moveMats(-2.5); (OLD)
     rotateTo(90);
-    moveIn(MAT_Size*.5);
-    putOnPole();
+    moveMats(.5);
+    putOnSmallPole();
+}
 
-// get pole-side-red cap
-    moveIn(-MAT_Size*.5);
-    //back in same startinbg pos
+void get_pole_side_red_cap() {
+    moveMats(-.5);
+    //back in same starting pos
     rotateTo(-90);
-    moveIn(MAT_Size*.5);
+    moveMats(0.5);
     rotateTo(-90);
-    moveIn(MAT_Size*2);
+    moveMats(2);
     getCap();
+}
 
-// place second cap on pole
+void place_second_cap_on_pole() {
     rotateTo(180);
-    moveIn(MAT_Size);
+    moveMats(1);
     rotateTo(90);
-    moveIn(MAT_Size*1.5);
-    putOnPole();
+    moveMats(1.5);
+    putOnSmallPole();
+}
 
-// get net-side-red cap
-    moveIn(-MAT_Size*.5);
+void get_net_side_red_cap() {
+    moveMats(-0.5);
     rotateTo(-90);
-    moveIn(MAT_Size);
+    moveMats(1);
     rotateTo(-90);
-    moveIn(MAT_Size*3);
+    moveMats(3);
     rotateTo(-90);
-    moveIn(MAT_Size*2);
+    moveMats(2);
     getCap();
+}
 
-// place third cap on pole
+void place_third_cap_on_pole() {
     rotateTo(180);
-    moveIn(MAT_Size*2);
+    moveMats(2);
     rotateTo(90);
-    moveIn(MAT_Size*.5);
+    moveMats(0.5);
     rotateTo(-90);
-    moveIn(MAT_Size *.5);
+    moveMats(0.5);
     putOnBigPole();
+}
 
-// grab net-side-blue cap
+void grab_net_side_blue_cap() {
     rotateTo(-90);
-    moveIn(MAT_Size*1.5);
+    moveMats(1.5);
     rotateTo(-90);
-    moveIn(MAT_Size*1.5);
-    grabCap();
+    moveMats(1.5);
+    getCap();
+}
 
-// give net-side-blue balls to shooter
-    moveIn(-MAT_Size);
+void feed_net_side_balls_to_shooter() {
+    moveMats(-1);
     rotateTo(-90);
-    moveIn(MAT_Size*3);
+    moveMats(3);
     rotateTo(180);
-    moveIn(MAT_Size*1);
+    moveMats(1);
     flipCap();
+}
 
-//
+void return_to_start() {
     dropCap();
-    moveIn(-MAT_Size);
+    moveMats(-1);
     rotateTo(90);
-    */
+}
+
+#warning "Auton getCap() not complete"
+void getCap(){
+    // openClaw();
+    // moveArmTo(CAP_HEIGHT);
+    // closeClaw();
+}
+
+#warning "Auton putOnSmallPole() not complete"
+void putOnSmallPole() {
+    // // move cap above pole to prepare capping
+    // moveArmTo(POLE_CAP_PREPARE);
+    // // line up cap
+    // moveIn(POLE_SMALL_LINE_UP);
+    // moveArmTo(POLE_SMALL_HEIGHT);
+    // openClaw();
+    // moveIn(-POLE_SMALL_LINE_UP);
+}
+
+#warning "Auton putOnBigPole() not complete"
+void putOnBigPole() {
+    // // move cap above pole to prepare capping
+    // moveArmTo(POLE_PREPARE_HEIGHT);
+    // // line up cap
+    // moveIn(POLE_BIG_LINE_UP);
+    // moveArmTo(POLE_BIG_HEIGHT);
+    // openClaw();
+    // moveIn(-POLE_BIG_LINE_UP);
+}
+
+#warning "Auton flipCap() not complete"
+void flipCap(){
+    // // arm should be more than 1 cap radius above ground; maybe add check for arm > CAP_FLIP_HEIGHT
+    // moveArmTo(CAP_FLIP_HEIGHT);
+    // flipCap();
+}
+
+#warning "Auton dropCap() not complete"
+void dropCap(){
+    // // make slightly above ground so cap falls out of claw
+    // moveArmTo(CAP_FLIP_HEIGHT);
+    // openClaw();
 }

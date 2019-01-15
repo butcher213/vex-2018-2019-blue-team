@@ -39,10 +39,10 @@ int calculateError(PID_properties_t prop);
  *                  length = the number of PIDs in the system
  * Return:          the updated SSPIDs
  *
- * Note:            The SSPIDs should be initiated as a PID_array_t, then passed into this function to update them.
- *                    The code should loop through the array to initilize and set targets.
+ * Note:            * The SSPIDs should be initiated as a PID_array_t, then passed into this function to update them.
+ *                      The code should loop through the array to initilize and set targets.
  */
- PID_array_t generateNextSSPID(PID_array_t pids, int length);
+PID_array_t generateNextSSPID(PID_array_t pids, int length);
 
 /* Function:		generateMovedPID
  * Purpose:			moves the target property of prop by targetDelta
@@ -88,6 +88,6 @@ int isStopped(PID_properties_t prop);
 PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, long long startSlowingValue);
 
 
-#include "../src_real/PID.c"
+#include "../real_src/PID.c"
 
 #endif // _PID_H_

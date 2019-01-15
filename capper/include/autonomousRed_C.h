@@ -3,48 +3,25 @@
 
 #include "PID.h"
 
-/**
- * Runs the user autonomous code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the autonomous
- * mode. Alternatively, this function may be called in initialize or opcontrol
- * for non-competition testing purposes.
- *
- * If the robot is disabled or communications is lost, the autonomous task
- * will be stopped. Re-enabling the robot will restart the task, not re-start it
- * from where it left off.
-**/
-
 void autonomous();
+
+void initial_shooter_feed();
+void get_pole_side_blue_cap();
+void give_pole_side_blue_cap_balls_to_shooter();
+void place_first_cap_on_pole();
+void get_pole_side_red_cap();
+void place_second_cap_on_pole();
+void get_net_side_red_cap();
+void place_third_cap_on_pole();
+void grab_net_side_blue_cap();
+void feed_net_side_balls_to_shooter();
+void return_to_start();
 
 void getCap();
 void flipCap();
-void putOnPole();
+void putOnSmallPole();
 void putOnBigPole();
-void grabCap();
 void dropCap();
-
-
-
-void getCap(){
-
-}
-
-void putOnPole() {
-
-}
-
-void putOnBigPole() {
-
-}
-
-void flipCap(){
-
-}
-
-void dropCap(){
-
-}
 
 
 #endif // _AUTONOMOUS_RED_C_H

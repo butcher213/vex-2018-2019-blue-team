@@ -75,48 +75,25 @@
 #define _AUTONOMOUS_RED_C_H
 
 
-/**
- * Runs the user autonomous code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the autonomous
- * mode. Alternatively, this function may be called in initialize or opcontrol
- * for non-competition testing purposes.
- *
- * If the robot is disabled or communications is lost, the autonomous task
- * will be stopped. Re-enabling the robot will restart the task, not re-start it
- * from where it left off.
-**/
-
 void autonomous();
+
+void initial_shooter_feed();
+void get_pole_side_blue_cap();
+void give_pole_side_blue_cap_balls_to_shooter();
+void place_first_cap_on_pole();
+void get_pole_side_red_cap();
+void place_second_cap_on_pole();
+void get_net_side_red_cap();
+void place_third_cap_on_pole();
+void grab_net_side_blue_cap();
+void feed_net_side_balls_to_shooter();
+void return_to_start();
 
 void getCap();
 void flipCap();
-void putOnPole();
+void putOnSmallPole();
 void putOnBigPole();
-void grabCap();
 void dropCap();
-
-
-
-void getCap(){
-
-}
-
-void putOnPole() {
-
-}
-
-void putOnBigPole() {
-
-}
-
-void flipCap(){
-
-}
-
-void dropCap(){
-
-}
 
 
 #endif // _AUTONOMOUS_RED_C_H
@@ -216,11 +193,29 @@ typedef PID_properties_t *PID_array_t;
 
 
 /* Function:		generateNextPID
- * Purpose:			Updates the PID_properties_t by running through one pass of the PID algorithm
+ * Purpose:			updates the PID_properties_t by running through one pass of the PID algorithm
  * Argument:		prop = the property to be updated
  * Return:			the next PID_properties_t object
  */
 PID_properties_t generateNextPID(PID_properties_t prop);
+
+/* Function:        calculateError
+ * Purpose:         calculates error for prop (distance from target)
+ * Argument:        prop = the property which error will be calculated for
+ * Return:          the calculated error of prop
+ */
+int calculateError(PID_properties_t prop);
+
+/* Function:        generateNextSSPID
+ * Purpose:         updates the system of synchronized PIDs by running throught one pass of the PID algorithm
+ * Argument:        pids = the list of PIDs in the SSPIDs
+ *                  length = the number of PIDs in the system
+ * Return:          the updated SSPIDs
+ *
+ * Note:            * The SSPIDs should be initiated as a PID_array_t, then passed into this function to update them.
+ *                      The code should loop through the array to initilize and set targets.
+ */
+PID_array_t generateNextSSPID(PID_array_t pids, int length);
 
 /* Function:		generateMovedPID
  * Purpose:			moves the target property of prop by targetDelta
@@ -286,6 +281,7 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 // ~23.42 inches per mat
 #define INCHES_PER_MAT (WALL_TO_WALL_INCHES / WALL_TO_WALL_MATS)
 
+
 /* Function:		initializePID
  * Purpose:			Initializes the PID objects for the robot.
  * Argument:		N/A
@@ -316,6 +312,13 @@ void moveRaw(long raw);
  */
 void moveIn(float inches);
 
+/* Function:		moveMats
+ * Purpose:			moves the robot a specified amount of mats
+ * Argument:		mats = amount of mats to move
+ * Returns:			N/A
+ */
+void moveMats(float mats);
+
 /* Function:		rotateTo
  * Purpose:			rotates the robot to the specified degree
  * Argument:		deg = degree to move to
@@ -341,86 +344,154 @@ void rotateTo(float targetDeg);
  * from where it left off.
 **/
 
-
 void autonomous() {
-    /*
     // start facing other robot, twords top
-// give preload to shooter
+    initial_shooter_feed();
+
+    get_pole_side_blue_cap();
+    give_pole_side_blue_cap_balls_to_shooter();
+    place_first_cap_on_pole();
+
+    get_pole_side_red_cap();
+    place_second_cap_on_pole();
+    get_net_side_red_cap();
+
+    place_third_cap_on_pole();
+    grab_net_side_blue_cap();
+    feed_net_side_balls_to_shooter();
+
+    return_to_start();
+}
+
+
+void initial_shooter_feed() {
     moveMats(1.5);
     moveMats(-2.5);
     rotateTo(-90);
+}
 
-// get pole-side-blue cap
-    moveIn(MAT_Size*2);
+void get_pole_side_blue_cap() {
+    moveMats(2);
     getCap();
+}
 
-// give pole-side-blue cap balls to shooter
-    moveIn(-MAT_Size*2);
+void give_pole_side_blue_cap_balls_to_shooter() {
+    moveMats(-2);
     rotateTo(90);
-    moveIn(MAT_Size*3);
+    moveMats(3);
     flipCap();
+}
 
-// place first cap on pole
-    moveIn(-MAT_Size*1.5); // moveIn(-MAT_Size*2.5); (OLD)
+void place_first_cap_on_pole() {
+    moveMats(-1.5); // moveMats(-2.5); (OLD)
     rotateTo(90);
-    moveIn(MAT_Size*.5);
-    putOnPole();
+    moveMats(.5);
+    putOnSmallPole();
+}
 
-// get pole-side-red cap
-    moveIn(-MAT_Size*.5);
-    //back in same startinbg pos
+void get_pole_side_red_cap() {
+    moveMats(-.5);
+    //back in same starting pos
     rotateTo(-90);
-    moveIn(MAT_Size*.5);
+    moveMats(0.5);
     rotateTo(-90);
-    moveIn(MAT_Size*2);
+    moveMats(2);
     getCap();
+}
 
-// place second cap on pole
+void place_second_cap_on_pole() {
     rotateTo(180);
-    moveIn(MAT_Size);
+    moveMats(1);
     rotateTo(90);
-    moveIn(MAT_Size*1.5);
-    putOnPole();
+    moveMats(1.5);
+    putOnSmallPole();
+}
 
-// get net-side-red cap
-    moveIn(-MAT_Size*.5);
+void get_net_side_red_cap() {
+    moveMats(-0.5);
     rotateTo(-90);
-    moveIn(MAT_Size);
+    moveMats(1);
     rotateTo(-90);
-    moveIn(MAT_Size*3);
+    moveMats(3);
     rotateTo(-90);
-    moveIn(MAT_Size*2);
+    moveMats(2);
     getCap();
+}
 
-// place third cap on pole
+void place_third_cap_on_pole() {
     rotateTo(180);
-    moveIn(MAT_Size*2);
+    moveMats(2);
     rotateTo(90);
-    moveIn(MAT_Size*.5);
+    moveMats(0.5);
     rotateTo(-90);
-    moveIn(MAT_Size *.5);
+    moveMats(0.5);
     putOnBigPole();
+}
 
-// grab net-side-blue cap
+void grab_net_side_blue_cap() {
     rotateTo(-90);
-    moveIn(MAT_Size*1.5);
+    moveMats(1.5);
     rotateTo(-90);
-    moveIn(MAT_Size*1.5);
-    grabCap();
+    moveMats(1.5);
+    getCap();
+}
 
-// give net-side-blue balls to shooter
-    moveIn(-MAT_Size);
+void feed_net_side_balls_to_shooter() {
+    moveMats(-1);
     rotateTo(-90);
-    moveIn(MAT_Size*3);
+    moveMats(3);
     rotateTo(180);
-    moveIn(MAT_Size*1);
+    moveMats(1);
     flipCap();
+}
 
-//
+void return_to_start() {
     dropCap();
-    moveIn(-MAT_Size);
+    moveMats(-1);
     rotateTo(90);
-    */
+}
+
+#warning "Auton getCap() not complete"
+void getCap(){
+    // openClaw();
+    // moveArmTo(CAP_HEIGHT);
+    // closeClaw();
+}
+
+#warning "Auton putOnSmallPole() not complete"
+void putOnSmallPole() {
+    // // move cap above pole to prepare capping
+    // moveArmTo(POLE_CAP_PREPARE);
+    // // line up cap
+    // moveIn(POLE_SMALL_LINE_UP);
+    // moveArmTo(POLE_SMALL_HEIGHT);
+    // openClaw();
+    // moveIn(-POLE_SMALL_LINE_UP);
+}
+
+#warning "Auton putOnBigPole() not complete"
+void putOnBigPole() {
+    // // move cap above pole to prepare capping
+    // moveArmTo(POLE_PREPARE_HEIGHT);
+    // // line up cap
+    // moveIn(POLE_BIG_LINE_UP);
+    // moveArmTo(POLE_BIG_HEIGHT);
+    // openClaw();
+    // moveIn(-POLE_BIG_LINE_UP);
+}
+
+#warning "Auton flipCap() not complete"
+void flipCap(){
+    // // arm should be more than 1 cap radius above ground; maybe add check for arm > CAP_FLIP_HEIGHT
+    // moveArmTo(CAP_FLIP_HEIGHT);
+    // flipCap();
+}
+
+#warning "Auton dropCap() not complete"
+void dropCap(){
+    // // make slightly above ground so cap falls out of claw
+    // moveArmTo(CAP_FLIP_HEIGHT);
+    // openClaw();
 }
 /***************
 *initialize_C.c*
@@ -435,16 +506,12 @@ void autonomous() {
 void initialize() {
     initializePIDs();
 
-    setupMotor(1, 1, E_MOTOR_GEARSET_18);
-    setupMotor(2, 1, E_MOTOR_GEARSET_18);
-    setupMotor(11, 0, E_MOTOR_GEARSET_18);
-    setupMotor(12, 0, E_MOTOR_GEARSET_18);
-
+#warning "Testing for moveIn() enabled"
     moveIn(24);
-    while (1) {
-        printf("DONE");
-        delay(100);
-    }
+
+    printf("\n\nDONE\n");
+
+    while (1);
 }
 
 /**
@@ -489,39 +556,90 @@ void opcontrol() {
 ******/
 
 PID_properties_t generateNextPID(PID_properties_t prop) {
-	int i;
+    prop.error = calculateError(prop);
+ /* =================================================
+  * = Replaced with calculateError(), needs testing =
+  * =================================================
+
+ printf("1: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+    int avgPosition = 0;
+    for (int i = 0; i < prop.numMotorPorts; i++)
+        avgPosition += motor_get_position(prop.motorPorts[i]);
+    avgPosition /= prop.numMotorPorts;
+
+ printf("2: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ 	prop.error = prop.target - avgPosition;
+ */
+
+ printf("3: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+	if (abs(prop.error) <= prop.startSlowingValue)
+		prop.integral = 0;
+    else
+    	prop.integral += prop.error;
+
+ printf("4: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+	prop.derivative = prop.error - prop.previousError;
+	prop.previousError = prop.error;
+
+ printf("5: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+	prop.speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
+
+ printf("6: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+    if (prop.speed > 127)
+        prop.speed = 127;
+    else if (prop.speed < -127)
+        prop.speed = -127;
+
+ printf("7: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+    // printf("motor ports: ");
+	for (int i = 0; i < prop.numMotorPorts; i++) {
+		motor_move(prop.motorPorts[i], prop.speed);
+        // printf("%d(%d), ", prop.motorPorts[i], i);
+    }
+    // printf("\n");
+
+ printf("8: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+    return prop;
+}
+
+int calculateError(PID_properties_t prop) {
+ printf("1: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
 
     int avgPosition = 0;
     for (int i = 0; i < prop.numMotorPorts; i++)
         avgPosition += motor_get_position(prop.motorPorts[i]);
     avgPosition /= prop.numMotorPorts;
 
-	prop.error = prop.target - avgPosition;
-	prop.integral += prop.error;
+ printf("2: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+	return prop.target - avgPosition;
+}
 
-	if (prop.error == 0)
-		prop.integral = 0;
-	if (abs(prop.error) < prop.startSlowingValue)
-		prop.integral = 0;
+#warning "Untested function: generateNextPID()"
+PID_array_t generateNextSSPID(PID_array_t pids, int length) {
+    // calculate errors of each PID
+    int totalErrors[length];
+    for (int i = 0; i < length; i++)
+        totalErrors[i] = calculateError(pids[i]);
 
-	prop.derivative = prop.error - prop.previousError;
-	prop.previousError = prop.error;
+    // calulate each PID's distance sum from other PIDs
+    for (int i = 0; i < length; i++) {
+        // add on errors from other PIDs in system
+        for (int j = 0; j < length; j++) {
+            if (i == j) // no need to calculate for current PID
+                continue;
 
-	prop.speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
-
-    if (prop.speed > 127)
-        prop.speed = 127;
-    else if (prop.speed < -127)
-        prop.speed = -127;
-
-    // printf("motor ports: ");
-	for (i = 0; i < prop.numMotorPorts; ++i) {
-		motor_move(prop.motorPorts[i], prop.speed);
-        // printf("%d(%d), ", prop.motorPorts[i], i);
+            int dist = pids[i].error - pids[j].error;
+            // add dist to each other PID in error
+            totalErrors[i] += dist;
+        }
     }
-    // printf("\n");
 
-    return prop;
+    // store total errors back into their respective PID
+    for (int i = 0; i < length; i++)
+        pids[i].error = totalErrors[i];
+
+    // calculate PID speed normally from here
+ #warning "[PID.c ~92] SSPID not implemented"
 }
 
 PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta) {
@@ -559,16 +677,17 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 	prop.Kp = Kp;
 	prop.Ki = Ki;
 	prop.Kd = Kd;
-	prop.numMotorPorts = numMotorPorts;
-	prop.motorPorts = motorPorts;
-	prop.startSlowingValue = startSlowingValue;
 
-    prop.target = 0;
+    prop.speed = 0;
     prop.error = 0;
-    prop.previousError = 0;
-    prop.derivative = 0;
     prop.integral = 0;
+    prop.derivative = 0;
+    prop.target = 0;
+    prop.previousError = 0;
 
+	prop.motorPorts = motorPorts;
+	prop.numMotorPorts = numMotorPorts;
+	prop.startSlowingValue = startSlowingValue;
 
     // printf("ports: %d, %d\n", prop.motorPorts[0], prop.motorPorts[1]);
 	return prop;
@@ -580,11 +699,18 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 PID_properties_t leftWheels, rightWheels;
 
 void initializePIDs() {
+    setupMotor(1, 1, E_MOTOR_GEARSET_18);
+    setupMotor(2, 1, E_MOTOR_GEARSET_18);
+    setupMotor(11, 0, E_MOTOR_GEARSET_18);
+    setupMotor(12, 0, E_MOTOR_GEARSET_18);
+
     int leftWheelPorts[] = {11, 12};
     int rightWheelPorts[] = {1, 2};
+    
     float driveKp = 0.2;
     float driveKi = 0.00000035;
     float driveKd = 0.0001;
+
     leftWheels  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, 20);
     rightWheels = createPID(driveKp, driveKi, driveKd, rightWheelPorts, 2, 20);
 }
@@ -601,9 +727,11 @@ void moveRaw(long raw) {
     rightWheels = generateMovedPID(rightWheels, raw);
 
     while (!atTarget(leftWheels) && !atTarget(rightWheels)) {
+ printf("<LEFT> ");
         leftWheels = generateNextPID(leftWheels);
+ printf("<RIGHT> ");
         rightWheels = generateNextPID(rightWheels);
-// printf("speed: %d, %d\n", leftWheels.speed, rightWheels.speed);
+ printf("speed: %d, %d\n", leftWheels.speed, rightWheels.speed);
     }
 }
 void moveIn(float inches) {

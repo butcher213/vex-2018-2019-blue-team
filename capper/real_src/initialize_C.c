@@ -9,16 +9,12 @@
 void initialize() {
     initializePIDs();
 
-    setupMotor(1, 1, E_MOTOR_GEARSET_18);
-    setupMotor(2, 1, E_MOTOR_GEARSET_18);
-    setupMotor(11, 0, E_MOTOR_GEARSET_18);
-    setupMotor(12, 0, E_MOTOR_GEARSET_18);
-
+#warning "Testing for moveIn() enabled"
     moveIn(24);
-    while (1) {
-        printf("DONE");
-        delay(100);
-    }
+
+    printf("\n\nDONE\n");
+
+    while (1);
 }
 
 /**
