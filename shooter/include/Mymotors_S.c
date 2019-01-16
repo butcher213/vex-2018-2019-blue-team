@@ -66,24 +66,68 @@ void turnDeg(double deg) {
   moveIn(dist, -dist);
 
 }
-/* Function:		leftWheels
- * Purpose:			moves the left side of the robot forward
- * Arguments:	  speed: the speed of the motors
+/* Function:		stopDriveMotors
+ * Purpose:			stops all drive motors.
+ * Arguments:	  N/A
  * Returns:			N/A
  */
- /*
-void myleftWheels(float speed) {
-  motor_move(MOTOR_LEFT, speed);
-}
-*/
 
-/* Function:		rightWheels
- * Purpose:			moves the right side of the robot forward
- * Arguments:	  speed: the speed of the motors
+void stopDriveMotors(void) {
+  motor_move(MOTOR_BACK_LEFT, 0);
+  motor_move(MOTOR_FRONT_LEFT, 0);
+  motor_move(MOTOR_BACK_RIGHT, 0);
+  motor_move(MOTOR_FRONT_RIGHT, 0);
+}
+
+
+/* Function:		launchCatapult
+ * Purpose:		  Launch the catapult arm to throw a ball in autonomous
+ * Arguments:	  N/A
  * Returns:			N/A
  */
- /*
-void myrightWheels(float speed) {
-  motor_move(MOTOR_RIGHT, speed);
+
+void launchCatapult(void) {
+  stopDriveMotors();
+  while(adi_digital_read('H') == 0) {
+    motor_move(MOTOR_CATAPULT_LEFT, 127);
+    motor_move(MOTOR_CATAPULT_RIGHT, 127);
+  }
+  motor_move(MOTOR_CATAPULT_LEFT, 0);
+  motor_move(MOTOR_CATAPULT_RIGHT, 0);
 }
-*/
+/* Function:		spinLoader
+ * Purpose:		  spins the loading mechanism to load a ball into the flapper.
+ *              No exit condition
+ * Arguments:	  multiplier - a number between -1 and 1 to spin the motors at.
+  *             .75 for 75% and so on.
+ * Returns:			N/A
+ */
+
+void spinIntake(double multiplier) {
+motor_move(MOTOR_INTAKE, 127 * multiplier);
+motor_move(MOTOR_BELT, 127 * multiplier);
+}
+
+/* Function:		loadBallsIntoCatapult
+ * Purpose:		  dumps balls from the flapper wrist into the catapult
+ * Arguments:	  N/A
+ * Returns:			N/A
+ */
+
+void loadBallsIntoCatapult(void) {
+  while(adi_digital_read('A') == 0) {
+    motor_move(MOTOR_CATAPULT_LEFT, 127);
+    motor_move(MOTOR_CATAPULT_RIGHT, 127);
+  }
+  motor_move_velocity(MOTOR_CATAPULT_LEFT, 0);
+  motor_move_velocity(MOTOR_CATAPULT_RIGHT, 0);
+  delay(250);
+  // dump balls
+  motor_move_relative(MOTOR_FLAPPER, 90, 50);
+  delay(500);
+  motor_move_relative(MOTOR_FLAPPER, -90, 50);
+  delay(500);
+  motor_move(MOTOR_FLAPPER, 0);
+  motor_move(MOTOR_CATAPULT_LEFT, 0);
+  motor_move(MOTOR_CATAPULT_RIGHT, 0);
+}

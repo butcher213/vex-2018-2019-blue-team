@@ -16,10 +16,25 @@
  * from where it left off.
  */
 void autonomous() {
-  //moveIn(3 + MAT_Size);
+  // 1 for red, 0 for blue, anything else for no auton
+  int color = 1;
+  // ------------------------ red auton --------------------------------------
+  if(color == 1) {
+    // Launches preload ball and fed ball into the top targets
+    spinIntake(1);
+    delay(5000);
+    spinIntake(0);
+    loadBallsIntoCatapult();
+    moveIn(TILE_LENGTH, TILE_LENGTH);
+    delay(500);
+    launchCatapult();
+    // push the lower flag
+    moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
+  } else if(color == 0) {
+    // ------------------------ blue auton -------------------------------------
 
-  double leftDist = 12;
-  double rightDist = 12;
-  printf("go\n");
-//  moveIn(leftDist, rightDist);
+  } else {
+
+
+  }
 }
