@@ -30,12 +30,14 @@ void moveRaw(long raw) {
     leftWheels = generateMovedPID(leftWheels, raw);
     rightWheels = generateMovedPID(rightWheels, raw);
 
-    while (!atTarget(leftWheels) && !atTarget(rightWheels)) {
+    // while (!atTarget(leftWheels) && !atTarget(rightWheels)) {
+    for (int i = 0; i < 100; i++) {
  printf("<LEFT> ");
         leftWheels = generateNextPID(leftWheels);
  printf("<RIGHT> ");
         rightWheels = generateNextPID(rightWheels);
- printf("speed: %d, %d\n", leftWheels.speed, rightWheels.speed);
+ // printf("speed: %d, %d\n", leftWheels.speed, rightWheels.speed);
+ printf("\n");
     }
 }
 void moveIn(float inches) {

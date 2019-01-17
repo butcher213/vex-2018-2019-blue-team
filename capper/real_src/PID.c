@@ -1,42 +1,33 @@
 #include "../include/PID.h"
 #include "../include/main_C.h"
 
+void p(int n, PID_properties_t prop) {
+    printf("%d: %d, %d | ", n, prop.motorPorts[0], prop.motorPorts[1]);
+}
+
 PID_properties_t generateNextPID(PID_properties_t prop) {
     prop.error = calculateError(prop);
- /* =================================================
-  * = Replaced with calculateError(), needs testing =
-  * =================================================
 
- printf("1: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
-    int avgPosition = 0;
-    for (int i = 0; i < prop.numMotorPorts; i++)
-        avgPosition += motor_get_position(prop.motorPorts[i]);
-    avgPosition /= prop.numMotorPorts;
-
- printf("2: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
- 	prop.error = prop.target - avgPosition;
- */
-
- printf("3: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ p(3, prop);
 	if (abs(prop.error) <= prop.startSlowingValue)
 		prop.integral = 0;
     else
     	prop.integral += prop.error;
 
- printf("4: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ p(4, prop);
 	prop.derivative = prop.error - prop.previousError;
 	prop.previousError = prop.error;
 
- printf("5: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ p(5, prop);
 	prop.speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
 
- printf("6: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ p(6, prop);
     if (prop.speed > 127)
         prop.speed = 127;
     else if (prop.speed < -127)
         prop.speed = -127;
 
- printf("7: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ p(7, prop);
     // printf("motor ports: ");
 	for (int i = 0; i < prop.numMotorPorts; i++) {
 		motor_move(prop.motorPorts[i], prop.speed);
@@ -44,19 +35,19 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
     }
     // printf("\n");
 
- printf("8: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ p(8, prop);
     return prop;
 }
 
 int calculateError(PID_properties_t prop) {
- printf("1: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ p(1, prop);
 
     int avgPosition = 0;
     for (int i = 0; i < prop.numMotorPorts; i++)
         avgPosition += motor_get_position(prop.motorPorts[i]);
     avgPosition /= prop.numMotorPorts;
 
- printf("2: %d, %d", prop.motorPorts[0], prop.motorPorts[1]);
+ p(2, prop);
 	return prop.target - avgPosition;
 }
 
@@ -85,7 +76,7 @@ PID_array_t generateNextSSPID(PID_array_t pids, int length) {
         pids[i].error = totalErrors[i];
 
     // calculate PID speed normally from here
- #warning "[PID.c ~92] SSPID not implemented"
+ #warning "[PID.c ~92] SSPID not implemented "
 }
 
 PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta) {
@@ -135,6 +126,6 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 	prop.numMotorPorts = numMotorPorts;
 	prop.startSlowingValue = startSlowingValue;
 
-    // printf("ports: %d, %d\n", prop.motorPorts[0], prop.motorPorts[1]);
+    printf("ports: %d, %d\n", prop.motorPorts[0], prop.motorPorts[1]);
 	return prop;
 }
