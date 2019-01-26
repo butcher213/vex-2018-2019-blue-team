@@ -23,11 +23,27 @@ void armControl() {
 }
 
 void driveControl() {
-    int leftDriveSpeed = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_LEFT_STICK);
-    int rightDriveSpeed = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_RIGHT_STICK);
+    int leftY  = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_LEFT_STICK);
+    int rightY = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_RIGHT_STICK);
+    int leftX  = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_LEFT_STRAFE_STICK);
+    int rightX = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_RIGHT_STRAFE_STICK);
 
-    leftDrive(leftDriveSpeed);
-    rightDrive(rightDriveSpeed);
+//---- TANK DRIVE
+    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
+    // leftDrive(driveScaled);
+    // rightDrive(driveScaled);
+
+//---- ARCADE DRIVE [R] (RIGHT DRIVE, LEFT TURN)
+    int turningScaled = (leftX * leftX * leftX) / (127 * 127);
+    int driveScaled = (rightY * rightY * rightY) / (127 * 127);
+    leftDrive(driveScaled + turningScaled);
+    rightDrive(driveScaled - turningScaled);
+
+//---- ARCADE DRIVE [L] (LEFT DRIVE, RIGHT TURN)
+    // int turningScaled = (rightX * rightX * rightX) / (127 * 127);
+    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
+    // leftDrive(driveScaled - turningScaled);
+    // rightDrive(driveScaled + turningScaled);
 }
 
 void clawControl() {

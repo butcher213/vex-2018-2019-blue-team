@@ -36,6 +36,7 @@ void setupMotor(int port, int reversed, int gearset);
  * Returns:			N/A
  */
 void moveRaw(long raw);
+void moveRaw2(long raw);
 
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
@@ -57,6 +58,10 @@ void moveMats(float mats);
  * Return:			N/A
  */
 void rotateTo(float targetDeg);
+
+long leftDrivePos();
+long rightDrivePos();
+long drivePos();
 
 
 #endif // _SENSORS_H_
