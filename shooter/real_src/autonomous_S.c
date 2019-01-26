@@ -17,7 +17,7 @@
  */
 void autonomous() {
   // 1 for red, 0 for blue, anything else for no auton
-  int color = 1;
+/*  int color = 1;
   // ------------------------ red auton --------------------------------------
   if(color == 1) {
     // Launches preload ball and fed ball into the top targets
@@ -36,5 +36,5 @@ void autonomous() {
   } else {
 
 
-  }
+  }*/
 }

@@ -32,6 +32,7 @@ void initMotors(int motor, int gearset, bool reversed) {
 // }
 
 
+
 /* Function:		initDrive
  * Purpose:			Get PID's Made
  * Arguments:	  PIDs: PID_properties_t for left and right, left: left target, right: right target
@@ -44,13 +45,13 @@ void initPID() {
   static int rightMotorPorts[] = {MOTOR_BACK_RIGHT, MOTOR_FRONT_RIGHT};
   rightMotors = createPID(0.5, 0.000009, 0.009, rightMotorPorts, 2, 40);
   static int leftMotorPorts[] = {MOTOR_BACK_LEFT, MOTOR_FRONT_LEFT};
-  PID_properties_t leftMotors = createPID(0.5, 0.000009, 0.009, leftMotorPorts, 2, 40);
+  leftMotors = createPID(0.5, 0.000009, 0.009, leftMotorPorts, 2, 40);
 }
 
 
 void moveIn(double left, double right) {
   PID_properties_t a[2] = {generateMovedPID(leftMotors, 360/(4*PI)*left), generateMovedPID(rightMotors, 360/(4*PI)*right)};
-  printf("%d\n", atTarget(a[0]);
+  printf("%d\n", atTarget(a[0]));
   while (!atTarget(a[0]) && !atTarget(a[1])) {
     a[0] = generateNextPID(a[0]);
     a[1] = generateNextPID(a[1]);
@@ -115,7 +116,7 @@ motor_move(MOTOR_BELT, 127 * multiplier);
  */
 
 void loadBallsIntoCatapult(void) {
-  while(adi_digital_read('A') == 0) {
+  while(adi_digital_read('G') == 0) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
@@ -123,9 +124,9 @@ void loadBallsIntoCatapult(void) {
   motor_move_velocity(MOTOR_CATAPULT_RIGHT, 0);
   delay(250);
   // dump balls
-  motor_move_relative(MOTOR_FLAPPER, 90, 50);
+  motor_move(MOTOR_FLAPPER, 50);
   delay(500);
-  motor_move_relative(MOTOR_FLAPPER, -90, 50);
+  motor_move(MOTOR_FLAPPER, -50);
   delay(500);
   motor_move(MOTOR_FLAPPER, 0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
