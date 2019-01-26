@@ -23,100 +23,7 @@ void initialize() {
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
   initPID();
   int drivingVar = 1;
-  while(1){
 
-    /* Tank Drive */
-    if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1) && drivingVar){
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
-    }
-    else if(drivingVar){
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
-    }
-
-    /* Modified Arcade Drive */
-    /*if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1) && drivingVar){
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / 4);
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / 4);
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / -4);
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / -4);
-    }
-    else if(drivingVar){
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X));
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X));
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) * -1);
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) * -1);
-    }*/
-
-    /* Classic Arcade Drive */
-  /*  if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1) && drivingVar){
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
-
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) / 4);
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) / 4);
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) / -4);
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) / -4);
-    }
-    else if(drivingVar){
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
-
-      motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X));
-      motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X));
-      motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) * -1);
-      motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) * -1);
-    }*/
-
-
-    /* Digital Buttons */
-    if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1){
-      motor_move(MOTOR_CATAPULT_LEFT, 127);
-      motor_move(MOTOR_CATAPULT_RIGHT, 127);
-      motor_move(MOTOR_BACK_LEFT, 0);
-      motor_move(MOTOR_FRONT_LEFT, 0);
-      motor_move(MOTOR_BACK_RIGHT, 0);
-      motor_move(MOTOR_FRONT_RIGHT, 0);
-      drivingVar = 0;
-    }
-    if(adi_digital_read('H') == 1){
-      motor_move(MOTOR_CATAPULT_LEFT, 0);
-      motor_move(MOTOR_CATAPULT_RIGHT, 0);
-      drivingVar = 1;
-    }
-    if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
-      motor_move(MOTOR_INTAKE, 127);
-      motor_move(MOTOR_BELT, 127);
-    }
-    else{
-      motor_move(MOTOR_INTAKE, 0);
-      motor_move(MOTOR_BELT, 0);
-    }
-    if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_B) == 1){
-      motor_move(MOTOR_CATAPULT_LEFT, 0);
-      motor_move(MOTOR_CATAPULT_RIGHT, 0);
-      drivingVar = 1;
-    }
-  }
   int color = 1;
   // ------------------------ red auton --------------------------------------
   if(color == 1) {
@@ -125,7 +32,7 @@ void initialize() {
     delay(5000);
     spinIntake(0);
     loadBallsIntoCatapult();
-    moveIn(TILE_LENGTH, TILE_LENGTH);
+    moveIn(5, 5);
     stopDriveMotors();
     delay(1000);
     launchCatapult();
@@ -133,7 +40,7 @@ void initialize() {
     // push the lower flag
     moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
   }
-  }
+}
 
 
   /* Move Inches Prototype */
