@@ -1,6 +1,5 @@
 #include "../include/main_C.h"
 #include "../include/Motors_C.h"
-
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -16,29 +15,52 @@
  */
 
 void armControl() {
-    int armSpeed = controller_get_digital(ARM_CONTROLLER, ARM_UP_BTN);
+    int _armSpeed = 127 * ARM_UP * controller_get_digital(ARM_CONTROLLER, ARM_UP_BTN);
+    _armSpeed += 127 * ARM_DOWN * controller_get_digital(ARM_CONTROLLER, ARM_DN_BTN);
 
-    armSpeed(armSpeed);
+    printf("%d\n", _armSpeed);
+    armSpeed(_armSpeed);
 }
 
 void driveControl() {
-    int leftDriveSpeed = controller_get_analog(DRIVE_CONTROLLER, DRIVE_LEFT_STICK);
-    int rightDriveSpeed = controller_get_analog(DRIVE_CONTROLLER, DRIVE_RIGHT_STICK);
+    int leftY  = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_LEFT_STICK);
+    int rightY = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_RIGHT_STICK);
+    int leftX  = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_LEFT_STRAFE_STICK);
+    int rightX = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_RIGHT_STRAFE_STICK);
 
-    leftDrive(leftDriveSpeed);
-    rightDrive(rightDriveSpeed);
+//---- TANK DRIVE
+    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
+    // leftDrive(driveScaled);
+    // rightDrive(driveScaled);
+
+//---- ARCADE DRIVE [R] (RIGHT DRIVE, LEFT TURN)
+    int turningScaled = (leftX * leftX * leftX) / (127 * 127);
+    int driveScaled = (rightY * rightY * rightY) / (127 * 127);
+    leftDrive(driveScaled + turningScaled);
+    rightDrive(driveScaled - turningScaled);
+
+//---- ARCADE DRIVE [L] (LEFT DRIVE, RIGHT TURN)
+    // int turningScaled = (rightX * rightX * rightX) / (127 * 127);
+    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
+    // leftDrive(driveScaled - turningScaled);
+    // rightDrive(driveScaled + turningScaled);
 }
 
 void clawControl() {
-    int clawSpeed = controller_get_digital(CLAW_CONTROLLER, CLAW_BTN);
-    int clawRotateSpeed = controller_get_digital(CLAW_CONTROLLER, CLAW_ROTATE_BTN);
+    int _clawSpeed = 127 * CLAW_OPEN * controller_get_digital(CLAW_CONTROLLER, CLAW_OPEN_BTN);
+    _clawSpeed += 127 * CLAW_CLOSE * controller_get_digital(CLAW_CONTROLLER, CLAW_CLOSE_BTN);
 
-    clawSpeed(clawSpeed);
+    int clawRotateSpeed = 127 * CLAW_CW * controller_get_digital(CLAW_CONTROLLER, CLAW_CW_BTN);
+    clawRotateSpeed += 127 * CLAW_CCW * controller_get_digital(CLAW_CONTROLLER, CLAW_CCW_BTN);
+
+    clawSpeed(_clawSpeed);
     clawRotate(clawRotateSpeed);
 }
 
 void opcontrol() {
-    armControl();
-    driveControl();
-    clawControl();
+    while (1) {
+        armControl();
+        driveControl();
+        clawControl();
+    }
 }

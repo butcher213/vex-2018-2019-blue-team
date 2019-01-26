@@ -1,15 +1,12 @@
 #include "main_S.h"
-
+#ifndef PI
 #define PI 3.1415
-
+#endif
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
  * Argument:		inches = amount of inches to move
  * Returns:			N/A
  */
-void moveIn(int inches) {
-
-}
 
 /* Function:		rotateTo
  * Purpose:			rotates the robot to the specified degree

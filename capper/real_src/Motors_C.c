@@ -23,3 +23,7 @@ void clawRotate(int direction) {
 void clawSpeed(int speed) {
     motor_move(CLAW_PORT, speed);
 }
+
+void t() {
+    armSpeed(10);
+}
