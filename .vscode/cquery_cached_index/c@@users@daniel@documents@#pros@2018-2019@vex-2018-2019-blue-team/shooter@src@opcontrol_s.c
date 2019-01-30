@@ -13,8 +13,11 @@
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+ /* Current Driving Code 1/15/2019*/
 void opcontrol() {
   int drivingVar = 1;
+  int loadToggle = 0;
   while(1){
 
     /* Tank Drive */
@@ -32,7 +35,7 @@ void opcontrol() {
     }*/
 
     /* Modified Arcade Drive */
-    /*if((controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1) && drivingVar){
+    if((controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1) && drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
@@ -53,10 +56,10 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) * -1);
       motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) * -1);
-    }*/
+    }
 
     /* Classic Arcade Drive */
-    if((controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1) && drivingVar){
+    /*if((controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
@@ -77,11 +80,13 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) * -1);
       motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) * -1);
-    }
+    }*/
 
 
     /* Digital Buttons */
-    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1){
+
+    /* Shoot Chunk */
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1){
       motor_move(MOTOR_CATAPULT_LEFT, 127);
       motor_move(MOTOR_CATAPULT_RIGHT, 127);
       motor_move(MOTOR_BACK_LEFT, 0);
@@ -90,23 +95,45 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_RIGHT, 0);
       drivingVar = 0;
     }
+
+    /* Sensor Trigger, Stop Shooting */
     if(adi_digital_read('H') == 1){
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
       drivingVar = 1;
     }
-    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
+
+    /* Intake Ball - On */
+    if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R1) == 1){
       motor_move(MOTOR_INTAKE, 127);
       motor_move(MOTOR_BELT, 127);
     }
+    /* Intake Ball - Off */
     else{
       motor_move(MOTOR_INTAKE, 0);
       motor_move(MOTOR_BELT, 0);
     }
+
+    /* Manual Shooting Cancel */
     if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_B) == 1){
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
       drivingVar = 1;
+    }
+
+    if((controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_A) == 1) && (loadToggle == 0))
+    {
+      motor_move(MOTOR_FLAPPER, 50);
+      loadToggle = 1;
+    }
+    else if((controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_A) == 1) && (loadToggle == 1))
+    {
+      motor_move(MOTOR_FLAPPER, -50);
+      loadToggle = 0;
+    }
+    else
+    {
+      motor_move(MOTOR_FLAPPER, 0);
     }
   }
 }

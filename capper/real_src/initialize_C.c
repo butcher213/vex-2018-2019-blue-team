@@ -10,9 +10,10 @@ void initialize() {
     initializePIDs();
 
 #warning "Testing for moveIn() enabled"
-    moveIn(24);
+    moveInTmp(24, 24);
+    // moveIn(24);
 
-    printf("\n\nDONE\n");
+    printf("\n\nINIT DONE\n");
 
     while (1);
 }

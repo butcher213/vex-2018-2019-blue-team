@@ -120,15 +120,15 @@ void loadBallsIntoCatapult(void) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
-  motor_move_velocity(MOTOR_CATAPULT_LEFT, 0);
-  motor_move_velocity(MOTOR_CATAPULT_RIGHT, 0);
-  delay(250);
+  motor_move_velocity(MOTOR_CATAPULT_LEFT, 1);
+  motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
+  delay(100);
   // dump balls
-  motor_move(MOTOR_FLAPPER, 50);
+  motor_move_absolute(MOTOR_FLAPPER, 200, 60);
   delay(500);
-  motor_move(MOTOR_FLAPPER, -50);
+  motor_move_absolute(MOTOR_FLAPPER, -20, 75);
   delay(500);
-  motor_move(MOTOR_FLAPPER, 0);
+  motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
   motor_move(MOTOR_CATAPULT_RIGHT, 0);
 }

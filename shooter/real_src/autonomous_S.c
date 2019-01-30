@@ -15,26 +15,25 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {
+/*void autonomous() {
   // 1 for red, 0 for blue, anything else for no auton
-/*  int color = 1;
-  // ------------------------ red auton --------------------------------------
+int color = 1;
   if(color == 1) {
     // Launches preload ball and fed ball into the top targets
     spinIntake(1);
     delay(5000);
     spinIntake(0);
     loadBallsIntoCatapult();
-    moveIn(TILE_LENGTH, TILE_LENGTH);
-    delay(500);
+    moveIn(5, 5);
+    stopDriveMotors();
+    delay(1000);
     launchCatapult();
+    delay(1000);
     // push the lower flag
     moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
-  } else if(color == 0) {
     // ------------------------ blue auton -------------------------------------
 
   } else {
-
 
   }*/
 }
