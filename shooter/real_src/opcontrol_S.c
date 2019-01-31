@@ -166,9 +166,9 @@ void opcontrol() {
       motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
       delay(100);
       // dump balls
-      motor_move_absolute(MOTOR_FLAPPER, 200, 60);
+      motor_move_relative(MOTOR_FLAPPER, 220, 60);
       delay(500);
-      motor_move_absolute(MOTOR_FLAPPER, -20, 75);
+      motor_move_relative(MOTOR_FLAPPER, -220, 75);
       delay(500);
       motor_move(MOTOR_FLAPPER,0);
       motor_move(MOTOR_CATAPULT_LEFT, 0);

@@ -32,7 +32,7 @@ void initialize() {
     delay(5000);
     spinIntake(0);
     loadBallsIntoCatapult();
-    moveIn(5, 5);
+    moveIn(-12, -12);
     stopDriveMotors();
     delay(1000);
     launchCatapult();

@@ -147,7 +147,7 @@
 #define _MYMOTORS_H_
 
 #define MOTOR_FRONT_LEFT 11
-#define MOTOR_FRONT_RIGHT 3
+#define MOTOR_FRONT_RIGHT 13
 #define MOTOR_BACK_LEFT 2
 #define MOTOR_BACK_RIGHT 4
 #define MOTOR_CATAPULT_LEFT 5
@@ -315,9 +315,9 @@ void PID_control();
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-/*void autonomous() {
+void autonomous() {
   // 1 for red, 0 for blue, anything else for no auton
-int color = 1;
+/*int color = 1;
   if(color == 1) {
     // Launches preload ball and fed ball into the top targets
     spinIntake(1);
@@ -372,7 +372,7 @@ void initialize() {
     delay(5000);
     spinIntake(0);
     loadBallsIntoCatapult();
-    moveIn(5, 5);
+    moveIn(-12, -12);
     stopDriveMotors();
     delay(1000);
     launchCatapult();
@@ -553,9 +553,9 @@ void loadBallsIntoCatapult(void) {
   motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
   delay(100);
   // dump balls
-  motor_move_absolute(MOTOR_FLAPPER, 200, 60);
+  motor_move_relative(MOTOR_FLAPPER, 220, 60);
   delay(500);
-  motor_move_absolute(MOTOR_FLAPPER, -20, 75);
+  motor_move_relative(MOTOR_FLAPPER, -220, 75);
   delay(500);
   motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
@@ -730,9 +730,9 @@ void opcontrol() {
       motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
       delay(100);
       // dump balls
-      motor_move_absolute(MOTOR_FLAPPER, 200, 60);
+      motor_move_relative(MOTOR_FLAPPER, 220, 60);
       delay(500);
-      motor_move_absolute(MOTOR_FLAPPER, -20, 75);
+      motor_move_relative(MOTOR_FLAPPER, -220, 75);
       delay(500);
       motor_move(MOTOR_FLAPPER,0);
       motor_move(MOTOR_CATAPULT_LEFT, 0);
