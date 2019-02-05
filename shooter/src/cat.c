@@ -366,7 +366,7 @@ void initialize() {
 
   int color = 1;
   // ------------------------ red auton --------------------------------------
-  if(color == 1) {
+/*  if(color == 1) {
     // Launches preload ball and fed ball into the top targets
     spinIntake(1);
     delay(5000);
@@ -380,7 +380,7 @@ void initialize() {
     // push the lower flag
     moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
   }
-}
+}*/
 
 
   /* Move Inches Prototype */
