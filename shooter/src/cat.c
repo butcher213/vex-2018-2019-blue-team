@@ -149,7 +149,7 @@
 #define MOTOR_FRONT_LEFT 11
 #define MOTOR_FRONT_RIGHT 3
 #define MOTOR_BACK_LEFT 2
-#define MOTOR_BACK_RIGHT 4
+#define MOTOR_BACK_RIGHT 13
 #define MOTOR_CATAPULT_LEFT 5
 #define MOTOR_CATAPULT_RIGHT 6
 #define MOTOR_INTAKE 7
@@ -336,7 +336,7 @@ int color = 1;
   } else {
 
   }*/
-}
+//}
 /***************
 *initialize_S.c*
 ***************/
@@ -354,8 +354,8 @@ void on_center_button() {
  */
 void initialize() {
   initMotors(MOTOR_FRONT_LEFT, E_MOTOR_GEARSET_18, 0);
-  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_18, 1);
-  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_36, 1);
+  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_36, 1);
   initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
@@ -363,14 +363,13 @@ void initialize() {
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
   initPID();
   int drivingVar = 1;
-
   int color = 1;
   // ------------------------ red auton --------------------------------------
   if(color == 1) {
     // Launches preload ball and fed ball into the top targets
-    spinIntake(1);
+    /*spinIntake(1);
     delay(5000);
-    spinIntake(0);
+    spinIntake(0);*/
     loadBallsIntoCatapult();
     moveIn(5, 5);
     stopDriveMotors();
@@ -381,7 +380,6 @@ void initialize() {
     moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
   }
 }
-
 
   /* Move Inches Prototype */
 
@@ -440,6 +438,7 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
+  // motor_tare_position(motor);
  }
 
 
@@ -480,13 +479,24 @@ void initPID() {
 
 void moveIn(double left, double right) {
   PID_properties_t a[2] = {generateMovedPID(leftMotors, 360/(4*PI)*left), generateMovedPID(rightMotors, 360/(4*PI)*right)};
+
   printf("%d\n", atTarget(a[0]));
+  bool flag = 0;
+  //a[0].error = a[1].error;
+  leftMotors = a[0];
+  rightMotors = a[1];
+
   while (!atTarget(a[0]) && !atTarget(a[1])) {
     a[0] = generateNextPID(a[0]);
     a[1] = generateNextPID(a[1]);
+  //  printf("Left: %d       Right: %d\n", atTarget(a[1]), atTarget(a[0]));
   }
   leftMotors = a[0];
   rightMotors = a[1];
+  motor_move(MOTOR_FRONT_LEFT, 0);
+  motor_move(MOTOR_FRONT_RIGHT, 0);
+  motor_move(MOTOR_BACK_LEFT, 0);
+  motor_move(MOTOR_BACK_RIGHT, 0);
 }
 
 
@@ -518,10 +528,17 @@ void stopDriveMotors(void) {
 
 void launchCatapult(void) {
   stopDriveMotors();
-  while(adi_digital_read('H') == 0) {
+  printf("voltage : %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT));
+  int max = 0;
+  while(motor_get_current_draw(MOTOR_CATAPULT_LEFT) < 1900) {
+    if(motor_get_current_draw(MOTOR_CATAPULT_LEFT) > max ) {
+    printf("max: %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT));
+    max = motor_get_current_draw(MOTOR_CATAPULT_LEFT);
+  }
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
+  //delay(50);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
   motor_move(MOTOR_CATAPULT_RIGHT, 0);
 }
@@ -553,9 +570,11 @@ void loadBallsIntoCatapult(void) {
   motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
   delay(100);
   // dump balls
-  motor_move_absolute(MOTOR_FLAPPER, 200, 60);
+  motor_move(MOTOR_FLAPPER, -25);
   delay(500);
-  motor_move_absolute(MOTOR_FLAPPER, -20, 75);
+  motor_move(MOTOR_FLAPPER,0);
+  delay(500);
+  motor_move(MOTOR_FLAPPER, 25);
   delay(500);
   motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
@@ -694,9 +713,9 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_RIGHT, 0);
       drivingVar = 0;
     }
-
     /* Sensor Triggered Cancel Shooting */
-    if(adi_digital_read('H') == 1){
+    if(motor_get_current_draw(MOTOR_CATAPULT_LEFT) > 1550){
+      delay(50);
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
       drivingVar = 1;
@@ -769,10 +788,10 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
 
-    if (speed > 127)
-        speed = 127;
-    else if (speed < -127)
-        speed = -127;
+    if (speed > 75)
+        speed = 75;
+    else if (speed < -75)
+        speed = -75;
 
 	for (i = 0; i < prop.numMotorPorts; ++i)
 		motor_move(prop.motorPorts[i], speed);
@@ -789,7 +808,6 @@ PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta) 
 PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, long long target) {
     left = generateMovedPID(left, -target);
     right = generateMovedPID(right, target);
-
     do {
         left = generateNextPID(left);
         right = generateNextPID(right);
@@ -802,7 +820,7 @@ PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, 
 }
 
 int atTarget(PID_properties_t prop) {
-    return isStopped(prop) && abs(prop.error) < 5;
+    return isStopped(prop) && abs(prop.error) < 10;
 }
 
 int isStopped(PID_properties_t prop) {
