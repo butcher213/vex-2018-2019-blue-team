@@ -25,6 +25,7 @@ void initialize() {
   int drivingVar = 1;
 
   int color = 1;
+}
   // ------------------------ red auton --------------------------------------
 /*  if(color == 1) {
     // Launches preload ball and fed ball into the top targets
