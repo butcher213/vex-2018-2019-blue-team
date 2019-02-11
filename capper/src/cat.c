@@ -220,12 +220,12 @@ void clawSpeed(int speed);
 ******/
 #ifndef _PID_H_
 #define _PID_H_
+// #warning "In PID header"
 
 typedef struct {
 	double Kp;
 	double Ki;
 	double Kd;
-    int speed;
 	long long error;
 	long long integral;
 	long long derivative;
@@ -240,29 +240,11 @@ typedef PID_properties_t *PID_array_t;
 
 
 /* Function:		generateNextPID
- * Purpose:			updates the PID_properties_t by running through one pass of the PID algorithm
+ * Purpose:			Updates the PID_properties_t by running through one pass of the PID algorithm
  * Argument:		prop = the property to be updated
  * Return:			the next PID_properties_t object
  */
 PID_properties_t generateNextPID(PID_properties_t prop);
-
-/* Function:        calculateError
- * Purpose:         calculates error for prop (distance from target)
- * Argument:        prop = the property which error will be calculated for
- * Return:          the calculated error of prop
- */
-int calculateError(PID_properties_t prop);
-
-/* Function:        generateNextSSPID
- * Purpose:         updates the system of synchronized PIDs by running throught one pass of the PID algorithm
- * Argument:        pids = the list of PIDs in the SSPIDs
- *                  length = the number of PIDs in the system
- * Return:          the updated SSPIDs
- *
- * Note:            * The SSPIDs should be initiated as a PID_array_t, then passed into this function to update them.
- *                      The code should loop through the array to initilize and set targets.
- */
-PID_array_t generateNextSSPID(PID_array_t pids, int length);
 
 /* Function:		generateMovedPID
  * Purpose:			moves the target property of prop by targetDelta
@@ -307,6 +289,34 @@ int isStopped(PID_properties_t prop);
  */
 PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, long long startSlowingValue);
 
+/* !EXPERIMENTAL!
+ * Function:		applyRealTimeCorrection
+ * Purpose:         adjusts the derivative of the PID_properties_t object so that it will be more accurate on the next move
+ * Argument:        prop = the PID_properties_t object to which the algorithm will be applied
+ * Return:			the next PID_properties_t object
+ */
+PID_properties_t applyRealTimeCorrection(PID_properties_t prop);
+
+/* Function:        findKpid_Ziegler
+ * Purpose:         find the constants for PID using Ziegler-Nichols method
+ * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
+                    numMotorPorts = the length of numMotorPorts
+                    startSlowingValue = the error value where teh motors will start to slow down
+                    target = the distance to move the motor for testing
+ * Return:          the created PID_properties_t object
+ */
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
+
+/* Function:        findKpid_manual
+ * Purpose:         find the constants for PID using manual method
+ * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
+                    numMotorPorts = the length of numMotorPorts
+                    startSlowingValue = the error value where teh motors will start to slow down
+                    target = the distance to move the motor for testing
+ * Return:          the created PID_properties_t object
+ */
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
+
 
 
 #endif // _PID_H_
@@ -321,6 +331,7 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 #define WHEEL_CIRCUMFERENCE (WHEEL_DIAMETER * PI)
 #define MOTOR_COUNT_PER_REVOLUTION 4554752
 #define MOTOR_COUNTS_PER_INCH ((double) MOTOR_COUNT_PER_REVOLUTION / WHEEL_CIRCUMFERENCE)
+#define MOTOR_DEGREES_PER_INCH ((double) 360 / WHEEL_CIRCUMFERENCE)
 #define Pole_Hight_Small 23.0
 #define Pole_Hight_Large 34.0
 #define WALL_TO_WALL_INCHES 140.5
@@ -335,6 +346,8 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
  * Returns:			N/A
  */
 void initializePIDs();
+
+void initializeMotors();
 
 /* Function:        setupMotor
  * Purpose:			Initializes the motor with raw encoder counts.
@@ -351,6 +364,7 @@ void setupMotor(int port, int reversed, int gearset);
  * Returns:			N/A
  */
 void moveRaw(long raw);
+void moveRaw2(long raw);
 
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
@@ -372,6 +386,10 @@ void moveMats(float mats);
  * Return:			N/A
  */
 void rotateTo(float targetDeg);
+
+long leftDrivePos();
+long rightDrivePos();
+long drivePos();
 
 
 #endif // _SENSORS_H_
@@ -552,14 +570,14 @@ void dropCap(){
 **/
 void initialize() {
     initializePIDs();
+    initializeMotors();
 
-#warning "Testing for moveIn() enabled"
-    moveInTmp(24, 24);
-    // moveIn(24);
-
-    printf("\n\nINIT DONE\n");
-
-    while (1);
+ // #warning "Testing for moveIn() enabled"
+ //    moveIn(24);
+ //
+ //    printf("\n\nINIT DONE\n");
+ //
+ //    while (1);
 }
 
 /**
@@ -679,78 +697,42 @@ void opcontrol() {
 /******
 *PID.c*
 ******/
+// #warning "In PID source"
 
 void p(int n, PID_properties_t prop) {
     printf("@id %d: %d, %d; %d | ", n, prop.motorPorts[0], prop.motorPorts[1], prop.motorPorts);
 }
 
 PID_properties_t generateNextPID(PID_properties_t prop) {
- p(0, prop);
-    prop.error = calculateError(prop);
-
-	if (abs(prop.error) <= prop.startSlowingValue)
-		prop.integral = 0;
-    else
-    	prop.integral += prop.error;
-
- p(25, prop);
-	prop.derivative = prop.error - prop.previousError;
-	prop.previousError = prop.error;
-
-	prop.speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
-
- p(50, prop);
-    if (prop.speed > 127)
-        prop.speed = 127;
-    else if (prop.speed < -127)
-        prop.speed = -127;
-
-    // printf("motor ports: ");
-	for (int i = 0; i < prop.numMotorPorts; i++) {
-		motor_move(prop.motorPorts[i], prop.speed);
-        // printf("%d(%d), ", prop.motorPorts[i], i);
-    }
-    // printf("\n");
-
- p(100, prop);
-    return prop;
-}
-
-int calculateError(PID_properties_t prop) {
+	int speed, i;
+ // p(0, prop);
     int avgPosition = 0;
     for (int i = 0; i < prop.numMotorPorts; i++)
         avgPosition += motor_get_position(prop.motorPorts[i]);
     avgPosition /= prop.numMotorPorts;
 
-	return prop.target - avgPosition;
-}
+	prop.error = prop.target - avgPosition;
+	prop.integral += prop.error;
 
-#warning "Untested function: generateNextPID()"
-PID_array_t generateNextSSPID(PID_array_t pids, int length) {
-    // calculate errors of each PID
-    int totalErrors[length];
-    for (int i = 0; i < length; i++)
-        totalErrors[i] = calculateError(pids[i]);
+	if (prop.error == 0)
+		prop.integral = 0;
+	if (abs(prop.error) < prop.startSlowingValue)
+		prop.integral = 0;
 
-    // calulate each PID's distance sum from other PIDs
-    for (int i = 0; i < length; i++) {
-        // add on errors from other PIDs in system
-        for (int j = 0; j < length; j++) {
-            if (i == j) // no need to calculate for current PID
-                continue;
+	prop.derivative = prop.error - prop.previousError;
+	prop.previousError = prop.error;
 
-            int dist = pids[i].error - pids[j].error;
-            // add dist to each other PID in error
-            totalErrors[i] += dist;
-        }
-    }
+	speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
 
-    // store total errors back into their respective PID
-    for (int i = 0; i < length; i++)
-        pids[i].error = totalErrors[i];
+    if (speed > 127)
+        speed = 127;
+    else if (speed < -127)
+        speed = -127;
 
-    // calculate PID speed normally from here
- #warning "[PID.c ~92] SSPID not implemented "
+	for (i = 0; i < prop.numMotorPorts; ++i)
+		motor_move(prop.motorPorts[i], speed);
+
+    return prop;
 }
 
 PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta) {
@@ -775,8 +757,7 @@ PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, 
 }
 
 int atTarget(PID_properties_t prop) {
-    // return isStopped(prop) && abs(prop.error) < 5;
-    return abs(prop.error) < 5;
+    return isStopped(prop) && abs(prop.error) < 5;
 }
 
 int isStopped(PID_properties_t prop) {
@@ -789,52 +770,144 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 	prop.Kp = Kp;
 	prop.Ki = Ki;
 	prop.Kd = Kd;
-
-    prop.speed = 0;
-    prop.error = 0;
-    prop.integral = 0;
-    prop.derivative = 0;
-    prop.target = 0;
-    prop.previousError = 0;
-
-	prop.motorPorts = motorPorts;
 	prop.numMotorPorts = numMotorPorts;
+	prop.motorPorts = motorPorts;
 	prop.startSlowingValue = startSlowingValue;
 
-    printf("ports: %d, %d; %d\n", prop.motorPorts[0], prop.motorPorts[1], prop.motorPorts);
+    prop.target = 0;
+    prop.error = 0;
+    prop.previousError = 0;
+    prop.derivative = 0;
+    prop.integral = 0;
+
 	return prop;
+}
+
+PID_properties_t applyRealTimeCorrection(PID_properties_t prop) {
+    if (isStopped(prop)) {
+        if (prop.error < 0) { // robot went too far; derivative is too high
+            prop.Ki -= .0000000001;
+        }
+        else if (prop.error > 0) { // robot did not go far enough; derivative is too low
+            prop.Ki += .0000000001;
+        }
+    }
+
+    return prop;
+}
+
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target) {
+    PID_properties_t prop = createPID(.05, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
+
+    int dir = 1;
+
+    while (1) {
+        prop.target = target * dir;
+        prop.error = target; // error can only be at max to begin with
+
+        int lastDir = 2 * dir - 1;
+        long lastPeriodMeasured; // first measurement will be bad
+        for (int i = 0; i < 1000 && !atTarget(prop);) {
+            prop = generateNextPID(prop);
+
+            // is this pass the start of a new period measurement?
+            int currentDir = (prop.derivative > 0)? 1: -1;
+
+            // if (changed direction of motion && direction starts new period)
+            if (currentDir == -lastDir && currentDir == 2 * dir - 1) {
+                // set priod to be new measured value
+                long now = millis();
+                long period = now - lastPeriodMeasured;
+                lastPeriodMeasured = now;
+
+                // print new period to console
+                printf("Pu=%6d | Ku=%5.2f\n", period, prop.Kp);
+            }
+
+            lastDir = currentDir;
+
+            // determine if the robot is no long longer going to move
+            if (isStopped(prop))
+                i++;
+            else
+                i = 0;
+        }
+
+        prop.Kp += .05;
+
+        dir = 1 - dir; // switch directions
+        delay(1500); // wait for robot to settle
+    }
+}
+
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target) {
+    PID_properties_t prop = createPID(0, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
+
+    int dir = 1; // 1 for forward, 0 for return to starts. switch w/ dir = 1-dir;
+
+    // the Kp, Ki, Kd tuning constants, acceptable errors
+    double tuningVars[3][2] = { {.03,            20}, // for Kp
+                                {.002,          10}, // for Kd
+                                {.0000000001,   5}}; // for Ki
+
+    for (int i = 0; i < 3; i++) {
+        do {
+            prop.target = target * dir;
+            prop.error = target; // error can only be at max to begin with
+
+printf("> ");
+            switch (i) {
+                case 0:
+                    prop.Kp += tuningVars[0][0];
+printf("p%f | ", prop.Kp);
+                    break;
+                case 1:
+                    prop.Kd += tuningVars[1][0];
+printf("d%f | ", prop.Kd);
+                    break;
+                case 2:
+                    prop.Ki += tuningVars[2][0];
+printf("i%f | ", prop.Ki);
+                    break;
+            }
+
+printf("%d | %f | %f -> ", i, prop.error, prop.Kp);
+            for (int j = 0; j < 1000 && abs(prop.error) > tuningVars[i][1];) {
+                prop = generateNextPID(prop);
+
+                // determine if the robot is no long longer going to move
+                if (isStopped(prop))
+                    j++;
+                else
+                    j = 0;
+printf(" j%d|d%f", j, prop.derivative);
+            }
+printf("%f | %f\n", prop.error, prop.Kp);
+
+            dir = 1 - dir; // switch directions
+            delay(1500); // wait for robot to settle
+        } while (abs(prop.error) > tuningVars[i][1]);
+    }
+
+
+    // print out values
+    while (1)
+        printf("Kpid=%5.2f | %5.2f | %5.2f\n", prop.Kp, prop.Ki, prop.Kd);
 }
 /************
 *Sensors_C.c*
 ************/
 
 PID_properties_t wheelsLeft, wheelsRight;
-
-void moveInTmp(double left, double right) {
- printf("moveInTmp START: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
-	
-	//PID_properties_t a[2] = {generateMovedPID(wheelsLeft, 360/(4*PI)*left), generateMovedPID(wheelsRight, 360/(4*PI)*right)};
- printf("moveInTmp MID: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
-
-	// while (!atTarget(a[0]) && !atTarget(a[1])) {
-    //for (int i = 0; i < 100; i++) {
-		//a[0] = generateNextPID(a[0]);
-		//a[1] = generateNextPID(a[1]);
-	//}
- printf("moveInTmp END: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
-
-	//wheelsLeft = a[0];
-	//wheelsRight = a[1];
-}
+int leftWheelPorts[] = {11, 12};
+int rightWheelPorts[] = {1, 2};
 
 void initializePIDs() {
-    setupMotor(1, 1, E_MOTOR_GEARSET_18);
-    setupMotor(2, 1, E_MOTOR_GEARSET_18);
-    setupMotor(11, 0, E_MOTOR_GEARSET_18);
-    setupMotor(12, 0, E_MOTOR_GEARSET_18);
+    setupMotor(DRIVE_RIGHT_FRONT_PORT, 1, E_MOTOR_GEARSET_18);
+    setupMotor(DRIVE_RIGHT_REAR_PORT, 1, E_MOTOR_GEARSET_18);
+    setupMotor(DRIVE_LEFT_FRONT_PORT, 0, E_MOTOR_GEARSET_18);
+    setupMotor(DRIVE_LEFT_REAR_PORT, 0, E_MOTOR_GEARSET_18);
 
-    int leftWheelPorts[] = {11, 12};
-    int rightWheelPorts[] = {1, 2};
 
     float driveKp = 0.2;
     float driveKi = 0.00000035;
@@ -842,33 +915,46 @@ void initializePIDs() {
 
     wheelsLeft  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, 20);
     wheelsRight = createPID(driveKp, driveKi, driveKd, rightWheelPorts, 2, 20);
- printf("PID init ports: L = %.2f, %.2f | R = %.2f, %.2f\n", leftWheelPorts[0], leftWheelPorts[1], rightWheelPorts[0], rightWheelPorts[1]);
- printf("PID init: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
+ printf("PID init ports: L = %d,%d | R = %d, %d\n", leftWheelPorts[0], leftWheelPorts[1], rightWheelPorts[0], rightWheelPorts[1]);
+ printf("PID init: L = %d,%d | R = %d, %d\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
+}
+
+void initializeMotors() {
+    setupMotor(ARM_LEFT_PORT, 1, E_MOTOR_GEARSET_18);
+    setupMotor(ARM_RIGHT_PORT, 0, E_MOTOR_GEARSET_18);
+
+    setupMotor(CLAW_ROTATE_PORT, 0, E_MOTOR_GEARSET_18);
+    setupMotor(CLAW_PORT, 0, E_MOTOR_GEARSET_18);
 }
 
 void setupMotor(int port, int reversed, int gearset) {
 	motor_set_gearing(port, gearset);
 	motor_set_reversed(port, reversed);
-	motor_set_encoder_units(port, E_MOTOR_ENCODER_COUNTS);
+	motor_set_encoder_units(port, E_MOTOR_ENCODER_DEGREES);
     motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
 }
 
 void moveRaw(long raw) {
     wheelsLeft = generateMovedPID(wheelsLeft, raw);
     wheelsRight = generateMovedPID(wheelsRight, raw);
-
-    // while (!atTarget(wheelsLeft) && !atTarget(wheelsRight)) {
-    for (int i = 0; i < 100; i++) {
- printf("<LEFT> ");
+    
+    while (!atTarget(wheelsLeft) && !atTarget(wheelsRight)) {
+    // for (int i = 0; i < 100; i++) {
+ // printf("<LEFT> ");
         wheelsLeft = generateNextPID(wheelsLeft);
- printf("<RIGHT> ");
+ // printf("<RIGHT> ");
         wheelsRight = generateNextPID(wheelsRight);
- // printf("speed: %d, %d\n", wheelsLeft.speed, wheelsRight.speed);
- printf("\n");
+ // printf("error: %lld, %lld\n", wheelsLeft.error, wheelsRight.error);
+ // printf("speed: %lld, %lld\n", wheelsLeft.previousError, wheelsRight.previousError);
+ // printf("encoder: %.2f, %.2f\n", motor_get_position(1), motor_get_position(11));
+ // printf("\n");
     }
 }
+void moveRaw2(long raw) {
+	// while (drivePos()
+}
 void moveIn(float inches) {
-    moveRaw(inches * MOTOR_COUNTS_PER_INCH);
+    moveRaw(inches * MOTOR_DEGREES_PER_INCH);
 }
 void moveMats(float mats) {
     moveIn(mats * INCHES_PER_MAT);
@@ -876,4 +962,14 @@ void moveMats(float mats) {
 
 void rotateTo(float targetDeg) {
 
+}
+
+long leftDrivePos() {
+	return (motor_get_position(wheelsLeft.motorPorts[0]) + motor_get_position(wheelsLeft.motorPorts[1])) / 2;
+}
+long rightDrivePos() {
+	return (motor_get_position(wheelsRight.motorPorts[0]) + motor_get_position(wheelsRight.motorPorts[1])) / 2;
+}
+long drivePos() {
+	return (leftDrivePos() + rightDrivePos()) / 2;
 }

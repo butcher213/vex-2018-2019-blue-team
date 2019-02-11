@@ -8,11 +8,11 @@
 **/
 void initialize() {
     initializePIDs();
+    initializeMotors();
 
-#warning "Testing for moveIn() enabled"
-    moveInTmp(24, 24);
-    // moveIn(24);
-
+ #warning "Testing for moveIn() enabled"
+    moveIn(24);
+ 
     printf("\n\nINIT DONE\n");
 
     while (1);

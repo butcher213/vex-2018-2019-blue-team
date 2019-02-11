@@ -11,7 +11,7 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
- }
+}/* encoders not working | they do not count */
 
 
 /* Function:		initDrive
@@ -120,15 +120,15 @@ void loadBallsIntoCatapult(void) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
-  motor_move_velocity(MOTOR_CATAPULT_LEFT, 0);
-  motor_move_velocity(MOTOR_CATAPULT_RIGHT, 0);
-  delay(250);
+  motor_move_velocity(MOTOR_CATAPULT_LEFT, 1);
+  motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
+  delay(100);
   // dump balls
-  motor_move(MOTOR_FLAPPER, 50);
+  motor_move_absolute(MOTOR_FLAPPER, 200, 60);
   delay(500);
-  motor_move(MOTOR_FLAPPER, -50);
+  motor_move_absolute(MOTOR_FLAPPER, -20, 75);
   delay(500);
-  motor_move(MOTOR_FLAPPER, 0);
+  motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
   motor_move(MOTOR_CATAPULT_RIGHT, 0);
 }

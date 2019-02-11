@@ -6,6 +6,7 @@
 #define WHEEL_CIRCUMFERENCE (WHEEL_DIAMETER * PI)
 #define MOTOR_COUNT_PER_REVOLUTION 4554752
 #define MOTOR_COUNTS_PER_INCH ((double) MOTOR_COUNT_PER_REVOLUTION / WHEEL_CIRCUMFERENCE)
+#define MOTOR_DEGREES_PER_INCH ((double) 360 / WHEEL_CIRCUMFERENCE)
 #define Pole_Hight_Small 23.0
 #define Pole_Hight_Large 34.0
 #define WALL_TO_WALL_INCHES 140.5
@@ -20,6 +21,8 @@
  * Returns:			N/A
  */
 void initializePIDs();
+
+void initializeMotors();
 
 /* Function:        setupMotor
  * Purpose:			Initializes the motor with raw encoder counts.
