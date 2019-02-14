@@ -23,10 +23,10 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
 
-    if (speed > 127)
-        speed = 127;
-    else if (speed < -127)
-        speed = -127;
+    if (speed > 75)
+        speed = 75;
+    else if (speed < -75)
+        speed = -75;
 
 	for (i = 0; i < prop.numMotorPorts; ++i)
 		motor_move(prop.motorPorts[i], speed);
@@ -43,7 +43,6 @@ PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta) 
 PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, long long target) {
     left = generateMovedPID(left, -target);
     right = generateMovedPID(right, target);
-
     do {
         left = generateNextPID(left);
         right = generateNextPID(right);
@@ -56,7 +55,7 @@ PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, 
 }
 
 int atTarget(PID_properties_t prop) {
-    return isStopped(prop) && abs(prop.error) < 5;
+    return isStopped(prop) && abs(prop.error) < 10;
 }
 
 int isStopped(PID_properties_t prop) {

@@ -14,8 +14,8 @@ void on_center_button() {
  */
 void initialize() {
   initMotors(MOTOR_FRONT_LEFT, E_MOTOR_GEARSET_18, 0);
-  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_18, 1);
-  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_36, 1);
+  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_36, 1);
   initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
@@ -23,15 +23,14 @@ void initialize() {
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
   initPID();
   int drivingVar = 1;
-
   int color = 1;
 }
   // ------------------------ red auton --------------------------------------
 /*  if(color == 1) {
     // Launches preload ball and fed ball into the top targets
-    spinIntake(1);
+    /*spinIntake(1);
     delay(5000);
-    spinIntake(0);
+    spinIntake(0);*/
     loadBallsIntoCatapult();
     moveIn(-12, -12);
     stopDriveMotors();
@@ -42,7 +41,6 @@ void initialize() {
     moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
   }
 }*/
-
 
   /* Move Inches Prototype */
 
