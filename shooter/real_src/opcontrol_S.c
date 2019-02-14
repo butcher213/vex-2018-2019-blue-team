@@ -176,9 +176,12 @@ void opcontrol() {
 
     }
 
-    //double leftPower = motor_get_power(MOTOR_CATAPULT_LEFT);
-    //double rightPower = motor_get_power(MOTOR_CATAPULT_RIGHT);
-    //printf("LEFT: %lf   RIGHT: %lf\n", leftPower, rightPower);
+    double leftPower = motor_get_power(MOTOR_CATAPULT_LEFT);
+    double rightPower = motor_get_power(MOTOR_CATAPULT_RIGHT);
+    printf("LEFT: %lf   RIGHT: %lf\n", leftPower, rightPower);
+
+
+    
 
   }
 }
