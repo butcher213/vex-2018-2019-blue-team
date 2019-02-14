@@ -16,12 +16,12 @@
 #define CLAW_CW_BTN         E_CONTROLLER_DIGITAL_B
 #define CLAW_CCW_BTN        E_CONTROLLER_DIGITAL_A
 
-#define ARM_LEFT_PORT           20
-#define ARM_RIGHT_PORT          10
-#define DRIVE_LEFT_FRONT_PORT   11
-#define DRIVE_LEFT_REAR_PORT    12
-#define DRIVE_RIGHT_FRONT_PORT  1
-#define DRIVE_RIGHT_REAR_PORT   2
+#define ARM_LEFT_PORT           10
+#define ARM_RIGHT_PORT          20
+#define DRIVE_LEFT_FRONT_PORT   1
+#define DRIVE_LEFT_REAR_PORT    2
+#define DRIVE_RIGHT_FRONT_PORT  11
+#define DRIVE_RIGHT_REAR_PORT   12
 #define CLAW_ROTATE_PORT        9
 #define CLAW_PORT               8
 

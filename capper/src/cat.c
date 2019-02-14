@@ -189,12 +189,12 @@ void dropCap();
 #define CLAW_CW_BTN         E_CONTROLLER_DIGITAL_B
 #define CLAW_CCW_BTN        E_CONTROLLER_DIGITAL_A
 
-#define ARM_LEFT_PORT           20
-#define ARM_RIGHT_PORT          10
-#define DRIVE_LEFT_FRONT_PORT   11
-#define DRIVE_LEFT_REAR_PORT    12
-#define DRIVE_RIGHT_FRONT_PORT  1
-#define DRIVE_RIGHT_REAR_PORT   2
+#define ARM_LEFT_PORT           10
+#define ARM_RIGHT_PORT          20
+#define DRIVE_LEFT_FRONT_PORT   1
+#define DRIVE_LEFT_REAR_PORT    2
+#define DRIVE_RIGHT_FRONT_PORT  11
+#define DRIVE_RIGHT_REAR_PORT   12
 #define CLAW_ROTATE_PORT        9
 #define CLAW_PORT               8
 
@@ -329,15 +329,22 @@ PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long s
 #define PI 3.1415
 #define WHEEL_DIAMETER ((4 + 4.25)/2)
 #define WHEEL_CIRCUMFERENCE (WHEEL_DIAMETER * PI)
-#define MOTOR_COUNT_PER_REVOLUTION 4554752
-#define MOTOR_COUNTS_PER_INCH ((double) MOTOR_COUNT_PER_REVOLUTION / WHEEL_CIRCUMFERENCE)
-#define MOTOR_DEGREES_PER_INCH ((double) 360 / WHEEL_CIRCUMFERENCE)
 #define Pole_Hight_Small 23.0
 #define Pole_Hight_Large 34.0
 #define WALL_TO_WALL_INCHES 140.5
 #define WALL_TO_WALL_MATS 6
 // ~23.42 inches per mat
 #define INCHES_PER_MAT (WALL_TO_WALL_INCHES / WALL_TO_WALL_MATS)
+// Driving constants
+#define MOTOR_COUNT_PER_REVOLUTION 4554752
+#define MOTOR_COUNTS_PER_INCH  ((double) MOTOR_COUNT_PER_REVOLUTION / WHEEL_CIRCUMFERENCE)
+#define MOTOR_DEGREES_PER_INCH ((double) 360 / WHEEL_CIRCUMFERENCE)
+// Turning constants
+#define ROBOT_ROTATION_MOTOR_COUNTS 1200
+// #define ROBOT_ROTATION_MOTOR_COUNTS 988.78
+#define ROBOT_ROTATION_COUNTS_PER_DEGREE (ROBOT_ROTATION_MOTOR_COUNTS / 360)
+#define ROBOT_ROTATION_TURN_LEFT 1
+#define ROBOT_ROTATION_TURN_RIGHT -ROBOT_ROTATION_TURN_LEFT
 
 
 /* Function:		initializePID
@@ -358,13 +365,14 @@ void initializeMotors();
  */
 void setupMotor(int port, int reversed, int gearset);
 
+void moveDrivePID();
+
 /* Function:		moveRaw
  * Purpose:			move the robot the specified number of raw counts
  * Argument:		raw = number of raw encoder counts to move
  * Returns:			N/A
  */
 void moveRaw(long raw);
-void moveRaw2(long raw);
 
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
@@ -572,12 +580,22 @@ void initialize() {
     initializePIDs();
     initializeMotors();
 
- // #warning "Testing for moveIn() enabled"
- //    moveIn(24);
- //
- //    printf("\n\nINIT DONE\n");
- //
- //    while (1);
+ #warning "Testing for moveIn() enabled"
+    // moveIn(36);
+    // moveMats(1);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 360);
+
+    printf("\n\nINIT DONE\n");
+
+    while (1) {
+    //     printf("%f | %f | %f | %f    \n",
+    //             motor_get_position(1),
+    //             motor_get_position(2),
+    //             motor_get_position(11),
+    //             motor_get_position(12));
+    //
+    //     delay(1000);
+    }
 }
 
 /**
@@ -659,21 +677,22 @@ void driveControl() {
     int rightX = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_RIGHT_STRAFE_STICK);
 
 //---- TANK DRIVE
-    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
-    // leftDrive(driveScaled);
-    // rightDrive(driveScaled);
+    // int driveScaledL = (leftY * leftY * leftY) / (127 * 127);
+    // int driveScaledR = (rightY * rightY * rightY) / (127 * 127);
+    // leftDrive(driveScaledL);
+    // rightDrive(driveScaledR);
 
 //---- ARCADE DRIVE [R] (RIGHT DRIVE, LEFT TURN)
-    int turningScaled = (leftX * leftX * leftX) / (127 * 127);
-    int driveScaled = (rightY * rightY * rightY) / (127 * 127);
-    leftDrive(driveScaled + turningScaled);
-    rightDrive(driveScaled - turningScaled);
+    // int turningScaled = (leftX * leftX * leftX) / (127 * 127);
+    // int driveScaled = (rightY * rightY * rightY) / (127 * 127);
+    // leftDrive(driveScaled + turningScaled);
+    // rightDrive(driveScaled - turningScaled);
 
 //---- ARCADE DRIVE [L] (LEFT DRIVE, RIGHT TURN)
-    // int turningScaled = (rightX * rightX * rightX) / (127 * 127);
-    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
-    // leftDrive(driveScaled - turningScaled);
-    // rightDrive(driveScaled + turningScaled);
+    int turningScaled = (rightX * rightX * rightX) / (127 * 127);
+    int driveScaled = (leftY * leftY * leftY) / (127 * 127);
+    leftDrive(driveScaled - turningScaled);
+    rightDrive(driveScaled + turningScaled);
 }
 
 void clawControl() {
@@ -910,7 +929,7 @@ void initializePIDs() {
 
 
     float driveKp = 0.2;
-    float driveKi = 0.00000035;
+    float driveKi = 0.0000018; // orig = 0.00000035
     float driveKd = 0.0001;
 
     wheelsLeft  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, 20);
@@ -934,10 +953,7 @@ void setupMotor(int port, int reversed, int gearset) {
     motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
 }
 
-void moveRaw(long raw) {
-    wheelsLeft = generateMovedPID(wheelsLeft, raw);
-    wheelsRight = generateMovedPID(wheelsRight, raw);
-    
+void moveDrivePID() {
     while (!atTarget(wheelsLeft) && !atTarget(wheelsRight)) {
     // for (int i = 0; i < 100; i++) {
  // printf("<LEFT> ");
@@ -946,12 +962,16 @@ void moveRaw(long raw) {
         wheelsRight = generateNextPID(wheelsRight);
  // printf("error: %lld, %lld\n", wheelsLeft.error, wheelsRight.error);
  // printf("speed: %lld, %lld\n", wheelsLeft.previousError, wheelsRight.previousError);
- // printf("encoder: %.2f, %.2f\n", motor_get_position(1), motor_get_position(11));
- // printf("\n");
+ printf("encoder: %.2f, %.2f\n", motor_get_position(1), motor_get_position(11));
+ printf("\n");
     }
 }
-void moveRaw2(long raw) {
-	// while (drivePos()
+
+void moveRaw(long raw) {
+    wheelsLeft = generateMovedPID(wheelsLeft, raw);
+    wheelsRight = generateMovedPID(wheelsRight, raw);
+
+    moveDrivePID();
 }
 void moveIn(float inches) {
     moveRaw(inches * MOTOR_DEGREES_PER_INCH);
@@ -961,7 +981,12 @@ void moveMats(float mats) {
 }
 
 void rotateTo(float targetDeg) {
+    long targetRaw = targetDeg * ROBOT_ROTATION_COUNTS_PER_DEGREE;
 
+    wheelsLeft = generateMovedPID(wheelsLeft, targetRaw);
+    wheelsRight = generateMovedPID(wheelsRight, -targetRaw);
+
+    moveDrivePID();
 }
 
 long leftDrivePos() {

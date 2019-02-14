@@ -12,7 +12,7 @@ void initializePIDs() {
 
 
     float driveKp = 0.2;
-    float driveKi = 0.00000035;
+    float driveKi = 0.0000018; // orig = 0.00000035
     float driveKd = 0.0001;
 
     wheelsLeft  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, 20);
@@ -36,10 +36,7 @@ void setupMotor(int port, int reversed, int gearset) {
     motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
 }
 
-void moveRaw(long raw) {
-    wheelsLeft = generateMovedPID(wheelsLeft, raw);
-    wheelsRight = generateMovedPID(wheelsRight, raw);
-    
+void moveDrivePID() {
     while (!atTarget(wheelsLeft) && !atTarget(wheelsRight)) {
     // for (int i = 0; i < 100; i++) {
  // printf("<LEFT> ");
@@ -48,12 +45,16 @@ void moveRaw(long raw) {
         wheelsRight = generateNextPID(wheelsRight);
  // printf("error: %lld, %lld\n", wheelsLeft.error, wheelsRight.error);
  // printf("speed: %lld, %lld\n", wheelsLeft.previousError, wheelsRight.previousError);
- // printf("encoder: %.2f, %.2f\n", motor_get_position(1), motor_get_position(11));
- // printf("\n");
+ printf("encoder: %.2f, %.2f\n", motor_get_position(1), motor_get_position(11));
+ printf("\n");
     }
 }
-void moveRaw2(long raw) {
-	// while (drivePos()
+
+void moveRaw(long raw) {
+    wheelsLeft = generateMovedPID(wheelsLeft, raw);
+    wheelsRight = generateMovedPID(wheelsRight, raw);
+
+    moveDrivePID();
 }
 void moveIn(float inches) {
     moveRaw(inches * MOTOR_DEGREES_PER_INCH);
@@ -63,7 +64,12 @@ void moveMats(float mats) {
 }
 
 void rotateTo(float targetDeg) {
+    long targetRaw = targetDeg * ROBOT_ROTATION_COUNTS_PER_DEGREE;
 
+    wheelsLeft = generateMovedPID(wheelsLeft, targetRaw);
+    wheelsRight = generateMovedPID(wheelsRight, -targetRaw);
+
+    moveDrivePID();
 }
 
 long leftDrivePos() {

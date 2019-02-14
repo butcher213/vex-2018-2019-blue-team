@@ -11,11 +11,21 @@ void initialize() {
     initializeMotors();
 
  #warning "Testing for moveIn() enabled"
-    moveIn(24);
- 
+    // moveIn(36);
+    // moveMats(1);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 360);
+
     printf("\n\nINIT DONE\n");
 
-    while (1);
+    while (1) {
+    //     printf("%f | %f | %f | %f    \n",
+    //             motor_get_position(1),
+    //             motor_get_position(2),
+    //             motor_get_position(11),
+    //             motor_get_position(12));
+    //
+    //     delay(1000);
+    }
 }
 
 /**
