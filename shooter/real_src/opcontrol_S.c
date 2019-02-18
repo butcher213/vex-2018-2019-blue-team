@@ -130,9 +130,9 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_RIGHT, 0);
       drivingVar = 0;
     }
-
     /* Sensor Triggered Cancel Shooting */
-    if(adi_digital_read('H') == 1){
+    if(motor_get_current_draw(MOTOR_CATAPULT_LEFT) > 1550){
+      delay(50);
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
       drivingVar = 1;

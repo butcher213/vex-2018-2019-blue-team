@@ -11,7 +11,12 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
+<<<<<<< HEAD
 }/* encoders not working | they do not count */
+=======
+  // motor_tare_position(motor);
+ }
+>>>>>>> 98da6422f82f19338661a4e408db8a5ce2d88f2b
 
 
 /* Function:		initDrive
@@ -51,13 +56,24 @@ void initPID() {
 
 void moveIn(double left, double right) {
   PID_properties_t a[2] = {generateMovedPID(leftMotors, 360/(4*PI)*left), generateMovedPID(rightMotors, 360/(4*PI)*right)};
+
   printf("%d\n", atTarget(a[0]));
+  bool flag = 0;
+  //a[0].error = a[1].error;
+  leftMotors = a[0];
+  rightMotors = a[1];
+
   while (!atTarget(a[0]) && !atTarget(a[1])) {
     a[0] = generateNextPID(a[0]);
     a[1] = generateNextPID(a[1]);
+  //  printf("Left: %d       Right: %d\n", atTarget(a[1]), atTarget(a[0]));
   }
   leftMotors = a[0];
   rightMotors = a[1];
+  motor_move(MOTOR_FRONT_LEFT, 0);
+  motor_move(MOTOR_FRONT_RIGHT, 0);
+  motor_move(MOTOR_BACK_LEFT, 0);
+  motor_move(MOTOR_BACK_RIGHT, 0);
 }
 
 
@@ -89,10 +105,17 @@ void stopDriveMotors(void) {
 
 void launchCatapult(void) {
   stopDriveMotors();
-  while(adi_digital_read('H') == 0) {
+  printf("voltage : %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT));
+  int max = 0;
+  while(motor_get_current_draw(MOTOR_CATAPULT_LEFT) < 1900) {
+    if(motor_get_current_draw(MOTOR_CATAPULT_LEFT) > max ) {
+    printf("max: %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT));
+    max = motor_get_current_draw(MOTOR_CATAPULT_LEFT);
+  }
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
+  //delay(50);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
   motor_move(MOTOR_CATAPULT_RIGHT, 0);
 }
@@ -124,9 +147,11 @@ void loadBallsIntoCatapult(void) {
   motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
   delay(100);
   // dump balls
-  motor_move_absolute(MOTOR_FLAPPER, 200, 60);
+  motor_move(MOTOR_FLAPPER, -25);
   delay(500);
-  motor_move_absolute(MOTOR_FLAPPER, -20, 75);
+  motor_move(MOTOR_FLAPPER,0);
+  delay(500);
+  motor_move(MOTOR_FLAPPER, 25);
   delay(500);
   motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);

@@ -48,14 +48,18 @@ void driveControl() {
 }
 
 void clawControl() {
-    int _clawSpeed = 127 * CLAW_OPEN * controller_get_digital(CLAW_CONTROLLER, CLAW_OPEN_BTN);
-    _clawSpeed += 127 * CLAW_CLOSE * controller_get_digital(CLAW_CONTROLLER, CLAW_CLOSE_BTN);
+    // int _clawSpeed = 127 * CLAW_OPEN * controller_get_digital(CLAW_CONTROLLER, CLAW_OPEN_BTN);
+    // _clawSpeed += 127 * CLAW_CLOSE * controller_get_digital(CLAW_CONTROLLER, CLAW_CLOSE_BTN);
+    //
+    // int clawRotateSpeed = 127 * CLAW_CW * controller_get_digital(CLAW_CONTROLLER, CLAW_CW_BTN);
+    // clawRotateSpeed += 127 * CLAW_CCW * controller_get_digital(CLAW_CONTROLLER, CLAW_CCW_BTN);
+    //
+    // clawSpeed(_clawSpeed);
+    // clawRotate(clawRotateSpeed);
 
-    int clawRotateSpeed = 127 * CLAW_CW * controller_get_digital(CLAW_CONTROLLER, CLAW_CW_BTN);
-    clawRotateSpeed += 127 * CLAW_CCW * controller_get_digital(CLAW_CONTROLLER, CLAW_CCW_BTN);
-
-    clawSpeed(_clawSpeed);
-    clawRotate(clawRotateSpeed);
+    if(controller_get_digital(CLAW_CONTROLLER, CLAW_ROTATE_BTN)) {
+        claw180Rotate();
+    }
 }
 
 void opcontrol() {

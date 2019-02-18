@@ -1,6 +1,5 @@
 #include "PID.h"
 #include "main.h"
-// #warning "In PID source"
 
 void p(int n, PID_properties_t prop) {
     printf("@id %d: %d, %d; %d | ", n, prop.motorPorts[0], prop.motorPorts[1], prop.motorPorts);
@@ -19,7 +18,7 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	if (prop.error == 0)
 		prop.integral = 0;
-	if (abs(prop.error) < prop.startSlowingValue)
+	if (abs(prop.error) > prop.startSlowingValue)
 		prop.integral = 0;
 
 	prop.derivative = prop.error - prop.previousError;
@@ -60,7 +59,7 @@ PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, 
 }
 
 int atTarget(PID_properties_t prop) {
-    return isStopped(prop) && abs(prop.error) < 5;
+    return abs(prop.error) < 5;
 }
 
 int isStopped(PID_properties_t prop) {
