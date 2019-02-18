@@ -59,9 +59,16 @@ void moveIn(double left, double right) {
   leftMotors = a[0];
   rightMotors = a[1];
 
-  while (!atTarget(a[0]) && !atTarget(a[1])) {
-    a[0] = generateNextPID(a[0]);
-    a[1] = generateNextPID(a[1]);
+  while (1) {
+    if(!atTarget(a[0])){
+      a[0] = generateNextPID(a[0]);
+    }
+    if(!atTarget(a[1])){
+      a[1] = generateNextPID(a[1]);
+    }
+    if(atTarget(a[0]) & atTarget(a[1])){
+      break;
+    }
   //  printf("Left: %d       Right: %d\n", atTarget(a[1]), atTarget(a[0]));
   }
   leftMotors = a[0];
