@@ -44,26 +44,42 @@ PID_properties_t rightMotors, leftMotors;
 
 void initPID() {
   static int rightMotorPorts[] = {MOTOR_BACK_RIGHT, MOTOR_FRONT_RIGHT};
-  rightMotors = createPID(0.5, 0.000009, 0.009, rightMotorPorts, 2, 40);
+//  rightMotors = createPID(0.5, 0.00009, 0.009, rightMotorPorts, 2, 40);
+  rightMotors = createPID(0.5, 0.0001, 0.09, rightMotorPorts, 2, 40);
   static int leftMotorPorts[] = {MOTOR_BACK_LEFT, MOTOR_FRONT_LEFT};
-  leftMotors = createPID(0.5, 0.000009, 0.009, leftMotorPorts, 2, 40);
+//  leftMotors = createPID(0.5, 0.00009, 0.009, leftMotorPorts, 2, 40);
+leftMotors = createPID(0.5, 0.0001, 0.09, leftMotorPorts, 2, 40);
 }
 
 
 void moveIn(double left, double right) {
+//  left *=0.5;
+//  right *=0.5;
   PID_properties_t a[2] = {generateMovedPID(leftMotors, 360/(4*PI)*left), generateMovedPID(rightMotors, 360/(4*PI)*right)};
-
+  printf("start: %d  %d\n", a[0].error, a[1].error);
   printf("%d\n", atTarget(a[0]));
   bool flag = 0;
   //a[0].error = a[1].error;
   leftMotors = a[0];
   rightMotors = a[1];
 
-  while (!atTarget(a[0]) && !atTarget(a[1])) {
+ while (!atTarget(a[0]) && !atTarget(a[1])) {
     a[0] = generateNextPID(a[0]);
     a[1] = generateNextPID(a[1]);
-  //  printf("Left: %d       Right: %d\n", atTarget(a[1]), atTarget(a[0]));
-  }
+    //printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
+}
+printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
+/*while (1) {
+    if(!atTarget(a[0])){
+      a[0] = generateNextPID(a[0]);
+    }
+    if(!atTarget(a[1])){
+      a[1] = generateNextPID(a[1]);
+    }
+    if(atTarget(a[0]) & atTarget(a[1])){
+      break;
+    }
+}*/
   leftMotors = a[0];
   rightMotors = a[1];
   motor_move(MOTOR_FRONT_LEFT, 0);
@@ -103,14 +119,15 @@ void launchCatapult(void) {
   stopDriveMotors();
   printf("voltage : %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT));
   int max = 0;
-  while(motor_get_current_draw(MOTOR_CATAPULT_LEFT) < 1900) {
+  /*while(motor_get_current_draw(MOTOR_CATAPULT_LEFT) < 1900) {
     if(motor_get_current_draw(MOTOR_CATAPULT_LEFT) > max ) {
     printf("max: %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT));
     max = motor_get_current_draw(MOTOR_CATAPULT_LEFT);
-  }
+  }*/
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
-  }
+  //}
+  delay(750);
   //delay(50);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
   motor_move(MOTOR_CATAPULT_RIGHT, 0);
@@ -139,16 +156,17 @@ void loadBallsIntoCatapult(void) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
-  motor_move_velocity(MOTOR_CATAPULT_LEFT, 1);
-  motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
+  delay(100);
+  motor_move(MOTOR_CATAPULT_LEFT, 10);
+  motor_move(MOTOR_CATAPULT_RIGHT,10);
   delay(100);
   // dump balls
-  motor_move(MOTOR_FLAPPER, -25);
+  motor_move(MOTOR_FLAPPER, -50);
+  delay(750);
+  motor_move(MOTOR_FLAPPER, 0);
   delay(500);
-  motor_move(MOTOR_FLAPPER,0);
-  delay(500);
-  motor_move(MOTOR_FLAPPER, 25);
-  delay(500);
+  motor_move(MOTOR_FLAPPER, 50);
+  delay(750);
   motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
   motor_move(MOTOR_CATAPULT_RIGHT, 0);

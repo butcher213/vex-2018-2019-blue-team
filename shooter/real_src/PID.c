@@ -15,7 +15,7 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	if (prop.error == 0)
 		prop.integral = 0;
-	if (abs(prop.error) < prop.startSlowingValue)
+	if (abs(prop.error) > prop.startSlowingValue)
 		prop.integral = 0;
 
 	prop.derivative = prop.error - prop.previousError;
@@ -23,12 +23,12 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
 
-    if (speed > 75)
-        speed = 75;
-    else if (speed < -75)
-        speed = -75;
+    if (speed > 80)
+        speed = 80;
+    else if (speed < -80)
+        speed = -80;
 
-	for (i = 0; i < prop.numMotorPorts; ++i)
+	for (i = 0; i < prop.numMotorPorts; i++)
 		motor_move(prop.motorPorts[i], speed);
 
     return prop;
