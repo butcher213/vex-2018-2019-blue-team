@@ -132,7 +132,9 @@ void launchCatapult(void) {
 
 void spinIntake(double multiplier) {
 motor_move(MOTOR_INTAKE, 127 * multiplier);
+motor_move(MOTOR_FRONT_INTAKE, 127 * multiplier);
 motor_move(MOTOR_BELT, 127 * multiplier);
+
 }
 
 /* Function:		loadBallsIntoCatapult
@@ -142,7 +144,7 @@ motor_move(MOTOR_BELT, 127 * multiplier);
  */
 
 void loadBallsIntoCatapult(void) {
-  while(adi_digital_read('G') == 0) {
+  while(adi_digital_read('H') == 0) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }

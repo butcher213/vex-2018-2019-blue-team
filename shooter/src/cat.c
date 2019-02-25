@@ -146,13 +146,14 @@
 #ifndef _MYMOTORS_H_
 #define _MYMOTORS_H_
 
-#define MOTOR_FRONT_LEFT 11
-#define MOTOR_FRONT_RIGHT 13
-#define MOTOR_BACK_LEFT 2
-#define MOTOR_BACK_RIGHT 13
+#define MOTOR_FRONT_LEFT 20
+#define MOTOR_FRONT_RIGHT 11
+#define MOTOR_BACK_LEFT 10
+#define MOTOR_BACK_RIGHT 4
 #define MOTOR_CATAPULT_LEFT 5
 #define MOTOR_CATAPULT_RIGHT 6
 #define MOTOR_INTAKE 7
+#define MOTOR_FRONT_INTAKE 9
 #define MOTOR_FLAPPER 8
 #define MOTOR_BELT 12
 #define WHEELS_FORWARD 127
@@ -317,8 +318,7 @@ void PID_control();
  */
 void autonomous() {
   // 1 for red, 0 for blue, anything else for no auton
-/*int color = 1;
-  if(color == 1) {
+/*  int color = 1;
     // Launches preload ball and fed ball into the top targets
     spinIntake(1);
     delay(5000);
@@ -331,12 +331,17 @@ void autonomous() {
     delay(1000);
     // push the lower flag
     moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
+    moveIn(-((TILE_LENGTH *.9) + 5 + TILE_LENGTH), -((TILE_LENGTH *.9) + 5 + TILE_LENGTH));
+    if(color == 1) {
+    moveIn(7, -7);
+    }
+    else {
+    moveIn(-7, 7);
+    }
+    moveIn(TILE_LENGTH * 1.5, TILE_LENGTH * 1.5);
     // ------------------------ blue auton -------------------------------------
-
-  } else {
-
-  }*/
-//}
+*/
+}
 /***************
 *initialize_S.c*
 ***************/
@@ -371,16 +376,16 @@ void initialize() {
     /*spinIntake(1);
     delay(5000);
     spinIntake(0);*/
-    loadBallsIntoCatapult();
-    moveIn(-12, -12);
-    stopDriveMotors();
-    delay(1000);
-    launchCatapult();
-    delay(1000);
+    //loadBallsIntoCatapult();
+    //moveIn(-12, -12);
+    //stopDriveMotors();
+    //delay(1000);
+    //launchCatapult();
+    //delay(1000);
     // push the lower flag
-    moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
-  }
-}*/
+    //moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
+  //}
+//}
 
   /* Move Inches Prototype */
 
@@ -487,9 +492,16 @@ void moveIn(double left, double right) {
   leftMotors = a[0];
   rightMotors = a[1];
 
-  while (!atTarget(a[0]) && !atTarget(a[1])) {
-    a[0] = generateNextPID(a[0]);
-    a[1] = generateNextPID(a[1]);
+  while (1) {
+    if(!atTarget(a[0])){
+      a[0] = generateNextPID(a[0]);
+    }
+    if(!atTarget(a[1])){
+      a[1] = generateNextPID(a[1]);
+    }
+    if(atTarget(a[0]) & atTarget(a[1])){
+      break;
+    }
   //  printf("Left: %d       Right: %d\n", atTarget(a[1]), atTarget(a[0]));
   }
   leftMotors = a[0];
@@ -553,7 +565,9 @@ void launchCatapult(void) {
 
 void spinIntake(double multiplier) {
 motor_move(MOTOR_INTAKE, 127 * multiplier);
+motor_move(MOTOR_FRONT_INTAKE, 127 * multiplier);
 motor_move(MOTOR_BELT, 127 * multiplier);
+
 }
 
 /* Function:		loadBallsIntoCatapult
@@ -563,7 +577,7 @@ motor_move(MOTOR_BELT, 127 * multiplier);
  */
 
 void loadBallsIntoCatapult(void) {
-  while(adi_digital_read('G') == 0) {
+  while(adi_digital_read('H') == 0) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
@@ -602,6 +616,9 @@ void loadBallsIntoCatapult(void) {
 void opcontrol() {
   double flapperPos;
   int drivingVar = 1;
+
+  //initialize();
+
   while(1){
 
 /*  R2 - Shoot
@@ -628,7 +645,7 @@ void opcontrol() {
     /* Tank Drive */
 
     /* R2 Holding = Slow Drive */
-    if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
+    /*if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
@@ -637,7 +654,7 @@ void opcontrol() {
 
     /* Quick Drive, Slow Hold Disabled */
 
-    else if(drivingVar){
+    /*else if(drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
@@ -647,7 +664,7 @@ void opcontrol() {
     /* Modified Arcade Drive */
 
     /* R2 Holding = Slow Drive */
-    /*if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
+    if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
@@ -657,11 +674,11 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / 4);
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / -4);
       motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / -4);
-    }*/
+    }
 
     /* Quick Drive, Slow Hold Disabled */
 
-    /*else if(drivingVar){
+    else if(drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
@@ -671,7 +688,7 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) * -1);
       motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) * -1);
-    }*/
+    }
 
     /* Classic Arcade Drive */
 
@@ -706,6 +723,7 @@ void opcontrol() {
 
     /* Shoot */
     if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1){
+      printf("R2\n");
       motor_move(MOTOR_CATAPULT_LEFT, 127);
       motor_move(MOTOR_CATAPULT_RIGHT, 127);
       motor_move(MOTOR_BACK_LEFT, 0);
@@ -715,8 +733,8 @@ void opcontrol() {
       drivingVar = 0;
     }
     /* Sensor Triggered Cancel Shooting */
-    if(motor_get_current_draw(MOTOR_CATAPULT_LEFT) > 1550){
-      delay(50);
+    if(adi_digital_read('H') == 1){
+      delay(700);
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
       drivingVar = 1;
@@ -724,6 +742,7 @@ void opcontrol() {
 
     /* Cancell Shooting */
     if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_B) == 1){
+      printf("B\n");
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
       drivingVar = 1;
@@ -731,23 +750,27 @@ void opcontrol() {
 
     /* Intake Hold */
     if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
+      printf("L1");
       motor_move(MOTOR_INTAKE, 127);
+      motor_move(MOTOR_FRONT_INTAKE, 127);
       motor_move(MOTOR_BELT, 127);
     }
     else{
       motor_move(MOTOR_INTAKE, 0);
+      motor_move(MOTOR_FRONT_INTAKE, 0);
       motor_move(MOTOR_BELT, 0);
     }
 
     /* Flapper - Dump */
     if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_RIGHT) == 1)
     {
-      while(adi_digital_read('G') == 0) {
+      printf("Right\n");
+      while(adi_digital_read('H') == 0) {
         motor_move(MOTOR_CATAPULT_LEFT, 127);
         motor_move(MOTOR_CATAPULT_RIGHT, 127);
       }
-      motor_move_velocity(MOTOR_CATAPULT_LEFT, 1);
-      motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
+      motor_move_velocity(MOTOR_CATAPULT_LEFT, 3);
+      motor_move_velocity(MOTOR_CATAPULT_RIGHT, 3);
       delay(100);
       // dump balls
       motor_move_relative(MOTOR_FLAPPER, 220, 60);
@@ -763,6 +786,9 @@ void opcontrol() {
     //double leftPower = motor_get_power(MOTOR_CATAPULT_LEFT);
     //double rightPower = motor_get_power(MOTOR_CATAPULT_RIGHT);
     //printf("LEFT: %lf   RIGHT: %lf\n", leftPower, rightPower);
+
+
+
 
   }
 }

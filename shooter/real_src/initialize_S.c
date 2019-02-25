@@ -21,6 +21,7 @@ void initialize() {
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_FRONT_INTAKE, E_MOTOR_GEARSET_18, 1);
   initPID();
   int drivingVar = 1;
   int color = 1;
@@ -31,16 +32,16 @@ void initialize() {
     /*spinIntake(1);
     delay(5000);
     spinIntake(0);*/
-    loadBallsIntoCatapult();
-    moveIn(-12, -12);
-    stopDriveMotors();
-    delay(1000);
-    launchCatapult();
-    delay(1000);
+    //loadBallsIntoCatapult();
+    //moveIn(-12, -12);
+    //stopDriveMotors();
+    //delay(1000);
+    //launchCatapult();
+    //delay(1000);
     // push the lower flag
-    moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
-  }
-}*/
+    //moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
+  //}
+//}
 
   /* Move Inches Prototype */
 
