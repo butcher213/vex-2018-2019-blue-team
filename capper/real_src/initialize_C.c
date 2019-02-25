@@ -7,15 +7,40 @@
  * to keep execution time for this mode under a few seconds.
 **/
 void initialize() {
+<<<<<<< HEAD
+  setupMotor(10, 0, E_MOTOR_GEARSET_18);
+  setupMotor(20, 1, E_MOTOR_GEARSET_18);
+  setupMotor(9, 1, E_MOTOR_GEARSET_18);
+  setupMotor(19, 0, E_MOTOR_GEARSET_18);
+=======
+    printf("\n\nINIT START\n");
+
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
     initializePIDs();
+    initializeMotors();
 
-#warning "Testing for moveIn() enabled"
-    moveInTmp(24, 24);
-    // moveIn(24);
+ #warning "Testing for moveIn() enabled"
+    // moveIn(36);
+    // moveMats(1);
+    // rotateTo(ROBOT_ROTATION_TURN_LEFT * 180);
+    // moveRaw(1000);
 
-    printf("\n\nINIT DONE\n");
+    // moveArmTo(POLE_PREPARE_HEIGHT);
 
-    while (1);
+<<<<<<< HEAD
+=======
+    printf("\n\nINIT END\n");
+
+    while (1) {
+        printf("%f | %f | %f | %f    \n",
+                motor_get_position(1),
+                motor_get_position(2),
+                motor_get_position(11),
+                motor_get_position(12));
+
+        delay(1000);
+    }
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 }
 
 /**

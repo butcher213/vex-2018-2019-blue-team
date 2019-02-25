@@ -1,11 +1,11 @@
 #ifndef _PID_H_
 #define _PID_H_
-// #warning "In PID header"
 
 typedef struct {
 	double Kp;
 	double Ki;
 	double Kd;
+    int speed;
 	long long error;
 	long long integral;
 	long long derivative;
@@ -20,11 +20,29 @@ typedef PID_properties_t *PID_array_t;
 
 
 /* Function:		generateNextPID
- * Purpose:			Updates the PID_properties_t by running through one pass of the PID algorithm
+ * Purpose:			updates the PID_properties_t by running through one pass of the PID algorithm
  * Argument:		prop = the property to be updated
  * Return:			the next PID_properties_t object
  */
 PID_properties_t generateNextPID(PID_properties_t prop);
+
+/* Function:        calculateError
+ * Purpose:         calculates error for prop (distance from target)
+ * Argument:        prop = the property which error will be calculated for
+ * Return:          the calculated error of prop
+ */
+int calculateError(PID_properties_t prop);
+
+/* Function:        generateNextSSPID
+ * Purpose:         updates the system of synchronized PIDs by running throught one pass of the PID algorithm
+ * Argument:        pids = the list of PIDs in the SSPIDs
+ *                  length = the number of PIDs in the system
+ * Return:          the updated SSPIDs
+ *
+ * Note:            * The SSPIDs should be initiated as a PID_array_t, then passed into this function to update them.
+ *                      The code should loop through the array to initilize and set targets.
+ */
+PID_array_t generateNextSSPID(PID_array_t pids, int length);
 
 /* Function:		generateMovedPID
  * Purpose:			moves the target property of prop by targetDelta
@@ -69,35 +87,7 @@ int isStopped(PID_properties_t prop);
  */
 PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, long long startSlowingValue);
 
-/* !EXPERIMENTAL!
- * Function:		applyRealTimeCorrection
- * Purpose:         adjusts the derivative of the PID_properties_t object so that it will be more accurate on the next move
- * Argument:        prop = the PID_properties_t object to which the algorithm will be applied
- * Return:			the next PID_properties_t object
- */
-PID_properties_t applyRealTimeCorrection(PID_properties_t prop);
 
-/* Function:        findKpid_Ziegler
- * Purpose:         find the constants for PID using Ziegler-Nichols method
- * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
-                    numMotorPorts = the length of numMotorPorts
-                    startSlowingValue = the error value where teh motors will start to slow down
-                    target = the distance to move the motor for testing
- * Return:          the created PID_properties_t object
- */
-PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
-
-/* Function:        findKpid_manual
- * Purpose:         find the constants for PID using manual method
- * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
-                    numMotorPorts = the length of numMotorPorts
-                    startSlowingValue = the error value where teh motors will start to slow down
-                    target = the distance to move the motor for testing
- * Return:          the created PID_properties_t object
- */
-PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
-
-
-#include "PID.c"
+#include "../real_src/PID.c"
 
 #endif // _PID_H_

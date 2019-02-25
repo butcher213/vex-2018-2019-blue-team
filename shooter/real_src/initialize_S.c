@@ -14,8 +14,8 @@ void on_center_button() {
  */
 void initialize() {
   initMotors(MOTOR_FRONT_LEFT, E_MOTOR_GEARSET_18, 0);
-  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_36, 1);
-  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_36, 1);
+  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
@@ -24,6 +24,7 @@ void initialize() {
   initMotors(MOTOR_FRONT_INTAKE, E_MOTOR_GEARSET_18, 1);
   initPID();
   int drivingVar = 1;
+<<<<<<< HEAD
   int color = 1;
 }
   // ------------------------ red auton --------------------------------------
@@ -42,6 +43,10 @@ void initialize() {
     //moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
   //}
 //}
+=======
+
+}
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
 
   /* Move Inches Prototype */
 

@@ -146,10 +146,55 @@
 #ifndef _MYMOTORS_H_
 #define _MYMOTORS_H_
 
+<<<<<<< HEAD
 #define MOTOR_FRONT_LEFT 20
 #define MOTOR_FRONT_RIGHT 11
 #define MOTOR_BACK_LEFT 10
 #define MOTOR_BACK_RIGHT 4
+=======
+#define MOTOR_FRONT_LEFT 10
+#define MOTOR_FRONT_RIGHT 20
+#define MOTOR_BACK_LEFT 9
+#define MOTOR_BACK_RIGHT 19
+#define MOTOR_CATAPULT_LEFT 5
+#define MOTOR_CATAPULT_RIGHT 6
+#define MOTOR_INTAKE 7
+#define MOTOR_FLAPPER 8
+#define MOTOR_BELT 12
+#define WHEELS_FORWARD 127
+#define WHEELS_BACKWARD -127
+#define WHEEL_DIAMETER 4
+#define PI 3.1415
+#define TILE_LENGTH 22.5
+
+
+
+//void initMotors(int motor, int gearset, bool reversed);
+//PID_array_t initDrive(double Kp, double Ki, double Kd);
+
+void initPID();
+
+void moveIn(double left, double right);
+
+void turnDeg(double deg);
+
+void launchCatapult(void);
+
+void stopDriveMotors(void);
+
+void spinIntake(double multiplier);
+#endif // _MYMOTORS_H_
+/*****************
+*Mymotors_Sread.h*
+*****************/
+#ifndef _MYMOTORS_H_
+#define _MYMOTORS_H_
+
+#define MOTOR_FRONT_LEFT 20
+#define MOTOR_FRONT_RIGHT 14
+#define MOTOR_BACK_LEFT 10
+#define MOTOR_BACK_RIGHT 9
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
 #define MOTOR_CATAPULT_LEFT 5
 #define MOTOR_CATAPULT_RIGHT 6
 #define MOTOR_INTAKE 7
@@ -340,8 +385,21 @@ void autonomous() {
     }
     moveIn(TILE_LENGTH * 1.5, TILE_LENGTH * 1.5);
     // ------------------------ blue auton -------------------------------------
+<<<<<<< HEAD
 */
 }
+=======
+
+  } else {
+
+<<<<<<< HEAD
+  }
+}*/
+=======
+  }*/
+//}
+>>>>>>> 98da6422f82f19338661a4e408db8a5ce2d88f2b
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
 /***************
 *initialize_S.c*
 ***************/
@@ -359,8 +417,8 @@ void on_center_button() {
  */
 void initialize() {
   initMotors(MOTOR_FRONT_LEFT, E_MOTOR_GEARSET_18, 0);
-  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_36, 1);
-  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_36, 1);
+  initMotors(MOTOR_FRONT_RIGHT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_BACK_RIGHT, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
@@ -368,6 +426,16 @@ void initialize() {
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
   initPID();
   int drivingVar = 1;
+<<<<<<< HEAD
+
+=======
+<<<<<<< HEAD
+
+  moveIn(24, 24);
+  while(1);
+
+=======
+>>>>>>> 98da6422f82f19338661a4e408db8a5ce2d88f2b
   int color = 1;
 }
   // ------------------------ red auton --------------------------------------
@@ -383,9 +451,16 @@ void initialize() {
     //launchCatapult();
     //delay(1000);
     // push the lower flag
+<<<<<<< HEAD
     //moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
   //}
 //}
+=======
+    moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
+  }
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
+}
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
 
   /* Move Inches Prototype */
 
@@ -477,22 +552,36 @@ PID_properties_t rightMotors, leftMotors;
 
 void initPID() {
   static int rightMotorPorts[] = {MOTOR_BACK_RIGHT, MOTOR_FRONT_RIGHT};
-  rightMotors = createPID(0.5, 0.000009, 0.009, rightMotorPorts, 2, 40);
+//  rightMotors = createPID(0.5, 0.00009, 0.009, rightMotorPorts, 2, 40);
+  rightMotors = createPID(0.35, 0.000007, 0.003, rightMotorPorts, 2, 40);
   static int leftMotorPorts[] = {MOTOR_BACK_LEFT, MOTOR_FRONT_LEFT};
-  leftMotors = createPID(0.5, 0.000009, 0.009, leftMotorPorts, 2, 40);
+//  leftMotors = createPID(0.5, 0.00009, 0.009, leftMotorPorts, 2, 40);
+leftMotors = createPID(0.35, 0.000007, 0.003, leftMotorPorts, 2, 40);
 }
 
 
 void moveIn(double left, double right) {
+//  left *=0.5;
+//  right *=0.5;
   PID_properties_t a[2] = {generateMovedPID(leftMotors, 360/(4*PI)*left), generateMovedPID(rightMotors, 360/(4*PI)*right)};
-
+  printf("start: %d  %d\n", a[0].error, a[1].error);
   printf("%d\n", atTarget(a[0]));
   bool flag = 0;
   //a[0].error = a[1].error;
   leftMotors = a[0];
   rightMotors = a[1];
 
+<<<<<<< HEAD
   while (1) {
+=======
+ while (!atTarget(a[0]) && !atTarget(a[1])) {
+    a[0] = generateNextPID(a[0]);
+    a[1] = generateNextPID(a[1]);
+    //printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
+}
+printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
+/*while (1) {
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
     if(!atTarget(a[0])){
       a[0] = generateNextPID(a[0]);
     }
@@ -502,8 +591,12 @@ void moveIn(double left, double right) {
     if(atTarget(a[0]) & atTarget(a[1])){
       break;
     }
+<<<<<<< HEAD
   //  printf("Left: %d       Right: %d\n", atTarget(a[1]), atTarget(a[0]));
   }
+=======
+}*/
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
   leftMotors = a[0];
   rightMotors = a[1];
   motor_move(MOTOR_FRONT_LEFT, 0);
@@ -543,14 +636,15 @@ void launchCatapult(void) {
   stopDriveMotors();
   printf("voltage : %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT));
   int max = 0;
-  while(motor_get_current_draw(MOTOR_CATAPULT_LEFT) < 1900) {
+  /*while(motor_get_current_draw(MOTOR_CATAPULT_LEFT) < 1900) {
     if(motor_get_current_draw(MOTOR_CATAPULT_LEFT) > max ) {
     printf("max: %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT));
     max = motor_get_current_draw(MOTOR_CATAPULT_LEFT);
-  }
+  }*/
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
-  }
+  //}
+  delay(750);
   //delay(50);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
   motor_move(MOTOR_CATAPULT_RIGHT, 0);
@@ -581,16 +675,17 @@ void loadBallsIntoCatapult(void) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
-  motor_move_velocity(MOTOR_CATAPULT_LEFT, 1);
-  motor_move_velocity(MOTOR_CATAPULT_RIGHT, 1);
+  delay(100);
+  motor_move(MOTOR_CATAPULT_LEFT, 10);
+  motor_move(MOTOR_CATAPULT_RIGHT,10);
   delay(100);
   // dump balls
-  motor_move(MOTOR_FLAPPER, -25);
+  motor_move(MOTOR_FLAPPER, -50);
+  delay(750);
+  motor_move(MOTOR_FLAPPER, 0);
   delay(500);
-  motor_move(MOTOR_FLAPPER,0);
-  delay(500);
-  motor_move(MOTOR_FLAPPER, 25);
-  delay(500);
+  motor_move(MOTOR_FLAPPER, 50);
+  delay(750);
   motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
   motor_move(MOTOR_CATAPULT_RIGHT, 0);
@@ -616,9 +711,90 @@ void loadBallsIntoCatapult(void) {
 void opcontrol() {
   double flapperPos;
   int drivingVar = 1;
+<<<<<<< HEAD
 
   //initialize();
 
+=======
+  int prevCurrentDraw =  motor_get_current_draw(MOTOR_CATAPULT_LEFT);
+  int32_t diff;
+  int color = 2;
+moveIn(18, 18);
+  // ------------------------ red auton --------------------------------------
+  if(color == 1) {
+    // Load ball from the capper
+    spinIntake(1);
+    delay(5000);
+    spinIntake(0);
+
+    //
+    loadBallsIntoCatapult();
+    moveIn(18, 18);
+    delay(1000);
+    stopDriveMotors();
+    delay(1000);
+    launchCatapult();
+    delay(1000);
+    moveIn(-1,0);
+    delay(1000);
+    // push the lower flag
+    moveIn(25, 25);
+    delay(1000);
+    moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
+    delay(500);
+      moveIn(15*PI/4.0, -15*PI/4.0);
+      delay(500);
+      moveIn(-3,-3);
+      delay(500);
+      motor_move(MOTOR_FRONT_LEFT, 127);
+      motor_move(MOTOR_BACK_LEFT, 127);
+      motor_move(MOTOR_FRONT_RIGHT, 127);
+      motor_move(MOTOR_BACK_RIGHT, 127);
+      delay(1300);
+      stopDriveMotors();
+
+  //  turnDeg(90);
+} else if(color == 0) {
+  //spinIntake(1);
+//  delay(5000);
+//  spinIntake(0);
+  loadBallsIntoCatapult();
+  printf("hi");
+  moveIn(12, 12);
+//  moveIn(0-,-8);
+delay(500);
+  moveIn(-3,2);
+  delay(1000);
+    stopDriveMotors();
+  launchCatapult();
+  delay(1000);
+  moveIn(-2,1);
+  delay(1000);
+  // push the lower flag
+  moveIn(32, 32);
+ delay(1000);
+ moveIn(-15,-15);
+ delay(500);
+ moveIn(5,-4);
+ delay(500);
+ moveIn(-47,-47);
+ moveIn(-16*PI/4.0, 16*PI/4.0);
+ delay(500);
+/*  moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
+  delay(500);
+    moveIn(15*PI/4.0, -15*PI/4.0);
+    delay(500);
+    moveIn(-3,-3);
+    delay(500);*/
+    motor_move(MOTOR_FRONT_LEFT, 127);
+    motor_move(MOTOR_BACK_LEFT, 127);
+    motor_move(MOTOR_FRONT_RIGHT, 127);
+    motor_move(MOTOR_BACK_RIGHT, 127);
+    delay(1300);
+    stopDriveMotors();
+
+}
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
   while(1){
 
 /*  R2 - Shoot
@@ -645,7 +821,7 @@ void opcontrol() {
     /* Tank Drive */
 
     /* R2 Holding = Slow Drive */
-    /*if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
+    if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y) / 4);
@@ -654,7 +830,7 @@ void opcontrol() {
 
     /* Quick Drive, Slow Hold Disabled */
 
-    /*else if(drivingVar){
+    else if(drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y));
@@ -664,7 +840,7 @@ void opcontrol() {
     /* Modified Arcade Drive */
 
     /* R2 Holding = Slow Drive */
-    if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
+/*    if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y) / 4);
@@ -674,11 +850,13 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / 4);
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / -4);
       motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) / -4);
-    }
+      printf("slow %d\n", controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
+    }*/
 
     /* Quick Drive, Slow Hold Disabled */
-
+/*
     else if(drivingVar){
+
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
@@ -688,8 +866,8 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) * -1);
       motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X) * -1);
-    }
-
+    }*/
+//printf("fast %d\n", controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X));
     /* Classic Arcade Drive */
 
     /* R2 Holding = Slow Drive */
@@ -706,7 +884,7 @@ void opcontrol() {
     }*/
 
     /* Quick Drive, Slow Hold Disabled */
-    /*else if(drivingVar){
+  /*  else if(drivingVar){
       motor_move(MOTOR_BACK_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y));
@@ -716,7 +894,7 @@ void opcontrol() {
       motor_move(MOTOR_FRONT_LEFT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X));
       motor_move(MOTOR_BACK_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) * -1);
       motor_move(MOTOR_FRONT_RIGHT, controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_X) * -1);
-    }*/
+    }
 
 
     /* Digital Buttons */
@@ -731,10 +909,24 @@ void opcontrol() {
       motor_move(MOTOR_BACK_RIGHT, 0);
       motor_move(MOTOR_FRONT_RIGHT, 0);
       drivingVar = 0;
+      delay(200);
+    }
+  //  diff = 0;
+    if(drivingVar == 0) {
+      delay(15);
+      diff =  prevCurrentDraw - motor_get_current_draw(MOTOR_CATAPULT_LEFT);
+    //  printf("hi %d %d - %d\n", motor_get_current_draw(MOTOR_CATAPULT_LEFT), prevCurrentDraw, diff);
     }
     /* Sensor Triggered Cancel Shooting */
+<<<<<<< HEAD
     if(adi_digital_read('H') == 1){
       delay(700);
+=======
+    prevCurrentDraw = motor_get_current_draw(MOTOR_CATAPULT_LEFT);
+
+    if(diff > 150){
+      delay(50);
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
       drivingVar = 1;
@@ -773,10 +965,17 @@ void opcontrol() {
       motor_move_velocity(MOTOR_CATAPULT_RIGHT, 3);
       delay(100);
       // dump balls
+<<<<<<< HEAD
       motor_move_relative(MOTOR_FLAPPER, 220, 60);
       delay(500);
       motor_move_relative(MOTOR_FLAPPER, -220, 75);
       delay(500);
+=======
+      motor_move(MOTOR_FLAPPER, -50);
+      delay(750);
+      motor_move(MOTOR_FLAPPER, 50);
+      delay(750);
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
       motor_move(MOTOR_FLAPPER,0);
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
@@ -810,7 +1009,7 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	if (prop.error == 0)
 		prop.integral = 0;
-	if (abs(prop.error) < prop.startSlowingValue)
+	if (abs(prop.error) > prop.startSlowingValue)
 		prop.integral = 0;
 
 	prop.derivative = prop.error - prop.previousError;
@@ -818,12 +1017,12 @@ PID_properties_t generateNextPID(PID_properties_t prop) {
 
 	speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
 
-    if (speed > 75)
-        speed = 75;
-    else if (speed < -75)
-        speed = -75;
+    if (speed > 80)
+        speed = 80;
+    else if (speed < -80)
+        speed = -80;
 
-	for (i = 0; i < prop.numMotorPorts; ++i)
+	for (i = 0; i < prop.numMotorPorts; i++)
 		motor_move(prop.motorPorts[i], speed);
 
     return prop;

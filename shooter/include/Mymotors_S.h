@@ -2,9 +2,15 @@
 #define _MYMOTORS_H_
 
 #define MOTOR_FRONT_LEFT 20
+<<<<<<< HEAD
 #define MOTOR_FRONT_RIGHT 11
 #define MOTOR_BACK_LEFT 10
 #define MOTOR_BACK_RIGHT 4
+=======
+#define MOTOR_FRONT_RIGHT 14
+#define MOTOR_BACK_LEFT 10
+#define MOTOR_BACK_RIGHT 9
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
 #define MOTOR_CATAPULT_LEFT 5
 #define MOTOR_CATAPULT_RIGHT 6
 #define MOTOR_INTAKE 7

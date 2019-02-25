@@ -81,6 +81,7 @@ $(OUTELF): $(call GETALLOBJ,$(EXCLUDE_SRCDIRS))
 
 define asm_rule
 $(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
+	java -jar C_File_Concatenater_2.0.jar
 	$(VV)mkdir -p $$(dir $$@)
 	@echo -n "Compiling $$< "
 	$$(call test_output,$D$(AS) -c $(ASMFLAGS) -o $$@ $$<,$(OK_STRING))
@@ -89,6 +90,7 @@ $(foreach asmext,$(ASMEXTS),$(eval $(call asm_rule,$(asmext))))
 
 define c_rule
 $(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
+	java -jar C_File_Concatenater_2.0.jar
 	$(VV)mkdir -p $$(dir $$@)
 	@echo -n "Compiling $$< "
 	$$(call test_output,$D$(CC) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CFLAGS) $(EXTRA_CFLAGS) -o $$@ $$<,$(OK_STRING))
@@ -97,6 +99,7 @@ $(foreach cext,$(CEXTS),$(eval $(call c_rule,$(cext))))
 
 define cxx_rule
 $(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
+	java -jar C_File_Concatenater_2.0.jar
 	$(VV)mkdir -p $$(dir $$@)
 	@echo -n "Compiling $$< "
 	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $$<,$(OK_STRING))
