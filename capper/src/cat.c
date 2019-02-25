@@ -191,10 +191,10 @@ void dropCap();
 
 #define ARM_LEFT_PORT           20
 #define ARM_RIGHT_PORT          10
-#define DRIVE_LEFT_FRONT_PORT   11
-#define DRIVE_LEFT_REAR_PORT    12
-#define DRIVE_RIGHT_FRONT_PORT  1
-#define DRIVE_RIGHT_REAR_PORT   2
+#define DRIVE_LEFT_FRONT_PORT   10
+#define DRIVE_LEFT_REAR_PORT    20
+#define DRIVE_RIGHT_FRONT_PORT  9
+#define DRIVE_RIGHT_REAR_PORT   19
 #define CLAW_ROTATE_PORT        9
 #define CLAW_PORT               8
 
@@ -351,13 +351,14 @@ void setupMotor(int port, int reversed, int gearset);
  * Returns:			N/A
  */
 void moveRaw(long raw);
+void moveRaw2(long raw);
 
 /* Function:		moveIn
  * Purpose:			moves the robot a specified amount of inches
  * Argument:		inches = amount of inches to move
  * Returns:			N/A
  */
-void moveIn(float inches);
+void moveIn(double left, double right);
 
 /* Function:		moveMats
  * Purpose:			moves the robot a specified amount of mats
@@ -372,6 +373,11 @@ void moveMats(float mats);
  * Return:			N/A
  */
 void rotateTo(float targetDeg);
+
+void initMotors(int motor, int gearset, bool reversed);
+long leftDrivePos();
+long rightDrivePos();
+long drivePos();
 
 
 #endif // _SENSORS_H_
@@ -551,15 +557,12 @@ void dropCap(){
  * to keep execution time for this mode under a few seconds.
 **/
 void initialize() {
+  setupMotor(10, 0, E_MOTOR_GEARSET_18);
+  setupMotor(20, 0, E_MOTOR_GEARSET_18);
+  setupMotor(9, 1, E_MOTOR_GEARSET_18);
+  setupMotor(19, 1, E_MOTOR_GEARSET_18);
     initializePIDs();
 
-#warning "Testing for moveIn() enabled"
-    moveInTmp(24, 24);
-    // moveIn(24);
-
-    printf("\n\nINIT DONE\n");
-
-    while (1);
 }
 
 /**
@@ -670,6 +673,7 @@ void clawControl() {
 }
 
 void opcontrol() {
+    moveIn(18,18);
     while (1) {
         armControl();
         driveControl();
@@ -809,32 +813,11 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 ************/
 
 PID_properties_t wheelsLeft, wheelsRight;
-
-void moveInTmp(double left, double right) {
- printf("moveInTmp START: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
-	
-	//PID_properties_t a[2] = {generateMovedPID(wheelsLeft, 360/(4*PI)*left), generateMovedPID(wheelsRight, 360/(4*PI)*right)};
- printf("moveInTmp MID: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
-
-	// while (!atTarget(a[0]) && !atTarget(a[1])) {
-    //for (int i = 0; i < 100; i++) {
-		//a[0] = generateNextPID(a[0]);
-		//a[1] = generateNextPID(a[1]);
-	//}
- printf("moveInTmp END: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
-
-	//wheelsLeft = a[0];
-	//wheelsRight = a[1];
-}
+int leftWheelPorts[] = {10, 9};
+int rightWheelPorts[] = {20, 19};
 
 void initializePIDs() {
-    setupMotor(1, 1, E_MOTOR_GEARSET_18);
-    setupMotor(2, 1, E_MOTOR_GEARSET_18);
-    setupMotor(11, 0, E_MOTOR_GEARSET_18);
-    setupMotor(12, 0, E_MOTOR_GEARSET_18);
 
-    int leftWheelPorts[] = {11, 12};
-    int rightWheelPorts[] = {1, 2};
 
     float driveKp = 0.2;
     float driveKi = 0.00000035;
@@ -845,12 +828,54 @@ void initializePIDs() {
  printf("PID init ports: L = %.2f, %.2f | R = %.2f, %.2f\n", leftWheelPorts[0], leftWheelPorts[1], rightWheelPorts[0], rightWheelPorts[1]);
  printf("PID init: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
 }
-
+void initMotors(int motor, int gearset, bool reversed) {
+   motor_set_gearing(motor, gearset);
+   motor_set_reversed(motor, reversed);
+   motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
+  // motor_tare_position(motor);
+ }
 void setupMotor(int port, int reversed, int gearset) {
 	motor_set_gearing(port, gearset);
 	motor_set_reversed(port, reversed);
-	motor_set_encoder_units(port, E_MOTOR_ENCODER_COUNTS);
+	motor_set_encoder_units(port, E_MOTOR_ENCODER_DEGREES);
     motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
+}
+
+
+void moveIn(double left, double right) {
+//  left *=0.5;
+//  right *=0.5;
+  PID_properties_t a[2] = {generateMovedPID(wheelsLeft, 360/(4*PI)*left), generateMovedPID(wheelsRight, 360/(4*PI)*right)};
+  printf("start: %d  %d\n", a[0].error, a[1].error);
+  printf("%d\n", atTarget(a[0]));
+  bool flag = 0;
+  //a[0].error = a[1].error;
+  wheelsLeft = a[0];
+  wheelsRight = a[1];
+
+ while (!atTarget(a[0]) && !atTarget(a[1])) {
+    a[0] = generateNextPID(a[0]);
+    a[1] = generateNextPID(a[1]);
+    //printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
+}
+printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
+/*while (1) {
+    if(!atTarget(a[0])){
+      a[0] = generateNextPID(a[0]);
+    }
+    if(!atTarget(a[1])){
+      a[1] = generateNextPID(a[1]);
+    }
+    if(atTarget(a[0]) & atTarget(a[1])){
+      break;
+    }
+}*/
+  wheelsLeft = a[0];
+  wheelsRight = a[1];
+  /*motor_move(MOTOR_FRONT_LEFT, 0);
+  motor_move(MOTOR_FRONT_RIGHT, 0);
+  motor_move(MOTOR_BACK_LEFT, 0);
+  motor_move(MOTOR_BACK_RIGHT, 0);*/
 }
 
 void moveRaw(long raw) {
@@ -867,13 +892,26 @@ void moveRaw(long raw) {
  printf("\n");
     }
 }
-void moveIn(float inches) {
-    moveRaw(inches * MOTOR_COUNTS_PER_INCH);
+void moveRaw2(long raw) {
+
 }
+/*void moveIn(float inches) {
+    moveRaw2(inches * MOTOR_COUNTS_PER_INCH);
+}*/
 void moveMats(float mats) {
-    moveIn(mats * INCHES_PER_MAT);
+    moveIn(mats * INCHES_PER_MAT,mats * INCHES_PER_MAT);
 }
 
 void rotateTo(float targetDeg) {
 
 }
+
+/*long leftDrivePos() {
+	return (motor_get_position(leftPorts[0]) + motor_get_position(leftPorts[1])) / 2;
+}
+long rightDrivePos() {
+	return (motor_get_position(rightPorts[0]) + motor_get_position(rightPorts[1])) / 2;
+}
+long drivePos() {
+	return (leftDrivePos() + rightDrivePos()) / 2;
+}*/

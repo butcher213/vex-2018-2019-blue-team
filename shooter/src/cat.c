@@ -146,6 +146,44 @@
 #ifndef _MYMOTORS_H_
 #define _MYMOTORS_H_
 
+#define MOTOR_FRONT_LEFT 10
+#define MOTOR_FRONT_RIGHT 20
+#define MOTOR_BACK_LEFT 9
+#define MOTOR_BACK_RIGHT 19
+#define MOTOR_CATAPULT_LEFT 5
+#define MOTOR_CATAPULT_RIGHT 6
+#define MOTOR_INTAKE 7
+#define MOTOR_FLAPPER 8
+#define MOTOR_BELT 12
+#define WHEELS_FORWARD 127
+#define WHEELS_BACKWARD -127
+#define WHEEL_DIAMETER 4
+#define PI 3.1415
+#define TILE_LENGTH 22.5
+
+
+
+//void initMotors(int motor, int gearset, bool reversed);
+//PID_array_t initDrive(double Kp, double Ki, double Kd);
+
+void initPID();
+
+void moveIn(double left, double right);
+
+void turnDeg(double deg);
+
+void launchCatapult(void);
+
+void stopDriveMotors(void);
+
+void spinIntake(double multiplier);
+#endif // _MYMOTORS_H_
+/*****************
+*Mymotors_Sread.h*
+*****************/
+#ifndef _MYMOTORS_H_
+#define _MYMOTORS_H_
+
 #define MOTOR_FRONT_LEFT 20
 #define MOTOR_FRONT_RIGHT 14
 #define MOTOR_BACK_LEFT 10
@@ -457,10 +495,10 @@ PID_properties_t rightMotors, leftMotors;
 void initPID() {
   static int rightMotorPorts[] = {MOTOR_BACK_RIGHT, MOTOR_FRONT_RIGHT};
 //  rightMotors = createPID(0.5, 0.00009, 0.009, rightMotorPorts, 2, 40);
-  rightMotors = createPID(0.5, 0.0001, 0.09, rightMotorPorts, 2, 40);
+  rightMotors = createPID(0.35, 0.000007, 0.003, rightMotorPorts, 2, 40);
   static int leftMotorPorts[] = {MOTOR_BACK_LEFT, MOTOR_FRONT_LEFT};
 //  leftMotors = createPID(0.5, 0.00009, 0.009, leftMotorPorts, 2, 40);
-leftMotors = createPID(0.5, 0.0001, 0.09, leftMotorPorts, 2, 40);
+leftMotors = createPID(0.35, 0.000007, 0.003, leftMotorPorts, 2, 40);
 }
 
 
@@ -606,19 +644,19 @@ void opcontrol() {
   int drivingVar = 1;
   int prevCurrentDraw =  motor_get_current_draw(MOTOR_CATAPULT_LEFT);
   int32_t diff;
-  int color = 0;
-
+  int color = 2;
+moveIn(18, 18);
   // ------------------------ red auton --------------------------------------
   if(color == 1) {
-    // Launches preload ball and fed ball into the top targets
+    // Load ball from the capper
     spinIntake(1);
     delay(5000);
     spinIntake(0);
+
+    //
     loadBallsIntoCatapult();
-    printf("hi");
     moveIn(18, 18);
-  //  moveIn(-18,-18);
- delay(1000);
+    delay(1000);
     stopDriveMotors();
     delay(1000);
     launchCatapult();

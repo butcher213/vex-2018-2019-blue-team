@@ -7,15 +7,12 @@
  * to keep execution time for this mode under a few seconds.
 **/
 void initialize() {
+  setupMotor(10, 0, E_MOTOR_GEARSET_18);
+  setupMotor(20, 1, E_MOTOR_GEARSET_18);
+  setupMotor(9, 1, E_MOTOR_GEARSET_18);
+  setupMotor(19, 0, E_MOTOR_GEARSET_18);
     initializePIDs();
 
-#warning "Testing for moveIn() enabled"
-    moveInTmp(24, 24);
-    // moveIn(24);
-
-    printf("\n\nINIT DONE\n");
-
-    while (1);
 }
 
 /**

@@ -58,6 +58,7 @@ void clawControl() {
 }
 
 void opcontrol() {
+    moveIn(18,18);
     while (1) {
         armControl();
         driveControl();

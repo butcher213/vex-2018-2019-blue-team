@@ -43,7 +43,7 @@ void moveRaw2(long raw);
  * Argument:		inches = amount of inches to move
  * Returns:			N/A
  */
-void moveIn(float inches);
+void moveIn(double left, double right);
 
 /* Function:		moveMats
  * Purpose:			moves the robot a specified amount of mats
@@ -59,6 +59,7 @@ void moveMats(float mats);
  */
 void rotateTo(float targetDeg);
 
+void initMotors(int motor, int gearset, bool reversed);
 long leftDrivePos();
 long rightDrivePos();
 long drivePos();
