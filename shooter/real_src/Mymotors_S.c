@@ -11,8 +11,12 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
+<<<<<<< HEAD
+}/* encoders not working | they do not count */
+=======
   // motor_tare_position(motor);
  }
+>>>>>>> 98da6422f82f19338661a4e408db8a5ce2d88f2b
 
 
 /* Function:		initDrive

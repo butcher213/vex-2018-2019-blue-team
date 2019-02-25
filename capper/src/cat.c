@@ -75,9 +75,24 @@
 #define _AUTONOMOUS_RED_C_H
 
 
+// line up vars measured in mats
+#define CAP_LINE_UP     0
+#define CAP_HEIGHT      5
+#define CAP_FLIP_HEIGHT 0
+int capFlipState = -1;
+
+#define POLE_PREPARE_HEIGHT 575
+
+#define POLE_SMALL_LINE_UP 0
+#define POLE_SMALL_HEIGHT  0
+
+#define POLE_BIG_LINE_UP 0
+#define POLE_BIG_HEIGHT  0
+
+
 void autonomous();
 
-void initial_shooter_feed();
+void preload_shooter();
 void get_pole_side_blue_cap();
 void give_pole_side_blue_cap_balls_to_shooter();
 void place_first_cap_on_pole();
@@ -86,7 +101,6 @@ void place_second_cap_on_pole();
 void get_net_side_red_cap();
 void place_third_cap_on_pole();
 void grab_net_side_blue_cap();
-void feed_net_side_balls_to_shooter();
 void return_to_start();
 
 void getCap();
@@ -171,8 +185,8 @@ void dropCap();
 /***********
 *Motors_C.h*
 ***********/
-#ifndef _MOTORS_C_C
-#define _MOTORS_C_C
+#ifndef _MOTORS_C_H
+#define _MOTORS_C_H
 
 #define ARM_CONTROLLER      E_CONTROLLER_MASTER
 #define DRIVE_CONTROLLER    E_CONTROLLER_MASTER
@@ -184,6 +198,7 @@ void dropCap();
 #define DRIVE_RIGHT_STICK   E_CONTROLLER_ANALOG_RIGHT_Y
 #define DRIVE_LEFT_STRAFE_STICK     E_CONTROLLER_ANALOG_LEFT_X
 #define DRIVE_RIGHT_STRAFE_STICK    E_CONTROLLER_ANALOG_RIGHT_X
+<<<<<<< HEAD
 #define CLAW_OPEN_BTN       E_CONTROLLER_DIGITAL_R2
 #define CLAW_CLOSE_BTN      E_CONTROLLER_DIGITAL_R1
 #define CLAW_CW_BTN         E_CONTROLLER_DIGITAL_B
@@ -197,35 +212,56 @@ void dropCap();
 #define DRIVE_RIGHT_REAR_PORT   19
 #define CLAW_ROTATE_PORT        9
 #define CLAW_PORT               8
+=======
+// #define CLAW_OPEN_BTN       E_CONTROLLER_DIGITAL_R2
+// #define CLAW_CLOSE_BTN      E_CONTROLLER_DIGITAL_R1
+// #define CLAW_CW_BTN         E_CONTROLLER_DIGITAL_B
+// #define CLAW_CCW_BTN        E_CONTROLLER_DIGITAL_A
+#define CLAW_ROTATE_BTN     E_CONTROLLER_DIGITAL_A
+
+#define ARM_LEFT_PORT          8
+#define ARM_RIGHT_PORT         18
+#define DRIVE_LEFT_FRONT_PORT  10
+#define DRIVE_LEFT_REAR_PORT   9
+#define DRIVE_RIGHT_FRONT_PORT 20
+#define DRIVE_RIGHT_REAR_PORT  19
+#define CLAW_ROTATE_PORT       7
+// #define CLAW_PORT              6
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 
 #define DRIVE_FORWARD  1
 #define DRIVE_BACKWARD -DRIVE_FORWARD
-#define ARM_UP   1
+#define ARM_UP   127
 #define ARM_DOWN -ARM_UP
-#define CLAW_OPEN  1
-#define CLAW_CLOSE -CLAW_OPEN
-#define CLAW_CW  1
+// #define CLAW_OPEN  127
+// #define CLAW_CLOSE -CLAW_OPEN
+#define CLAW_CW  127
 #define CLAW_CCW -CLAW_CW
 
 
 void armSpeed(int speed);
 void leftDrive(int speed);
 void rightDrive(int speed);
-void clawRotate(int direction);
-void clawSpeed(int speed);
+void clawRotate(int speed);
+void clawRotatePos(int pos, int speed);
+// void clawSpeed(int speed);
 
-#endif // _MOTORS_C_C
+
+void moveArmTo(int pos);
+void claw180Rotate();
+
+#endif // _MOTORS_C_H
 /******
 *PID.h*
 ******/
 #ifndef _PID_H_
 #define _PID_H_
+// #warning "In PID header"
 
 typedef struct {
 	double Kp;
 	double Ki;
 	double Kd;
-    int speed;
 	long long error;
 	long long integral;
 	long long derivative;
@@ -240,29 +276,11 @@ typedef PID_properties_t *PID_array_t;
 
 
 /* Function:		generateNextPID
- * Purpose:			updates the PID_properties_t by running through one pass of the PID algorithm
+ * Purpose:			Updates the PID_properties_t by running through one pass of the PID algorithm
  * Argument:		prop = the property to be updated
  * Return:			the next PID_properties_t object
  */
 PID_properties_t generateNextPID(PID_properties_t prop);
-
-/* Function:        calculateError
- * Purpose:         calculates error for prop (distance from target)
- * Argument:        prop = the property which error will be calculated for
- * Return:          the calculated error of prop
- */
-int calculateError(PID_properties_t prop);
-
-/* Function:        generateNextSSPID
- * Purpose:         updates the system of synchronized PIDs by running throught one pass of the PID algorithm
- * Argument:        pids = the list of PIDs in the SSPIDs
- *                  length = the number of PIDs in the system
- * Return:          the updated SSPIDs
- *
- * Note:            * The SSPIDs should be initiated as a PID_array_t, then passed into this function to update them.
- *                      The code should loop through the array to initilize and set targets.
- */
-PID_array_t generateNextSSPID(PID_array_t pids, int length);
 
 /* Function:		generateMovedPID
  * Purpose:			moves the target property of prop by targetDelta
@@ -307,6 +325,34 @@ int isStopped(PID_properties_t prop);
  */
 PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int numMotorPorts, long long startSlowingValue);
 
+/* !EXPERIMENTAL!
+ * Function:		applyRealTimeCorrection
+ * Purpose:         adjusts the derivative of the PID_properties_t object so that it will be more accurate on the next move
+ * Argument:        prop = the PID_properties_t object to which the algorithm will be applied
+ * Return:			the next PID_properties_t object
+ */
+PID_properties_t applyRealTimeCorrection(PID_properties_t prop);
+
+/* Function:        findKpid_Ziegler
+ * Purpose:         find the constants for PID using Ziegler-Nichols method
+ * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
+                    numMotorPorts = the length of numMotorPorts
+                    startSlowingValue = the error value where teh motors will start to slow down
+                    target = the distance to move the motor for testing
+ * Return:          the created PID_properties_t object
+ */
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
+
+/* Function:        findKpid_manual
+ * Purpose:         find the constants for PID using manual method
+ * Argument:        motorPorts = the motor ports that are associated with the PID_properties_t
+                    numMotorPorts = the length of numMotorPorts
+                    startSlowingValue = the error value where teh motors will start to slow down
+                    target = the distance to move the motor for testing
+ * Return:          the created PID_properties_t object
+ */
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target);
+
 
 
 #endif // _PID_H_
@@ -317,16 +363,24 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 #define _SENSORS_H_
 
 #define PI 3.1415
-#define WHEEL_DIAMETER ((4 + 4.25)/2)
+#define WHEEL_DIAMETER 3.75
 #define WHEEL_CIRCUMFERENCE (WHEEL_DIAMETER * PI)
-#define MOTOR_COUNT_PER_REVOLUTION 4554752
-#define MOTOR_COUNTS_PER_INCH ((double) MOTOR_COUNT_PER_REVOLUTION / WHEEL_CIRCUMFERENCE)
 #define Pole_Hight_Small 23.0
 #define Pole_Hight_Large 34.0
 #define WALL_TO_WALL_INCHES 140.5
 #define WALL_TO_WALL_MATS 6
 // ~23.42 inches per mat
 #define INCHES_PER_MAT (WALL_TO_WALL_INCHES / WALL_TO_WALL_MATS)
+// Driving constants
+#define MOTOR_COUNT_PER_REVOLUTION 4554752
+#define MOTOR_COUNTS_PER_INCH  ((double) MOTOR_COUNT_PER_REVOLUTION / WHEEL_CIRCUMFERENCE)
+#define MOTOR_DEGREES_PER_INCH ((double) 360 / WHEEL_CIRCUMFERENCE)
+// Turning constants
+#define ROBOT_ROTATION_MOTOR_COUNTS 1250
+// #define ROBOT_ROTATION_MOTOR_COUNTS 988.78
+#define ROBOT_ROTATION_COUNTS_PER_DEGREE ((double) ROBOT_ROTATION_MOTOR_COUNTS / 360)
+#define ROBOT_ROTATION_TURN_LEFT 1
+#define ROBOT_ROTATION_TURN_RIGHT -ROBOT_ROTATION_TURN_LEFT
 
 
 /* Function:		initializePID
@@ -336,6 +390,8 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
  */
 void initializePIDs();
 
+void initializeMotors();
+
 /* Function:        setupMotor
  * Purpose:			Initializes the motor with raw encoder counts.
  * Argument:		port = smart port to setup
@@ -344,6 +400,8 @@ void initializePIDs();
  * Returns:			N/A
  */
 void setupMotor(int port, int reversed, int gearset);
+
+void moveDrivePID();
 
 /* Function:		moveRaw
  * Purpose:			move the robot the specified number of raw counts
@@ -374,11 +432,18 @@ void moveMats(float mats);
  */
 void rotateTo(float targetDeg);
 
+<<<<<<< HEAD
 void initMotors(int motor, int gearset, bool reversed);
+=======
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 long leftDrivePos();
 long rightDrivePos();
 long drivePos();
 
+<<<<<<< HEAD
+=======
+int armPosAvg();
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 
 #endif // _SENSORS_H_
 /******************
@@ -395,11 +460,11 @@ long drivePos();
  * If the robot is disabled or communications is lost, the autonomous task
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
-**/
+    **/
 
 void autonomous() {
     // start facing other robot, twords top
-    initial_shooter_feed();
+    preload_shooter();
 
     get_pole_side_blue_cap();
     give_pole_side_blue_cap_balls_to_shooter();
@@ -411,140 +476,134 @@ void autonomous() {
 
     place_third_cap_on_pole();
     grab_net_side_blue_cap();
-    feed_net_side_balls_to_shooter();
 
     return_to_start();
 }
 
 
-void initial_shooter_feed() {
-    moveMats(1.5);
-    moveMats(-2.5);
-    rotateTo(-90);
+void preload_shooter() {
+    moveMats(-1.5);
+    moveMats(2.5);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
 }
 
 void get_pole_side_blue_cap() {
-    moveMats(2);
+    moveMats(1.5);// moveMats(2);
     getCap();
 }
 
 void give_pole_side_blue_cap_balls_to_shooter() {
     moveMats(-2);
-    rotateTo(90);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
     moveMats(3);
     flipCap();
 }
 
 void place_first_cap_on_pole() {
     moveMats(-1.5); // moveMats(-2.5); (OLD)
-    rotateTo(90);
-    moveMats(.5);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+    // moveMats(.5);
     putOnSmallPole();
 }
 
 void get_pole_side_red_cap() {
-    moveMats(-.5);
+    // moveMats(-.5);
     //back in same starting pos
-    rotateTo(-90);
+    rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
     moveMats(0.5);
-    rotateTo(-90);
-    moveMats(2);
+    rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
+    moveMats(1.5);// moveMats(2);
     getCap();
 }
 
 void place_second_cap_on_pole() {
-    rotateTo(180);
+    rotateTo(ROBOT_ROTATION_TURN_RIGHT * 180);
     moveMats(1);
-    rotateTo(90);
-    moveMats(1.5);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+    moveMats(1); // moveMats(1.5);
     putOnSmallPole();
 }
 
 void get_net_side_red_cap() {
-    moveMats(-0.5);
-    rotateTo(-90);
+    // moveMats(-0.5);
+    rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
     moveMats(1);
-    rotateTo(-90);
+    rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
     moveMats(3);
-    rotateTo(-90);
-    moveMats(2);
+    rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
+    moveMats(1.5);// moveMats(2);
     getCap();
 }
 
 void place_third_cap_on_pole() {
     rotateTo(180);
     moveMats(2);
-    rotateTo(90);
+    rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
     moveMats(0.5);
-    rotateTo(-90);
-    moveMats(0.5);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT  * 90);
+    // moveMats(0.5);
     putOnBigPole();
 }
 
 void grab_net_side_blue_cap() {
-    rotateTo(-90);
-    moveMats(1.5);
-    rotateTo(-90);
-    moveMats(1.5);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+    moveMats(.5);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+    moveMats(1);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+    moveMats(.5);// moveMats(1);
     getCap();
 }
 
-void feed_net_side_balls_to_shooter() {
+void return_to_start() {
+    // feed net-side balls to shooter
     moveMats(-1);
-    rotateTo(-90);
-    moveMats(3);
-    rotateTo(180);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
     moveMats(1);
     flipCap();
+    // return to start
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+    moveMats(2);
 }
 
-void return_to_start() {
-    dropCap();
-    moveMats(-1);
-    rotateTo(90);
-}
-
-#warning "Auton getCap() not complete"
 void getCap(){
     // openClaw();
-    // moveArmTo(CAP_HEIGHT);
+    moveArmTo(CAP_HEIGHT);
+    moveMats(CAP_LINE_UP);
     // closeClaw();
 }
 
-#warning "Auton putOnSmallPole() not complete"
 void putOnSmallPole() {
-    // // move cap above pole to prepare capping
-    // moveArmTo(POLE_CAP_PREPARE);
-    // // line up cap
-    // moveIn(POLE_SMALL_LINE_UP);
-    // moveArmTo(POLE_SMALL_HEIGHT);
+    // move cap above pole to prepare capping
+    moveArmTo(POLE_PREPARE_HEIGHT);
+    // line up cap
+    moveMats(POLE_SMALL_LINE_UP);
+    moveArmTo(POLE_SMALL_HEIGHT);
     // openClaw();
-    // moveIn(-POLE_SMALL_LINE_UP);
+    moveMats(-POLE_SMALL_LINE_UP);
 }
 
-#warning "Auton putOnBigPole() not complete"
 void putOnBigPole() {
-    // // move cap above pole to prepare capping
-    // moveArmTo(POLE_PREPARE_HEIGHT);
-    // // line up cap
-    // moveIn(POLE_BIG_LINE_UP);
-    // moveArmTo(POLE_BIG_HEIGHT);
+    // move cap above pole to prepare capping
+    moveArmTo(POLE_PREPARE_HEIGHT);
+    // line up cap
+    moveMats(POLE_BIG_LINE_UP);
+    moveArmTo(POLE_BIG_HEIGHT);
     // openClaw();
-    // moveIn(-POLE_BIG_LINE_UP);
+    moveMats(-POLE_BIG_LINE_UP);
 }
 
-#warning "Auton flipCap() not complete"
 void flipCap(){
-    // // arm should be more than 1 cap radius above ground; maybe add check for arm > CAP_FLIP_HEIGHT
-    // moveArmTo(CAP_FLIP_HEIGHT);
-    // flipCap();
+    // arm should be more than 1 cap radius above ground; maybe add check for arm > CAP_FLIP_HEIGHT
+    moveArmTo(CAP_FLIP_HEIGHT);
+    claw180Rotate();
 }
 
-#warning "Auton dropCap() not complete"
 void dropCap(){
-    // // make slightly above ground so cap falls out of claw
-    // moveArmTo(CAP_FLIP_HEIGHT);
+    // make slightly above ground so cap falls out of claw
+    moveArmTo(CAP_HEIGHT);
     // openClaw();
+    moveMats(-CAP_LINE_UP);
 }
 /***************
 *initialize_C.c*
@@ -557,12 +616,40 @@ void dropCap(){
  * to keep execution time for this mode under a few seconds.
 **/
 void initialize() {
+<<<<<<< HEAD
   setupMotor(10, 0, E_MOTOR_GEARSET_18);
   setupMotor(20, 0, E_MOTOR_GEARSET_18);
   setupMotor(9, 1, E_MOTOR_GEARSET_18);
   setupMotor(19, 1, E_MOTOR_GEARSET_18);
-    initializePIDs();
+=======
+    printf("\n\nINIT START\n");
 
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
+    initializePIDs();
+    initializeMotors();
+
+<<<<<<< HEAD
+=======
+ #warning "Testing for moveIn() enabled"
+    // moveIn(36);
+    // moveMats(1);
+    // rotateTo(ROBOT_ROTATION_TURN_LEFT * 180);
+    // moveRaw(1000);
+
+    // moveArmTo(POLE_PREPARE_HEIGHT);
+
+    printf("\n\nINIT END\n");
+
+    while (1) {
+        printf("%f | %f | %f | %f    \n",
+                motor_get_position(1),
+                motor_get_position(2),
+                motor_get_position(11),
+                motor_get_position(12));
+
+        delay(1000);
+    }
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 }
 
 /**
@@ -601,16 +688,64 @@ void rightDrive(int speed) {
     motor_move(DRIVE_RIGHT_REAR_PORT, speed);
 }
 
-void clawRotate(int direction) {
-    motor_move(CLAW_ROTATE_PORT, direction);
+void clawRotate(int speed) {
+    motor_move(CLAW_ROTATE_PORT, speed);
 }
 
-void clawSpeed(int speed) {
-    motor_move(CLAW_PORT, speed);
+void clawRotatePos(int pos, int speed) {
+    int lastPosition;
+    int stallTicks = 0;
+
+    clawRotate(speed);
+
+    while ((lastPosition = motor_get_position(CLAW_ROTATE_PORT)) != pos && stallTicks < 100) {
+        delay(1);
+        if (lastPosition == motor_get_position(CLAW_ROTATE_PORT))
+            stallTicks++;
+        else
+            stallTicks = 0;
+    }
+
+    clawRotate(0);
 }
 
-void t() {
-    armSpeed(10);
+// void clawSpeed(int speed) {
+//     motor_move(CLAW_PORT, speed);
+// }
+
+void moveArmTo(int pos) {
+    if (pos < armPosAvg()) {
+        armSpeed(ARM_UP * .5);
+
+        while (armPosAvg() < pos)
+            /* do  nothing */;
+
+        armSpeed(0);
+    }
+    else {
+        armSpeed(ARM_DOWN * .5);
+
+        while (armPosAvg() > pos)
+            /* do  nothing */;
+
+        armSpeed(0);
+    }
+}
+
+void claw180Rotate() {
+    switch (capFlipState) {
+        case 0: // Must rotate CW
+            clawRotatePos(-90, CLAW_CW);
+            capFlipState = 1;
+        break;
+        case 1: // Must rotate CCW
+            clawRotatePos(90, CLAW_CCW);
+            capFlipState = 0;
+        break;
+        default: // default DFA to state 0
+            capFlipState = 0;
+            claw180Rotate();
+    }
 }
 /**************
 *opcontrol_C.c*
@@ -644,32 +779,37 @@ void driveControl() {
     int rightX = DRIVE_FORWARD * controller_get_analog(DRIVE_CONTROLLER, DRIVE_RIGHT_STRAFE_STICK);
 
 //---- TANK DRIVE
-    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
-    // leftDrive(driveScaled);
-    // rightDrive(driveScaled);
+    // int driveScaledL = (leftY * leftY * leftY) / (127 * 127);
+    // int driveScaledR = (rightY * rightY * rightY) / (127 * 127);
+    // leftDrive(driveScaledL);
+    // rightDrive(driveScaledR);
 
 //---- ARCADE DRIVE [R] (RIGHT DRIVE, LEFT TURN)
-    int turningScaled = (leftX * leftX * leftX) / (127 * 127);
-    int driveScaled = (rightY * rightY * rightY) / (127 * 127);
-    leftDrive(driveScaled + turningScaled);
-    rightDrive(driveScaled - turningScaled);
+    // int turningScaled = (leftX * leftX * leftX) / (127 * 127);
+    // int driveScaled = (rightY * rightY * rightY) / (127 * 127);
+    // leftDrive(driveScaled + turningScaled);
+    // rightDrive(driveScaled - turningScaled);
 
 //---- ARCADE DRIVE [L] (LEFT DRIVE, RIGHT TURN)
-    // int turningScaled = (rightX * rightX * rightX) / (127 * 127);
-    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
-    // leftDrive(driveScaled - turningScaled);
-    // rightDrive(driveScaled + turningScaled);
+    int turningScaled = (rightX * rightX * rightX) / (127 * 127);
+    int driveScaled = (leftY * leftY * leftY) / (127 * 127);
+    leftDrive(driveScaled - turningScaled);
+    rightDrive(driveScaled + turningScaled);
 }
 
 void clawControl() {
-    int _clawSpeed = 127 * CLAW_OPEN * controller_get_digital(CLAW_CONTROLLER, CLAW_OPEN_BTN);
-    _clawSpeed += 127 * CLAW_CLOSE * controller_get_digital(CLAW_CONTROLLER, CLAW_CLOSE_BTN);
+    // int _clawSpeed = 127 * CLAW_OPEN * controller_get_digital(CLAW_CONTROLLER, CLAW_OPEN_BTN);
+    // _clawSpeed += 127 * CLAW_CLOSE * controller_get_digital(CLAW_CONTROLLER, CLAW_CLOSE_BTN);
+    //
+    // int clawRotateSpeed = 127 * CLAW_CW * controller_get_digital(CLAW_CONTROLLER, CLAW_CW_BTN);
+    // clawRotateSpeed += 127 * CLAW_CCW * controller_get_digital(CLAW_CONTROLLER, CLAW_CCW_BTN);
+    //
+    // clawSpeed(_clawSpeed);
+    // clawRotate(clawRotateSpeed);
 
-    int clawRotateSpeed = 127 * CLAW_CW * controller_get_digital(CLAW_CONTROLLER, CLAW_CW_BTN);
-    clawRotateSpeed += 127 * CLAW_CCW * controller_get_digital(CLAW_CONTROLLER, CLAW_CCW_BTN);
-
-    clawSpeed(_clawSpeed);
-    clawRotate(clawRotateSpeed);
+    if(controller_get_digital(CLAW_CONTROLLER, CLAW_ROTATE_BTN)) {
+        claw180Rotate();
+    }
 }
 
 void opcontrol() {
@@ -689,72 +829,35 @@ void p(int n, PID_properties_t prop) {
 }
 
 PID_properties_t generateNextPID(PID_properties_t prop) {
- p(0, prop);
-    prop.error = calculateError(prop);
-
-	if (abs(prop.error) <= prop.startSlowingValue)
-		prop.integral = 0;
-    else
-    	prop.integral += prop.error;
-
- p(25, prop);
-	prop.derivative = prop.error - prop.previousError;
-	prop.previousError = prop.error;
-
-	prop.speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
-
- p(50, prop);
-    if (prop.speed > 127)
-        prop.speed = 127;
-    else if (prop.speed < -127)
-        prop.speed = -127;
-
-    // printf("motor ports: ");
-	for (int i = 0; i < prop.numMotorPorts; i++) {
-		motor_move(prop.motorPorts[i], prop.speed);
-        // printf("%d(%d), ", prop.motorPorts[i], i);
-    }
-    // printf("\n");
-
- p(100, prop);
-    return prop;
-}
-
-int calculateError(PID_properties_t prop) {
+	int speed, i;
+ // p(0, prop);
     int avgPosition = 0;
     for (int i = 0; i < prop.numMotorPorts; i++)
         avgPosition += motor_get_position(prop.motorPorts[i]);
     avgPosition /= prop.numMotorPorts;
 
-	return prop.target - avgPosition;
-}
+	prop.error = prop.target - avgPosition;
+	prop.integral += prop.error;
 
-#warning "Untested function: generateNextPID()"
-PID_array_t generateNextSSPID(PID_array_t pids, int length) {
-    // calculate errors of each PID
-    int totalErrors[length];
-    for (int i = 0; i < length; i++)
-        totalErrors[i] = calculateError(pids[i]);
+	if (prop.error == 0)
+		prop.integral = 0;
+	if (abs(prop.error) > prop.startSlowingValue)
+		prop.integral = 0;
 
-    // calulate each PID's distance sum from other PIDs
-    for (int i = 0; i < length; i++) {
-        // add on errors from other PIDs in system
-        for (int j = 0; j < length; j++) {
-            if (i == j) // no need to calculate for current PID
-                continue;
+	prop.derivative = prop.error - prop.previousError;
+	prop.previousError = prop.error;
 
-            int dist = pids[i].error - pids[j].error;
-            // add dist to each other PID in error
-            totalErrors[i] += dist;
-        }
-    }
+	speed = prop.Kp * prop.error + prop.Ki * prop.integral + prop.Kd * prop.derivative;
 
-    // store total errors back into their respective PID
-    for (int i = 0; i < length; i++)
-        pids[i].error = totalErrors[i];
+    if (speed > 127)
+        speed = 127;
+    else if (speed < -127)
+        speed = -127;
 
-    // calculate PID speed normally from here
- #warning "[PID.c ~92] SSPID not implemented "
+	for (i = 0; i < prop.numMotorPorts; ++i)
+		motor_move(prop.motorPorts[i], speed);
+
+    return prop;
 }
 
 PID_properties_t generateMovedPID(PID_properties_t prop, long long targetDelta) {
@@ -779,7 +882,6 @@ PID_array_t generateRotatedDrive(PID_properties_t left, PID_properties_t right, 
 }
 
 int atTarget(PID_properties_t prop) {
-    // return isStopped(prop) && abs(prop.error) < 5;
     return abs(prop.error) < 5;
 }
 
@@ -793,40 +895,170 @@ PID_properties_t createPID(double Kp, double Ki, double Kd, int *motorPorts, int
 	prop.Kp = Kp;
 	prop.Ki = Ki;
 	prop.Kd = Kd;
-
-    prop.speed = 0;
-    prop.error = 0;
-    prop.integral = 0;
-    prop.derivative = 0;
-    prop.target = 0;
-    prop.previousError = 0;
-
-	prop.motorPorts = motorPorts;
 	prop.numMotorPorts = numMotorPorts;
+	prop.motorPorts = motorPorts;
 	prop.startSlowingValue = startSlowingValue;
 
-    printf("ports: %d, %d; %d\n", prop.motorPorts[0], prop.motorPorts[1], prop.motorPorts);
+    prop.target = 0;
+    prop.error = 0;
+    prop.previousError = 0;
+    prop.derivative = 0;
+    prop.integral = 0;
+
 	return prop;
+}
+
+PID_properties_t applyRealTimeCorrection(PID_properties_t prop) {
+    if (isStopped(prop)) {
+        if (prop.error < 0) { // robot went too far; derivative is too high
+            prop.Ki -= .0000000001;
+        }
+        else if (prop.error > 0) { // robot did not go far enough; derivative is too low
+            prop.Ki += .0000000001;
+        }
+    }
+
+    return prop;
+}
+
+PID_properties_t findKpid_Ziegler(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target) {
+    PID_properties_t prop = createPID(.05, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
+
+    int dir = 1;
+
+    while (1) {
+        prop.target = target * dir;
+        prop.error = target; // error can only be at max to begin with
+
+        int lastDir = 2 * dir - 1;
+        long lastPeriodMeasured; // first measurement will be bad
+        for (int i = 0; i < 1000 && !atTarget(prop);) {
+            prop = generateNextPID(prop);
+
+            // is this pass the start of a new period measurement?
+            int currentDir = (prop.derivative > 0)? 1: -1;
+
+            // if (changed direction of motion && direction starts new period)
+            if (currentDir == -lastDir && currentDir == 2 * dir - 1) {
+                // set priod to be new measured value
+                long now = millis();
+                long period = now - lastPeriodMeasured;
+                lastPeriodMeasured = now;
+
+                // print new period to console
+                printf("Pu=%6d | Ku=%5.2f\n", period, prop.Kp);
+            }
+
+            lastDir = currentDir;
+
+            // determine if the robot is no long longer going to move
+            if (isStopped(prop))
+                i++;
+            else
+                i = 0;
+        }
+
+        prop.Kp += .05;
+
+        dir = 1 - dir; // switch directions
+        delay(1500); // wait for robot to settle
+    }
+}
+
+PID_properties_t findKpid_manual(int* motorPorts, int numMotorPorts, long long startSlowingValue, long long target) {
+    PID_properties_t prop = createPID(0, 0, 0, motorPorts, numMotorPorts, startSlowingValue);
+
+    int dir = 1; // 1 for forward, 0 for return to starts. switch w/ dir = 1-dir;
+
+    // the Kp, Ki, Kd tuning constants, acceptable errors
+    double tuningVars[3][2] = { {.03,            20}, // for Kp
+                                {.002,          10}, // for Kd
+                                {.0000000001,   5}}; // for Ki
+
+    for (int i = 0; i < 3; i++) {
+        do {
+            prop.target = target * dir;
+            prop.error = target; // error can only be at max to begin with
+
+printf("> ");
+            switch (i) {
+                case 0:
+                    prop.Kp += tuningVars[0][0];
+printf("p%f | ", prop.Kp);
+                    break;
+                case 1:
+                    prop.Kd += tuningVars[1][0];
+printf("d%f | ", prop.Kd);
+                    break;
+                case 2:
+                    prop.Ki += tuningVars[2][0];
+printf("i%f | ", prop.Ki);
+                    break;
+            }
+
+printf("%d | %f | %f -> ", i, prop.error, prop.Kp);
+            for (int j = 0; j < 1000 && abs(prop.error) > tuningVars[i][1];) {
+                prop = generateNextPID(prop);
+
+                // determine if the robot is no long longer going to move
+                if (isStopped(prop))
+                    j++;
+                else
+                    j = 0;
+printf(" j%d|d%f", j, prop.derivative);
+            }
+printf("%f | %f\n", prop.error, prop.Kp);
+
+            dir = 1 - dir; // switch directions
+            delay(1500); // wait for robot to settle
+        } while (abs(prop.error) > tuningVars[i][1]);
+    }
+
+
+    // print out values
+    while (1)
+        printf("Kpid=%5.2f | %5.2f | %5.2f\n", prop.Kp, prop.Ki, prop.Kd);
 }
 /************
 *Sensors_C.c*
 ************/
 
 PID_properties_t wheelsLeft, wheelsRight;
+<<<<<<< HEAD
 int leftWheelPorts[] = {10, 9};
 int rightWheelPorts[] = {20, 19};
 
 void initializePIDs() {
 
+=======
+int leftWheelPorts[] = {11, 12};
+int rightWheelPorts[] = {1, 2};
 
-    float driveKp = 0.2;
-    float driveKi = 0.00000035;
-    float driveKd = 0.0001;
+void initializePIDs() {
+    setupMotor(DRIVE_RIGHT_FRONT_PORT, 1, E_MOTOR_GEARSET_18);
+    setupMotor(DRIVE_RIGHT_REAR_PORT, 1, E_MOTOR_GEARSET_18);
+    setupMotor(DRIVE_LEFT_FRONT_PORT, 0, E_MOTOR_GEARSET_18);
+    setupMotor(DRIVE_LEFT_REAR_PORT, 0, E_MOTOR_GEARSET_18);
 
-    wheelsLeft  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, 20);
-    wheelsRight = createPID(driveKp, driveKi, driveKd, rightWheelPorts, 2, 20);
- printf("PID init ports: L = %.2f, %.2f | R = %.2f, %.2f\n", leftWheelPorts[0], leftWheelPorts[1], rightWheelPorts[0], rightWheelPorts[1]);
- printf("PID init: L = %.2f, %.2f | R = %.2f, %.2f\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
+
+    float driveKp = 0.35;     // orig = .2
+    float driveKi = 0.000007; // orig = .0000018
+    float driveKd = 0.003;   // orig = .0001
+    long startStopping = 100;
+
+    wheelsLeft  = createPID(driveKp, driveKi, driveKd, leftWheelPorts,  2, startStopping);
+    wheelsRight = createPID(driveKp, driveKi, driveKd, rightWheelPorts, 2, startStopping);
+ printf("PID init ports: L = %d,%d | R = %d, %d\n", leftWheelPorts[0], leftWheelPorts[1], rightWheelPorts[0], rightWheelPorts[1]);
+ printf("PID init: L = %d,%d | R = %d, %d\n", wheelsLeft.motorPorts[0], wheelsLeft.motorPorts[1], wheelsRight.motorPorts[0], wheelsRight.motorPorts[1]);
+}
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
+
+void initializeMotors() {
+    setupMotor(ARM_LEFT_PORT, 1, E_MOTOR_GEARSET_18);
+    setupMotor(ARM_RIGHT_PORT, 0, E_MOTOR_GEARSET_18);
+
+    setupMotor(CLAW_ROTATE_PORT, 0, E_MOTOR_GEARSET_18);
+    // setupMotor(CLAW_PORT, 0, E_MOTOR_GEARSET_18);
 }
 void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
@@ -841,6 +1073,7 @@ void setupMotor(int port, int reversed, int gearset) {
     motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
 }
 
+<<<<<<< HEAD
 
 void moveIn(double left, double right) {
 //  left *=0.5;
@@ -876,24 +1109,48 @@ printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
   motor_move(MOTOR_FRONT_RIGHT, 0);
   motor_move(MOTOR_BACK_LEFT, 0);
   motor_move(MOTOR_BACK_RIGHT, 0);*/
+=======
+void moveDrivePID() {
+    int i = 0;
+    while (i < 2) {
+        i = 0;
+//  printf("<LEFT> ");
+        if (!atTarget(wheelsLeft))
+            wheelsLeft = generateNextPID(wheelsLeft);
+        else
+            i++;
+//  printf("<RIGHT> ");
+        if (!atTarget(wheelsRight))
+            wheelsRight = generateNextPID(wheelsRight);
+        else
+            i++;
+//  printf("error: %lld, %lld\n", wheelsLeft.error, wheelsRight.error);
+//  printf("speed: %lld, %lld\n", wheelsLeft.previousError, wheelsRight.previousError);
+//  printf("encoder: %.2f, %.2f\n", motor_get_position(1), motor_get_position(11));
+//  printf("targ: %.2f, %.2f\n", wheelsLeft.target, wheelsRight.target);
+// printf("\n");
+    }
+
+    motor_move(1, 0);
+    motor_move(2, 0);
+    motor_move(11, 0);
+    motor_move(12, 0);
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 }
 
 void moveRaw(long raw) {
     wheelsLeft = generateMovedPID(wheelsLeft, raw);
     wheelsRight = generateMovedPID(wheelsRight, raw);
 
-    // while (!atTarget(wheelsLeft) && !atTarget(wheelsRight)) {
-    for (int i = 0; i < 100; i++) {
- printf("<LEFT> ");
-        wheelsLeft = generateNextPID(wheelsLeft);
- printf("<RIGHT> ");
-        wheelsRight = generateNextPID(wheelsRight);
- // printf("speed: %d, %d\n", wheelsLeft.speed, wheelsRight.speed);
- printf("\n");
-    }
+    moveDrivePID();
 }
+<<<<<<< HEAD
 void moveRaw2(long raw) {
 
+=======
+void moveIn(float inches) {
+    moveRaw(inches * MOTOR_DEGREES_PER_INCH);
+>>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 }
 /*void moveIn(float inches) {
     moveRaw2(inches * MOTOR_COUNTS_PER_INCH);
@@ -903,7 +1160,26 @@ void moveMats(float mats) {
 }
 
 void rotateTo(float targetDeg) {
+    long targetRaw = targetDeg * ROBOT_ROTATION_COUNTS_PER_DEGREE;
 
+    wheelsLeft = generateMovedPID(wheelsLeft, targetRaw);
+    wheelsRight = generateMovedPID(wheelsRight, -targetRaw);
+ printf("%ld | %f, %lf\n", targetRaw, targetDeg, ROBOT_ROTATION_COUNTS_PER_DEGREE);
+    moveDrivePID();
+}
+
+long leftDrivePos() {
+	return (motor_get_position(wheelsLeft.motorPorts[0]) + motor_get_position(wheelsLeft.motorPorts[1])) / 2;
+}
+long rightDrivePos() {
+	return (motor_get_position(wheelsRight.motorPorts[0]) + motor_get_position(wheelsRight.motorPorts[1])) / 2;
+}
+long drivePos() {
+	return (leftDrivePos() + rightDrivePos()) / 2;
+}
+
+int armPosAvg() {
+    return (motor_get_position(ARM_LEFT_PORT) + motor_get_position(ARM_RIGHT_PORT))/2;
 }
 
 /*long leftDrivePos() {

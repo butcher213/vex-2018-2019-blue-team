@@ -15,7 +15,7 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-#include "display/lv_misc/lv_color.h"
+#include "../lv_misc/lv_color.h"
 #include "lv_hal.h"
 #include <stdbool.h>
 #include <stdint.h>

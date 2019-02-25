@@ -27,7 +27,7 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-#include "display/lvgl.h"
+#include "../display/lvgl.h"
 #pragma GCC diagnostic pop
 
 #ifdef __cplusplus
