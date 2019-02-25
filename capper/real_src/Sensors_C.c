@@ -5,13 +5,6 @@ int leftWheelPorts[] = {10, 9};
 int rightWheelPorts[] = {20, 19};
 
 void initializePIDs() {
-<<<<<<< HEAD
-=======
-    setupMotor(DRIVE_RIGHT_FRONT_PORT, 1, E_MOTOR_GEARSET_18);
-    setupMotor(DRIVE_RIGHT_REAR_PORT, 1, E_MOTOR_GEARSET_18);
-    setupMotor(DRIVE_LEFT_FRONT_PORT, 0, E_MOTOR_GEARSET_18);
-    setupMotor(DRIVE_LEFT_REAR_PORT, 0, E_MOTOR_GEARSET_18);
->>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 
 
     float driveKp = 0.35;     // orig = .2
@@ -40,7 +33,6 @@ void setupMotor(int port, int reversed, int gearset) {
     motor_set_brake_mode(port, E_MOTOR_BRAKE_COAST);
 }
 
-<<<<<<< HEAD
 
 void moveIn(double left, double right) {
 //  left *=0.5;
@@ -76,40 +68,12 @@ printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
   motor_move(MOTOR_FRONT_RIGHT, 0);
   motor_move(MOTOR_BACK_LEFT, 0);
   motor_move(MOTOR_BACK_RIGHT, 0);*/
-=======
-void moveDrivePID() {
-    int i = 0;
-    while (i < 2) {
-        i = 0;
-//  printf("<LEFT> ");
-        if (!atTarget(wheelsLeft))
-            wheelsLeft = generateNextPID(wheelsLeft);
-        else
-            i++;
-//  printf("<RIGHT> ");
-        if (!atTarget(wheelsRight))
-            wheelsRight = generateNextPID(wheelsRight);
-        else
-            i++;
-//  printf("error: %lld, %lld\n", wheelsLeft.error, wheelsRight.error);
-//  printf("speed: %lld, %lld\n", wheelsLeft.previousError, wheelsRight.previousError);
-//  printf("encoder: %.2f, %.2f\n", motor_get_position(1), motor_get_position(11));
-//  printf("targ: %.2f, %.2f\n", wheelsLeft.target, wheelsRight.target);
-// printf("\n");
-    }
-
-    motor_move(1, 0);
-    motor_move(2, 0);
-    motor_move(11, 0);
-    motor_move(12, 0);
->>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 }
 
 void moveRaw(long raw) {
     wheelsLeft = generateMovedPID(wheelsLeft, raw);
     wheelsRight = generateMovedPID(wheelsRight, raw);
 
-<<<<<<< HEAD
     // while (!atTarget(wheelsLeft) && !atTarget(wheelsRight)) {
     for (int i = 0; i < 100; i++) {
  printf("<LEFT> ");
@@ -126,13 +90,6 @@ void moveRaw2(long raw) {
 /*void moveIn(float inches) {
     moveRaw2(inches * MOTOR_COUNTS_PER_INCH);
 }*/
-=======
-    moveDrivePID();
-}
-void moveIn(float inches) {
-    moveRaw(inches * MOTOR_DEGREES_PER_INCH);
-}
->>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 void moveMats(float mats) {
     moveIn(mats * INCHES_PER_MAT,mats * INCHES_PER_MAT);
 }
@@ -146,25 +103,12 @@ void rotateTo(float targetDeg) {
     moveDrivePID();
 }
 
-<<<<<<< HEAD
 /*long leftDrivePos() {
 	return (motor_get_position(leftPorts[0]) + motor_get_position(leftPorts[1])) / 2;
-=======
-long leftDrivePos() {
-	return (motor_get_position(wheelsLeft.motorPorts[0]) + motor_get_position(wheelsLeft.motorPorts[1])) / 2;
->>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 }
 long rightDrivePos() {
 	return (motor_get_position(wheelsRight.motorPorts[0]) + motor_get_position(wheelsRight.motorPorts[1])) / 2;
 }
 long drivePos() {
 	return (leftDrivePos() + rightDrivePos()) / 2;
-<<<<<<< HEAD
 }*/
-=======
-}
-
-int armPosAvg() {
-    return (motor_get_position(ARM_LEFT_PORT) + motor_get_position(ARM_RIGHT_PORT))/2;
-}
->>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
