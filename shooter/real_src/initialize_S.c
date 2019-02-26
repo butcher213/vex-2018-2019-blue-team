@@ -24,17 +24,16 @@ void initialize() {
   initMotors(MOTOR_FRONT_INTAKE, E_MOTOR_GEARSET_18, 1);
   initPID();
   int drivingVar = 1;
-<<<<<<< HEAD
   int color = 1;
 }
   // ------------------------ red auton --------------------------------------
-/*  if(color == 1) {
+ /*if(color == 1) {
     // Launches preload ball and fed ball into the top targets
-    /*spinIntake(1);
+    spinIntake(1);
     delay(5000);
-    spinIntake(0);*/
-    //loadBallsIntoCatapult();
-    //moveIn(-12, -12);
+    spinIntake(0);
+    loadBallsIntoCatapult();
+    moveIn(-12, -12);
     //stopDriveMotors();
     //delay(1000);
     //launchCatapult();
