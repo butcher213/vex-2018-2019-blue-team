@@ -20,14 +20,14 @@ void autonomous() {
     give_pole_side_blue_cap_balls_to_shooter();
     place_first_cap_on_pole();
 
-    get_pole_side_red_cap();
-    place_second_cap_on_pole();
-    get_net_side_red_cap();
+    // get_pole_side_red_cap();
+    // place_second_cap_on_pole();
+    // get_net_side_red_cap();
 
-    place_third_cap_on_pole();
-    grab_net_side_blue_cap();
+    // place_third_cap_on_pole();
+    // grab_net_side_blue_cap();
 
-    return_to_start();
+    // return_to_start();
 }
 
 
@@ -44,7 +44,7 @@ void get_pole_side_blue_cap() {
 }
 
 void give_pole_side_blue_cap_balls_to_shooter() {
-    rotateTo(ROBOT_ROTATION_TURN_LEFT * 142.5);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 140);
     moveMats(2.5);
     flipCap();
 }

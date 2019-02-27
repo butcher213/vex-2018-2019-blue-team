@@ -23,10 +23,10 @@ void initialize() {
 
     // moveArmTo(CAP_FLIP_HEIGHT);
 	
-	preload_shooter();
-	get_pole_side_blue_cap();
-	give_pole_side_blue_cap_balls_to_shooter();
-	place_first_cap_on_pole();
+	// preload_shooter();
+	// get_pole_side_blue_cap();
+	// give_pole_side_blue_cap_balls_to_shooter();
+	// place_first_cap_on_pole();
 
     printf("\n\nINIT END\n");
 
