@@ -19,8 +19,9 @@ void initialize() {
   initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
-  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_FEEDER, E_MOTOR_GEARSET_18, 0);
   initPID();
   int drivingVar = 1;
 

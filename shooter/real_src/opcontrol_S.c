@@ -20,13 +20,13 @@ void opcontrol() {
   int drivingVar = 1;
   int prevCurrentDraw =  motor_get_current_draw(MOTOR_CATAPULT_LEFT);
   int32_t diff;
-  int color = 0;
+  int color = 1;
 
   // ------------------------ red auton --------------------------------------
   if(color == 1) {
     // Load ball from the capper
     spinIntake(1);
-    delay(5000);
+    delay(7000);
     spinIntake(0);
 
     //
@@ -37,12 +37,12 @@ void opcontrol() {
     delay(1000);
     launchCatapult();
     delay(1000);
-    moveIn(-1,0);
+    moveIn(-2,0);
     delay(1000);
     // push the lower flag
     moveIn(25, 25);
     delay(1000);
-    moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
+    moveIn(TILE_LENGTH * -2.65,TILE_LENGTH * -2.65);
     delay(500);
       moveIn(15*PI/4.0, -15*PI/4.0);
       delay(500);

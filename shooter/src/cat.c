@@ -146,53 +146,16 @@
 #ifndef _MYMOTORS_H_
 #define _MYMOTORS_H_
 
-#define MOTOR_FRONT_LEFT 10
-#define MOTOR_FRONT_RIGHT 20
-#define MOTOR_BACK_LEFT 9
-#define MOTOR_BACK_RIGHT 19
-#define MOTOR_CATAPULT_LEFT 5
-#define MOTOR_CATAPULT_RIGHT 6
-#define MOTOR_INTAKE 7
-#define MOTOR_FLAPPER 8
-#define MOTOR_BELT 12
-#define WHEELS_FORWARD 127
-#define WHEELS_BACKWARD -127
-#define WHEEL_DIAMETER 4
-#define PI 3.1415
-#define TILE_LENGTH 22.5
-
-
-
-//void initMotors(int motor, int gearset, bool reversed);
-//PID_array_t initDrive(double Kp, double Ki, double Kd);
-
-void initPID();
-
-void moveIn(double left, double right);
-
-void turnDeg(double deg);
-
-void launchCatapult(void);
-
-void stopDriveMotors(void);
-
-void spinIntake(double multiplier);
-#endif // _MYMOTORS_H_
-/*****************
-*Mymotors_Sread.h*
-*****************/
-#ifndef _MYMOTORS_H_
-#define _MYMOTORS_H_
-
 #define MOTOR_FRONT_LEFT 20
-#define MOTOR_FRONT_RIGHT 14
+#define MOTOR_FRONT_RIGHT 11
 #define MOTOR_BACK_LEFT 10
-#define MOTOR_BACK_RIGHT 9
+#define MOTOR_BACK_RIGHT 4
 #define MOTOR_CATAPULT_LEFT 5
 #define MOTOR_CATAPULT_RIGHT 6
 #define MOTOR_INTAKE 7
 #define MOTOR_FLAPPER 8
-#define MOTOR_BELT 12
+#define MOTOR_BELT 9
+#define MOTOR_FEEDER 12
 #define WHEELS_FORWARD 127
 #define WHEELS_BACKWARD -127
 #define WHEEL_DIAMETER 4
@@ -373,13 +336,8 @@ int color = 1;
 
   } else {
 
-<<<<<<< HEAD
-  }
-}*/
-=======
   }*/
 //}
->>>>>>> 98da6422f82f19338661a4e408db8a5ce2d88f2b
 /***************
 *initialize_S.c*
 ***************/
@@ -402,37 +360,12 @@ void initialize() {
   initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
-  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
+  initMotors(MOTOR_FEEDER, E_MOTOR_GEARSET_18, 0);
   initPID();
   int drivingVar = 1;
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-
-  moveIn(24, 24);
-  while(1);
-
-=======
->>>>>>> 98da6422f82f19338661a4e408db8a5ce2d88f2b
-  int color = 1;
-  // ------------------------ red auton --------------------------------------
-  if(color == 1) {
-    // Launches preload ball and fed ball into the top targets
-    /*spinIntake(1);
-    delay(5000);
-    spinIntake(0);*/
-    loadBallsIntoCatapult();
-    moveIn(5, 5);
-    stopDriveMotors();
-    delay(1000);
-    launchCatapult();
-    delay(1000);
-    // push the lower flag
-    moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
-  }
->>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
 }
 
   /* Move Inches Prototype */
@@ -492,8 +425,7 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
-  // motor_tare_position(motor);
- }
+}/* encoders not working | they do not count */
 
 
 /* Function:		initDrive
@@ -526,10 +458,10 @@ PID_properties_t rightMotors, leftMotors;
 void initPID() {
   static int rightMotorPorts[] = {MOTOR_BACK_RIGHT, MOTOR_FRONT_RIGHT};
 //  rightMotors = createPID(0.5, 0.00009, 0.009, rightMotorPorts, 2, 40);
-  rightMotors = createPID(0.35, 0.000007, 0.003, rightMotorPorts, 2, 40);
+  rightMotors = createPID(0.5, 0.0001, 0.09, rightMotorPorts, 2, 40);
   static int leftMotorPorts[] = {MOTOR_BACK_LEFT, MOTOR_FRONT_LEFT};
 //  leftMotors = createPID(0.5, 0.00009, 0.009, leftMotorPorts, 2, 40);
-leftMotors = createPID(0.35, 0.000007, 0.003, leftMotorPorts, 2, 40);
+leftMotors = createPID(0.5, 0.0001, 0.09, leftMotorPorts, 2, 40);
 }
 
 
@@ -624,6 +556,7 @@ void launchCatapult(void) {
 void spinIntake(double multiplier) {
 motor_move(MOTOR_INTAKE, 127 * multiplier);
 motor_move(MOTOR_BELT, 127 * multiplier);
+motor_move(MOTOR_FEEDER, 127 * multiplier);
 }
 
 /* Function:		loadBallsIntoCatapult
@@ -633,11 +566,11 @@ motor_move(MOTOR_BELT, 127 * multiplier);
  */
 
 void loadBallsIntoCatapult(void) {
-  while(adi_digital_read('G') == 0) {
+  while(adi_digital_read('H') == 0) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
-  delay(100);
+  delay(25);
   motor_move(MOTOR_CATAPULT_LEFT, 10);
   motor_move(MOTOR_CATAPULT_RIGHT,10);
   delay(100);
@@ -675,13 +608,13 @@ void opcontrol() {
   int drivingVar = 1;
   int prevCurrentDraw =  motor_get_current_draw(MOTOR_CATAPULT_LEFT);
   int32_t diff;
-  int color = 2;
-moveIn(18, 18);
+  int color = 1;
+
   // ------------------------ red auton --------------------------------------
   if(color == 1) {
     // Load ball from the capper
     spinIntake(1);
-    delay(5000);
+    delay(7000);
     spinIntake(0);
 
     //
@@ -692,12 +625,12 @@ moveIn(18, 18);
     delay(1000);
     launchCatapult();
     delay(1000);
-    moveIn(-1,0);
+    moveIn(-2,0);
     delay(1000);
     // push the lower flag
     moveIn(25, 25);
     delay(1000);
-    moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
+    moveIn(TILE_LENGTH * -2.65,TILE_LENGTH * -2.65);
     delay(500);
       moveIn(15*PI/4.0, -15*PI/4.0);
       delay(500);

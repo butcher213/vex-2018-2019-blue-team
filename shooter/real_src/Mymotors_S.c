@@ -11,12 +11,7 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
-<<<<<<< HEAD
 }/* encoders not working | they do not count */
-=======
-  // motor_tare_position(motor);
- }
->>>>>>> 98da6422f82f19338661a4e408db8a5ce2d88f2b
 
 
 /* Function:		initDrive
@@ -147,6 +142,7 @@ void launchCatapult(void) {
 void spinIntake(double multiplier) {
 motor_move(MOTOR_INTAKE, 127 * multiplier);
 motor_move(MOTOR_BELT, 127 * multiplier);
+motor_move(MOTOR_FEEDER, 127 * multiplier);
 }
 
 /* Function:		loadBallsIntoCatapult
@@ -156,11 +152,11 @@ motor_move(MOTOR_BELT, 127 * multiplier);
  */
 
 void loadBallsIntoCatapult(void) {
-  while(adi_digital_read('G') == 0) {
+  while(adi_digital_read('H') == 0) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
-  delay(100);
+  delay(25);
   motor_move(MOTOR_CATAPULT_LEFT, 10);
   motor_move(MOTOR_CATAPULT_RIGHT,10);
   delay(100);
