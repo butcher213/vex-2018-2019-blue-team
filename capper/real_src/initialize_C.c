@@ -7,40 +7,38 @@
  * to keep execution time for this mode under a few seconds.
 **/
 void initialize() {
-<<<<<<< HEAD
-  setupMotor(10, 0, E_MOTOR_GEARSET_18);
-  setupMotor(20, 1, E_MOTOR_GEARSET_18);
-  setupMotor(9, 1, E_MOTOR_GEARSET_18);
-  setupMotor(19, 0, E_MOTOR_GEARSET_18);
-=======
+	setupMotor(10, 0, E_MOTOR_GEARSET_18);
+	setupMotor(9, 0, E_MOTOR_GEARSET_18);
+	setupMotor(20, 1, E_MOTOR_GEARSET_18);
+	setupMotor(19, 1, E_MOTOR_GEARSET_18);
     printf("\n\nINIT START\n");
-
->>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
     initializePIDs();
     initializeMotors();
+	adi_pin_mode(1, INPUT_ANALOG);
 
  #warning "Testing for moveIn() enabled"
     // moveIn(36);
     // moveMats(1);
-    // rotateTo(ROBOT_ROTATION_TURN_LEFT * 180);
-    // moveRaw(1000);
+    // rotateTo(ROBOT_ROTATION_TURN_RIGHT * 180);
 
-    // moveArmTo(POLE_PREPARE_HEIGHT);
+    // moveArmTo(CAP_FLIP_HEIGHT);
+	
+	preload_shooter();
+	get_pole_side_blue_cap();
+	give_pole_side_blue_cap_balls_to_shooter();
+	place_first_cap_on_pole();
 
-<<<<<<< HEAD
-=======
     printf("\n\nINIT END\n");
 
-    while (1) {
-        printf("%f | %f | %f | %f    \n",
-                motor_get_position(1),
-                motor_get_position(2),
-                motor_get_position(11),
-                motor_get_position(12));
+    // while (1) {
+        // printf("%ld | %lf | %lf | %lf    \n",
+                // adi_analog_read(1),
+                // motor_get_position(15),
+                // motor_get_position(5),
+                // motor_get_position(15));
 
-        delay(1000);
-    }
->>>>>>> 5fb8723c4d75b2a598551fab91ca24620df41b6f
+        // delay(1000);
+	// }
 }
 
 /**
