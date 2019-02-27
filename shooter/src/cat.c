@@ -155,7 +155,7 @@
 #define MOTOR_INTAKE 7
 #define MOTOR_FRONT_INTAKE 9
 #define MOTOR_FLAPPER 8
-#define MOTOR_BELT 9
+#define MOTOR_BELT 12
 #define MOTOR_FEEDER 12
 #define WHEELS_FORWARD 127
 #define WHEELS_BACKWARD -127
@@ -341,16 +341,8 @@ void autonomous() {
     }
     moveIn(TILE_LENGTH * 1.5, TILE_LENGTH * 1.5);
     // ------------------------ blue auton -------------------------------------
-<<<<<<< HEAD
-
-  } else {
-
-  }*/
-//}
-=======
 */
 }
->>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
 /***************
 *initialize_S.c*
 ***************/
@@ -373,20 +365,16 @@ void initialize() {
   initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
-  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
-<<<<<<< HEAD
-  initMotors(MOTOR_FEEDER, E_MOTOR_GEARSET_18, 0);
-  initPID();
-  int drivingVar = 1;
-=======
+  initMotors(MOTOR_FLAPPER, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_FRONT_INTAKE, E_MOTOR_GEARSET_18, 1);
   initPID();
   int drivingVar = 1;
   int color = 1;
 }
   // ------------------------ red auton --------------------------------------
- /*if(color == 1) {
+/* if(color == 1) {
     // Launches preload ball and fed ball into the top targets
     spinIntake(1);
     delay(5000);
@@ -402,7 +390,6 @@ void initialize() {
   //}
 //}
 =======
->>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
 
 }
 >>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
@@ -464,7 +451,10 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
-}/* encoders not working | they do not count */
+
+  // motor_tare_position(motor);
+ }
+
 
 
 /* Function:		initDrive
@@ -504,7 +494,7 @@ leftMotors = createPID(0.5, 0.0001, 0.09, leftMotorPorts, 2, 40);
 }
 
 
-/*void moveIn(double left, double right) {
+void moveIn(double left, double right) {
 //  left *=0.5;
 //  right *=0.5;
   PID_properties_t a[2] = {generateMovedPID(leftMotors, 360/(4*PI)*left), generateMovedPID(rightMotors, 360/(4*PI)*right)};
@@ -514,15 +504,10 @@ leftMotors = createPID(0.5, 0.0001, 0.09, leftMotorPorts, 2, 40);
   //a[0].error = a[1].error;
   leftMotors = a[0];
   rightMotors = a[1];
-    if(!atTarget(a[0])){
-      a[0] = generateNextPID(a[0]);
-    }
-    if(!atTarget(a[1])){
-      a[1] = generateNextPID(a[1]);
-    }
-    if(atTarget(a[0]) & atTarget(a[1])){
-      break;
-    }
+  while (!atTarget(a[0]) && !atTarget(a[1])) {
+     a[0] = generateNextPID(a[0]);
+     a[1] = generateNextPID(a[1]);
+  }
   leftMotors = a[0];
   rightMotors = a[1];
   motor_move(MOTOR_FRONT_LEFT, 0);
@@ -587,11 +572,8 @@ void spinIntake(double multiplier) {
 motor_move(MOTOR_INTAKE, 127 * multiplier);
 motor_move(MOTOR_FRONT_INTAKE, 127 * multiplier);
 motor_move(MOTOR_BELT, 127 * multiplier);
-<<<<<<< HEAD
 motor_move(MOTOR_FEEDER, 127 * multiplier);
-=======
 
->>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
 }
 
 /* Function:		loadBallsIntoCatapult
@@ -610,11 +592,11 @@ void loadBallsIntoCatapult(void) {
   motor_move(MOTOR_CATAPULT_RIGHT,10);
   delay(100);
   // dump balls
-  motor_move(MOTOR_FLAPPER, -50);
+  motor_move(MOTOR_FLAPPER, 50);
   delay(750);
   motor_move(MOTOR_FLAPPER, 0);
   delay(500);
-  motor_move(MOTOR_FLAPPER, 50);
+  motor_move(MOTOR_FLAPPER, -50);
   delay(750);
   motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);
@@ -641,20 +623,14 @@ void loadBallsIntoCatapult(void) {
 void opcontrol() {
   double flapperPos;
   int drivingVar = 1;
-<<<<<<< HEAD
-  int prevCurrentDraw =  motor_get_current_draw(MOTOR_CATAPULT_LEFT);
-  int32_t diff;
-  int color = 1;
-=======
   int color = 0;
   int leftStickValueX = 0;
   int leftStickValueY = 0;
   int rightStickValueX = 0;
   int rightStickValueY = 0;
->>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
 
   // ------------------------ red auton --------------------------------------
-  /*if(color == 1) {
+  if(color == 1) {
     // Load ball from the capper
     spinIntake(1);
     delay(7000);
@@ -696,12 +672,12 @@ void opcontrol() {
   moveIn(12, 12);
 //  moveIn(0-,-8);
 delay(500);
-  moveIn(-3,2);
+  moveIn(-5,2.5);
   delay(1000);
     stopDriveMotors();
   launchCatapult();
   delay(1000);
-  moveIn(-2,1);
+  moveIn(-1,1);
   delay(1000);
   // push the lower flag
   moveIn(32, 32);
@@ -713,20 +689,20 @@ delay(500);
  moveIn(-47,-47);
  moveIn(-16*PI/4.0, 16*PI/4.0);
  delay(500);
-/*  moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
+  moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
   delay(500);
     moveIn(15*PI/4.0, -15*PI/4.0);
     delay(500);
     moveIn(-3,-3);
-    delay(500);*/
-  /*  motor_move(MOTOR_FRONT_LEFT, 127);
+    delay(500);
+    motor_move(MOTOR_FRONT_LEFT, 127);
     motor_move(MOTOR_BACK_LEFT, 127);
     motor_move(MOTOR_FRONT_RIGHT, 127);
     motor_move(MOTOR_BACK_RIGHT, 127);
     delay(1300);
     stopDriveMotors();
 
-  }*/
+  }
   while(1){
 
 /*  R2 - Shoot
@@ -750,7 +726,7 @@ delay(500);
     leftStickValueY = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y);
     rightStickValueX = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X);
     rightStickValueY = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y);
-    if((leftStickValueX > 5) | (leftStickValueY > 5) | (rightStickValueX > 5) | (rightStickValueY > 5))
+    if((abs(leftStickValueX) > 5) | (abs(leftStickValueY) > 5) | (abs(rightStickValueX) > 5) | (abs(rightStickValueY) > 5))
     {
 
       /* Tank Drive */
@@ -893,11 +869,14 @@ delay(500);
       motor_move(MOTOR_CATAPULT_RIGHT, 3);
       delay(300);
       // dump balls
-      motor_move(MOTOR_FLAPPER,75);
+      motor_move(MOTOR_FLAPPER,50);
       delay(750);
-      motor_move(MOTOR_FLAPPER,-75);
+      motor_move(MOTOR_FLAPPER,-50);
       delay(750);
       motor_move(MOTOR_FLAPPER,0);
+      motor_move(MOTOR_CATAPULT_LEFT, -25);
+      motor_move(MOTOR_CATAPULT_RIGHT, -25);
+      delay(300);
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
 

@@ -15,19 +15,30 @@ void initialize() {
     initializePIDs();
     initializeMotors();
 	adi_pin_mode(1, INPUT_ANALOG);
-
+/*
  #warning "Testing for moveIn() enabled"
     // moveIn(36);
     // moveMats(1);
     // rotateTo(ROBOT_ROTATION_TURN_RIGHT * 180);
 
     // moveArmTo(CAP_FLIP_HEIGHT);
-	
-	// preload_shooter();
-	// get_pole_side_blue_cap();
-	// give_pole_side_blue_cap_balls_to_shooter();
-	// place_first_cap_on_pole();
 
+	preload_shooter();
+	get_pole_side_blue_cap();
+	give_pole_side_blue_cap_balls_to_shooter();
+	place_first_cap_on_pole();
+*/
+moveMats(.75);
+//moveArmTo(CAP_FLIP_HEIGHT);
+moveMats(-1.7);
+rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+moveMats(2);
+// GRAB CAP
+// FLIP CAP
+moveMats(-1);
+//LIFT TO HEIGHT
+rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+//PLACE CAP
     printf("\n\nINIT END\n");
 
     // while (1) {
