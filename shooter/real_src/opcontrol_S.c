@@ -25,7 +25,7 @@ void opcontrol() {
   int rightStickValueY = 0;
 
   // ------------------------ red auton --------------------------------------
-  /*if(color == 1) {
+  if(color == 1) {
     // Load ball from the capper
     spinIntake(1);
     delay(7000);
@@ -67,12 +67,12 @@ void opcontrol() {
   moveIn(12, 12);
 //  moveIn(0-,-8);
 delay(500);
-  moveIn(-3,2);
+  moveIn(-5,2.5);
   delay(1000);
     stopDriveMotors();
   launchCatapult();
   delay(1000);
-  moveIn(-2,1);
+  moveIn(-1,1);
   delay(1000);
   // push the lower flag
   moveIn(32, 32);
@@ -84,20 +84,20 @@ delay(500);
  moveIn(-47,-47);
  moveIn(-16*PI/4.0, 16*PI/4.0);
  delay(500);
-/*  moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
+  moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
   delay(500);
     moveIn(15*PI/4.0, -15*PI/4.0);
     delay(500);
     moveIn(-3,-3);
-    delay(500);*/
-  /*  motor_move(MOTOR_FRONT_LEFT, 127);
+    delay(500);
+    motor_move(MOTOR_FRONT_LEFT, 127);
     motor_move(MOTOR_BACK_LEFT, 127);
     motor_move(MOTOR_FRONT_RIGHT, 127);
     motor_move(MOTOR_BACK_RIGHT, 127);
     delay(1300);
     stopDriveMotors();
 
-  }*/
+  }
   while(1){
 
 /*  R2 - Shoot
@@ -121,7 +121,7 @@ delay(500);
     leftStickValueY = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y);
     rightStickValueX = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X);
     rightStickValueY = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y);
-    if((leftStickValueX > 5) | (leftStickValueY > 5) | (rightStickValueX > 5) | (rightStickValueY > 5))
+    if((abs(leftStickValueX) > 5) | (abs(leftStickValueY) > 5) | (abs(rightStickValueX) > 5) | (abs(rightStickValueY) > 5))
     {
 
       /* Tank Drive */
@@ -264,11 +264,14 @@ delay(500);
       motor_move(MOTOR_CATAPULT_RIGHT, 3);
       delay(300);
       // dump balls
-      motor_move(MOTOR_FLAPPER,75);
+      motor_move(MOTOR_FLAPPER,50);
       delay(750);
-      motor_move(MOTOR_FLAPPER,-75);
+      motor_move(MOTOR_FLAPPER,-50);
       delay(750);
       motor_move(MOTOR_FLAPPER,0);
+      motor_move(MOTOR_CATAPULT_LEFT, -25);
+      motor_move(MOTOR_CATAPULT_RIGHT, -25);
+      delay(300);
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
 

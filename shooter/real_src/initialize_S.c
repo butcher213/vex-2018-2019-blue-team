@@ -19,19 +19,16 @@ void initialize() {
   initMotors(MOTOR_BACK_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_LEFT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
-  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 1);
+  initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 0);
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
-<<<<<<< HEAD
-  initMotors(MOTOR_FEEDER, E_MOTOR_GEARSET_18, 0);
-=======
+  initMotors(MOTOR_FLAPPER, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_FRONT_INTAKE, E_MOTOR_GEARSET_18, 1);
->>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
   initPID();
   int drivingVar = 1;
   int color = 1;
 }
   // ------------------------ red auton --------------------------------------
- /*if(color == 1) {
+/* if(color == 1) {
     // Launches preload ball and fed ball into the top targets
     spinIntake(1);
     delay(5000);
