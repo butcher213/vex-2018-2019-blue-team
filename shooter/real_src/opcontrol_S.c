@@ -18,17 +18,11 @@
 void opcontrol() {
   double flapperPos;
   int drivingVar = 1;
-<<<<<<< HEAD
-  int prevCurrentDraw =  motor_get_current_draw(MOTOR_CATAPULT_LEFT);
-  int32_t diff;
-  int color = 1;
-=======
   int color = 0;
   int leftStickValueX = 0;
   int leftStickValueY = 0;
   int rightStickValueX = 0;
   int rightStickValueY = 0;
->>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
 
   // ------------------------ red auton --------------------------------------
   /*if(color == 1) {
