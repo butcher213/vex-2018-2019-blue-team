@@ -21,11 +21,35 @@ void initialize() {
   initMotors(MOTOR_CATAPULT_RIGHT, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_BELT, E_MOTOR_GEARSET_18, 1);
   initMotors(MOTOR_INTAKE, E_MOTOR_GEARSET_18, 0);
+<<<<<<< HEAD
   initMotors(MOTOR_FEEDER, E_MOTOR_GEARSET_18, 0);
+=======
+  initMotors(MOTOR_FRONT_INTAKE, E_MOTOR_GEARSET_18, 1);
+>>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
   initPID();
   int drivingVar = 1;
+  int color = 1;
+}
+  // ------------------------ red auton --------------------------------------
+ /*if(color == 1) {
+    // Launches preload ball and fed ball into the top targets
+    spinIntake(1);
+    delay(5000);
+    spinIntake(0);
+    loadBallsIntoCatapult();
+    moveIn(-12, -12);
+    //stopDriveMotors();
+    //delay(1000);
+    //launchCatapult();
+    //delay(1000);
+    // push the lower flag
+    //moveIn(TILE_LENGTH *.9, TILE_LENGTH*.9);
+  //}
+//}
+=======
 
 }
+>>>>>>> e0dff5e36c92cc832dbcafea9d842925ee2e6ee8
 
   /* Move Inches Prototype */
 

@@ -11,7 +11,12 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
+<<<<<<< HEAD
 }/* encoders not working | they do not count */
+=======
+  // motor_tare_position(motor);
+ }
+>>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
 
 
 /* Function:		initDrive
@@ -51,7 +56,7 @@ leftMotors = createPID(0.5, 0.0001, 0.09, leftMotorPorts, 2, 40);
 }
 
 
-void moveIn(double left, double right) {
+/*void moveIn(double left, double right) {
 //  left *=0.5;
 //  right *=0.5;
   PID_properties_t a[2] = {generateMovedPID(leftMotors, 360/(4*PI)*left), generateMovedPID(rightMotors, 360/(4*PI)*right)};
@@ -61,14 +66,6 @@ void moveIn(double left, double right) {
   //a[0].error = a[1].error;
   leftMotors = a[0];
   rightMotors = a[1];
-
- while (!atTarget(a[0]) && !atTarget(a[1])) {
-    a[0] = generateNextPID(a[0]);
-    a[1] = generateNextPID(a[1]);
-    //printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
-}
-printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
-/*while (1) {
     if(!atTarget(a[0])){
       a[0] = generateNextPID(a[0]);
     }
@@ -78,7 +75,6 @@ printf("Left: %d       Right: %d\n", a[1].error, a[0].error);
     if(atTarget(a[0]) & atTarget(a[1])){
       break;
     }
-}*/
   leftMotors = a[0];
   rightMotors = a[1];
   motor_move(MOTOR_FRONT_LEFT, 0);
@@ -141,8 +137,13 @@ void launchCatapult(void) {
 
 void spinIntake(double multiplier) {
 motor_move(MOTOR_INTAKE, 127 * multiplier);
+motor_move(MOTOR_FRONT_INTAKE, 127 * multiplier);
 motor_move(MOTOR_BELT, 127 * multiplier);
+<<<<<<< HEAD
 motor_move(MOTOR_FEEDER, 127 * multiplier);
+=======
+
+>>>>>>> d6f0cc1ad94cc6834d1d56d7020cd33875dd6a7d
 }
 
 /* Function:		loadBallsIntoCatapult
