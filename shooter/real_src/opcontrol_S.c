@@ -60,8 +60,7 @@ void opcontrol() {
     //printf("Drive Mode: %d\n", driveToggle);
 
     /* If any of the sticks are moved a decent distance past the center. Accounts for sticky or worn joysticks. */
-    if((leftStickValueX > 5) || (leftStickValueY > 5) || (rightStickValueX > 5) || (rightStickValueY > 5)
-      || (leftStickValueX < -5) || (leftStickValueY < -5) || (rightStickValueX < -5) || (rightStickValueY < -5))
+    if((abs(leftStickValueX) > 5) || (abs(leftStickValueY) > 5) || (abs(rightStickValueX) > 5) || (abs(rightStickValueY) > 5))
     {
 
       switch(driveToggle)
