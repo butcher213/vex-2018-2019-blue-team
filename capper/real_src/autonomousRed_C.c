@@ -13,21 +13,28 @@
     **/
 
 void autonomous() {
-    // start facing other robot, twords top
-    preload_shooter();
-
-    get_pole_side_blue_cap();
-    give_pole_side_blue_cap_balls_to_shooter();
-    place_first_cap_on_pole();
-
-    // get_pole_side_red_cap();
-    // place_second_cap_on_pole();
-    // get_net_side_red_cap();
-
-    // place_third_cap_on_pole();
-    // grab_net_side_blue_cap();
-
-    // return_to_start();
+	// Feed shooter
+	moveMats(.75);
+	moveArmTo(CAP_FLIP_HEIGHT); // help the claw disengage
+	moveMats(-1.7);
+	moveArmTo(CAP_HEIGHT);
+	rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
+	// At cap
+	moveMats(2);
+	moveMats(-1);
+	moveArmTo(CAP_FLIP_HEIGHT);
+	
+	// Rotate claw
+	clawRotate(127);
+	delay(.1);
+	clawRotate(0);
+	
+	moveArmTo(POLE_PREPARE_HEIGHT);
+	rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
+	// Facing pole
+	moveMats(.1); // Line up with the pole
+	moveArmTo(POLE_BIG_HEIGHT);
+	moveMats(-.5); // Disengage the cap
 }
 
 

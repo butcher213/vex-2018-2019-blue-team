@@ -77,17 +77,17 @@
 
 // line up vars measured in mats
 #define CAP_LINE_UP     0
-#define CAP_HEIGHT      5
-#define CAP_FLIP_HEIGHT 100
+#define CAP_HEIGHT      10
+#define CAP_FLIP_HEIGHT (CAP_HEIGHT + 100)
 int capFlipState = -1;
 
-#define POLE_PREPARE_HEIGHT 575
+#define POLE_PREPARE_HEIGHT (CAP_HEIGHT + 1200)
 
 #define POLE_SMALL_LINE_UP 0
-#define POLE_SMALL_HEIGHT  0
+#define POLE_SMALL_HEIGHT  (CAP_HEIGHT + 800)
 
 #define POLE_BIG_LINE_UP 0
-#define POLE_BIG_HEIGHT  0
+#define POLE_BIG_HEIGHT  (CAP_HEIGHT + 1100)
 
 
 void autonomous();
@@ -446,21 +446,25 @@ int armPosAvg();
     **/
 
 void autonomous() {
-    // start facing other robot, twords top
-    preload_shooter();
+	moveMats(.75);
+	moveArmTo(CAP_FLIP_HEIGHT);
+	moveMats(-1.7);
+	moveArmTo(CAP_HEIGHT);
+	rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
+	moveMats(2);
+	moveMats(-1);
+	moveArmTo(CAP_FLIP_HEIGHT);
 
-    get_pole_side_blue_cap();
-    give_pole_side_blue_cap_balls_to_shooter();
-    place_first_cap_on_pole();
+	// ROTATE THE CLAW HERE
+	clawRotate(127);
+	delay(.1);
+	clawRotate(0);
 
-    // get_pole_side_red_cap();
-    // place_second_cap_on_pole();
-    // get_net_side_red_cap();
-
-    // place_third_cap_on_pole();
-    // grab_net_side_blue_cap();
-
-    // return_to_start();
+	moveArmTo(POLE_PREPARE_HEIGHT);
+	rotateTo(ROBOT_ROTATION_TURN_RIGHT * 90);
+	moveMats(.1); // line up with the
+	moveArmTo(POLE_BIG_HEIGHT);
+	moveMats(-.5);
 }
 
 
@@ -607,42 +611,44 @@ void initialize() {
     printf("\n\nINIT START\n");
     initializePIDs();
     initializeMotors();
-	adi_pin_mode(1, INPUT_ANALOG);
-/*
+	adi_port_set_config(ARM_POTENTIOMETER_PORT, E_ADI_ANALOG_IN);
+
  #warning "Testing for moveIn() enabled"
     // moveIn(36);
     // moveMats(1);
     // rotateTo(ROBOT_ROTATION_TURN_RIGHT * 180);
 
-    // moveArmTo(CAP_FLIP_HEIGHT);
 
-	preload_shooter();
-	get_pole_side_blue_cap();
-	give_pole_side_blue_cap_balls_to_shooter();
-	place_first_cap_on_pole();
-*/
-moveMats(.75);
-//moveArmTo(CAP_FLIP_HEIGHT);
-moveMats(-1.7);
-rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
-moveMats(2);
-// GRAB CAP
-// FLIP CAP
-moveMats(-1);
-//LIFT TO HEIGHT
-rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
-//PLACE CAP
+	// preload_shooter();
+	// get_pole_side_blue_cap();
+	// give_pole_side_blue_cap_balls_to_shooter();
+	// place_first_cap_on_pole();
+	// autonomous();
+
+	moveArmTo(CAP_FLIP_HEIGHT);
+	delay(1000);
+
     printf("\n\nINIT END\n");
 
-    // while (1) {
-        // printf("%ld | %lf | %lf | %lf    \n",
-                // adi_analog_read(1),
-                // motor_get_position(15),
-                // motor_get_position(5),
-                // motor_get_position(15));
+    while (1) {
+		// moveArmTo(CAP_HEIGHT);
+		// delay(1000);
+		// moveArmTo(CAP_FLIP_HEIGHT);
+		// delay(1000);
+		// moveArmTo(POLE_SMALL_HEIGHT);
+		// delay(1000);
+		// moveArmTo(POLE_BIG_HEIGHT);
+		// delay(1000);
+		// moveArmTo(POLE_PREPARE_HEIGHT);
+		// delay(1000);
 
-        // delay(1000);
-	// }
+        printf("%ld | %lf | %lf | %lf    \n",
+                adi_analog_read(ARM_POTENTIOMETER_PORT),
+                motor_get_position(15),
+                motor_get_position(5),
+                motor_get_position(15));
+        delay(1000);
+	}
 }
 
 /**
@@ -707,22 +713,31 @@ void clawRotatePos(int pos, int speed) {
 // }
 
 void moveArmTo(int pos) {
-    if (pos < armPosAvg()) {
-        armSpeed(ARM_UP);
+	int lastPos = armPosAvg();
 
-        while (armPosAvg() < pos)
-            /* do  nothing */;
+	for (int i = 0; armPosAvg() < pos && i < 1000;) {
+		armSpeed(ARM_UP);
 
-        armSpeed(0);
-    }
-    else {
-        armSpeed(ARM_DOWN);
+		// if (lastPos == armPosAvg())
+			// i++;
+		// else
+			// i = 0;
 
-        while (armPosAvg() > pos)
-            /* do  nothing */;
+		lastPos = armPosAvg();
+	}
 
-        armSpeed(0);
-    }
+	for (int i = 0; armPosAvg() > pos && i < 1000;) {
+		armSpeed(ARM_DOWN);
+
+		// if (lastPos == armPosAvg())
+			// i++;
+		// else
+			// i = 0;
+
+		lastPos = armPosAvg();
+	}
+
+	armSpeed(0);
 }
 
 void claw180Rotate() {

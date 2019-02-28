@@ -3,20 +3,20 @@
 
 #include "PID.h"
 
-// line up vars measured in mats
+// NOTE: line up vars measured in mats
 #define CAP_LINE_UP     0
-#define CAP_HEIGHT      5
-#define CAP_FLIP_HEIGHT 100
-int capFlipState = -1;
+#define CAP_HEIGHT      10
+#define CAP_FLIP_HEIGHT (CAP_HEIGHT + 100)
 
-#define POLE_PREPARE_HEIGHT 575
+#define POLE_PREPARE_HEIGHT (CAP_HEIGHT + 1200)
 
 #define POLE_SMALL_LINE_UP 0
-#define POLE_SMALL_HEIGHT  0
+#define POLE_SMALL_HEIGHT  (CAP_HEIGHT + 800)
 
 #define POLE_BIG_LINE_UP 0
-#define POLE_BIG_HEIGHT  0
+#define POLE_BIG_HEIGHT  (CAP_HEIGHT + 1100)
 
+int capFlipState = -1;
 
 void autonomous();
 
