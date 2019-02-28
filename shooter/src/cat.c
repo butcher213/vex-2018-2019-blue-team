@@ -628,81 +628,12 @@ void opcontrol() {
   int leftStickValueY = 0;
   int rightStickValueX = 0;
   int rightStickValueY = 0;
+  float leftMotorSpeed = 0;
+  float rightMotorSpeed = 0;
+  enum driveMode{TANK, HALO, ARCADE};
+  enum driveMode driveToggle = HALO;
 
-  // ------------------------ red auton --------------------------------------
-  /*if(color == 1) {
-    // Load ball from the capper
-    spinIntake(1);
-    delay(5000);
-    spinIntake(0);
 
-    //
-    loadBallsIntoCatapult();
-    moveIn(18, 18);
-    delay(1000);
-    stopDriveMotors();
-    delay(1000);
-    launchCatapult();
-    delay(1000);
-    moveIn(-1,0);
-    delay(1000);
-    // push the lower flag
-    moveIn(25, 25);
-    delay(1000);
-    moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
-    delay(500);
-      moveIn(15*PI/4.0, -15*PI/4.0);
-      delay(500);
-      moveIn(-3,-3);
-      delay(500);
-      motor_move(MOTOR_FRONT_LEFT, 127);
-      motor_move(MOTOR_BACK_LEFT, 127);
-      motor_move(MOTOR_FRONT_RIGHT, 127);
-      motor_move(MOTOR_BACK_RIGHT, 127);
-      delay(1300);
-      stopDriveMotors();
-
-  //  turnDeg(90);
-} else if(color == 0) {
-  //spinIntake(1);
-//  delay(5000);
-//  spinIntake(0);
-  loadBallsIntoCatapult();
-  printf("hi");
-  moveIn(12, 12);
-//  moveIn(0-,-8);
-delay(500);
-  moveIn(-3,2);
-  delay(1000);
-    stopDriveMotors();
-  launchCatapult();
-  delay(1000);
-  moveIn(-2,1);
-  delay(1000);
-  // push the lower flag
-  moveIn(32, 32);
- delay(1000);
- moveIn(-15,-15);
- delay(500);
- moveIn(5,-4);
- delay(500);
- moveIn(-47,-47);
- moveIn(-16*PI/4.0, 16*PI/4.0);
- delay(500);
-/*  moveIn(TILE_LENGTH * -2.7,TILE_LENGTH * -2.7);
-  delay(500);
-    moveIn(15*PI/4.0, -15*PI/4.0);
-    delay(500);
-    moveIn(-3,-3);
-    delay(500);*/
-  /*  motor_move(MOTOR_FRONT_LEFT, 127);
-    motor_move(MOTOR_BACK_LEFT, 127);
-    motor_move(MOTOR_FRONT_RIGHT, 127);
-    motor_move(MOTOR_BACK_RIGHT, 127);
-    delay(1300);
-    stopDriveMotors();
-
-  }*/
   while(1){
 
 /*  R2 - Shoot
@@ -726,86 +657,109 @@ delay(500);
     leftStickValueY = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_LEFT_Y);
     rightStickValueX = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_X);
     rightStickValueY = controller_get_analog(E_CONTROLLER_MASTER, E_CONTROLLER_ANALOG_RIGHT_Y);
-    if((leftStickValueX > 5) | (leftStickValueY > 5) | (rightStickValueX > 5) | (rightStickValueY > 5))
+    printf("LEFT X: %d LEFT Y: %d  RIGHT X: %d RIGHT Y: %d\n", leftStickValueX, leftStickValueY, rightStickValueX, rightStickValueY);
+    printf("Drive Mode: %d\n", driveToggle);
+
+    if((leftStickValueX > 5) | (leftStickValueY > 5) | (rightStickValueX > 5) | (rightStickValueY > 5)
+      | (leftStickValueX > -5) | (leftStickValueY > -5) | (rightStickValueX > -5) | (rightStickValueY > -5))
     {
 
-      /* Tank Drive */
+      switch(driveToggle)
+      {
+        case TANK:
+        /* Tank Drive */
 
-      /* R2 Holding = Slow Drive */
-      /*if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
-        motor_move(MOTOR_BACK_LEFT, leftStickValueY / 4);
-        motor_move(MOTOR_FRONT_LEFT, leftStickValueY / 4);
-        motor_move(MOTOR_BACK_RIGHT, rightStickValueY / 4);
-        motor_move(MOTOR_FRONT_RIGHT, rightStickValueY / 4);
-      }*/
+          /* R2 Holding = Slow Drive */
+          if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
+            motor_move(MOTOR_BACK_LEFT, leftStickValueY / 4);
+            motor_move(MOTOR_FRONT_LEFT, leftStickValueY / 4);
+            motor_move(MOTOR_BACK_RIGHT, rightStickValueY / 4);
+            motor_move(MOTOR_FRONT_RIGHT, rightStickValueY / 4);
+          }
 
-      /* Quick Drive, Slow Hold Disabled */
+          /* Quick Drive, Slow Hold Disabled */
 
-      /*else if(drivingVar){
-        motor_move(MOTOR_BACK_LEFT, leftStickValueY);
-        motor_move(MOTOR_FRONT_LEFT, leftStickValueY);
-        motor_move(MOTOR_BACK_RIGHT, rightStickValueY);
-        motor_move(MOTOR_FRONT_RIGHT, rightStickValueY);
-      }*/
+          else if(drivingVar){
+            motor_move(MOTOR_BACK_LEFT, leftStickValueY);
+            motor_move(MOTOR_FRONT_LEFT, leftStickValueY);
+            motor_move(MOTOR_BACK_RIGHT, rightStickValueY);
+            motor_move(MOTOR_FRONT_RIGHT, rightStickValueY);
+          }
 
-      /* Modified Arcade Drive A.K.A. Halo Drive */
+          break;
 
-      /* R2 Holding = Slow Drive */
-      if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
-        motor_move(MOTOR_BACK_LEFT, leftStickValueY / 4);
-        motor_move(MOTOR_FRONT_LEFT, leftStickValueY / 4);
-        motor_move(MOTOR_BACK_RIGHT, leftStickValueY / 4);
-        motor_move(MOTOR_FRONT_RIGHT, leftStickValueY / 4);
+        case HALO:
+        /* Modified Arcade Drive A.K.A. Halo Drive */
 
-        motor_move(MOTOR_BACK_LEFT, rightStickValueX / 4);
-        motor_move(MOTOR_FRONT_LEFT, rightStickValueX / 4);
-        motor_move(MOTOR_BACK_RIGHT, rightStickValueX / -4);
-        motor_move(MOTOR_FRONT_RIGHT, rightStickValueX / -4);
-      }
+          leftMotorSpeed = leftStickValueY + (rightStickValueX * (rightStickValueX/(abs(rightStickValueX))));
+          rightMotorSpeed = leftStickValueY - (rightStickValueX * (rightStickValueX/(abs(rightStickValueX))));
 
-      /* Quick Drive, Slow Hold Disabled */
+        /* R2 Holding = Slow Drive */
 
-      else if(drivingVar){
+          if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
+            motor_move(MOTOR_BACK_LEFT, leftMotorSpeed / 4);
+            motor_move(MOTOR_FRONT_LEFT, leftMotorSpeed / 4);
+            motor_move(MOTOR_BACK_RIGHT, rightMotorSpeed / 4);
+            motor_move(MOTOR_FRONT_RIGHT, rightMotorSpeed / 4);
+          }
 
-        motor_move(MOTOR_BACK_LEFT, leftStickValueY);
-        motor_move(MOTOR_FRONT_LEFT, leftStickValueY);
-        motor_move(MOTOR_BACK_RIGHT, leftStickValueY);
-        motor_move(MOTOR_FRONT_RIGHT, leftStickValueY);
+          /* Quick Drive, Slow Hold Disabled */
 
-        motor_move(MOTOR_BACK_LEFT, rightStickValueX);
-        motor_move(MOTOR_FRONT_LEFT, rightStickValueX);
-        motor_move(MOTOR_BACK_RIGHT, rightStickValueX * -1);
-        motor_move(MOTOR_FRONT_RIGHT, rightStickValueX * -1);
-      }
+          else if(drivingVar){
+            motor_move(MOTOR_BACK_LEFT, leftMotorSpeed);
+            motor_move(MOTOR_FRONT_LEFT, leftMotorSpeed);
+            motor_move(MOTOR_BACK_RIGHT, rightMotorSpeed);
+            motor_move(MOTOR_FRONT_RIGHT, rightMotorSpeed);
+          }
 
+
+
+          break;
+
+        case ARCADE:
       /* Classic Arcade Drive */
 
-      /* R2 Holding = Slow Drive */
-      /*if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
-        motor_move(MOTOR_BACK_LEFT, leftStickValueY / 4);
-        motor_move(MOTOR_FRONT_LEFT, leftStickValueY / 4);
-        motor_move(MOTOR_BACK_RIGHT, leftStickValueY / 4);
-        motor_move(MOTOR_FRONT_RIGHT, leftStickValueY / 4);
+          leftMotorSpeed = leftStickValueY + (leftStickValueX * (leftStickValueX/(abs(leftStickValueX))));
+          rightMotorSpeed = leftStickValueY - (leftStickValueX * (leftStickValueX/(abs(leftStickValueX))));
 
-        motor_move(MOTOR_BACK_LEFT, leftStickValueX / 4);
-        motor_move(MOTOR_FRONT_LEFT, leftStickValueX / 4);
-        motor_move(MOTOR_BACK_RIGHT, leftStickValueX / -4);
-        motor_move(MOTOR_FRONT_RIGHT, leftStickValueX / -4);
-      }*/
+          if(leftMotorSpeed > 127)
+          {
+            leftMotorSpeed = 127;
+          }
+          if(leftMotorSpeed < -127)
+          {
+            leftMotorSpeed = -127;
+          }
+          if(rightMotorSpeed > 127)
+          {
+            rightMotorSpeed = 127;
+          }
+          if(rightMotorSpeed < -127)
+          {
+            rightMotorSpeed = -127;
+          }
 
-      /* Quick Drive, Slow Hold Disabled */
-    /*  else if(drivingVar){
-        motor_move(MOTOR_BACK_LEFT, leftStickValueY);
-        motor_move(MOTOR_FRONT_LEFT, leftStickValueY);
-        motor_move(MOTOR_BACK_RIGHT, leftStickValueY);
-        motor_move(MOTOR_FRONT_RIGHT, leftStickValueY);
+          /* R2 Holding = Slow Drive */
+          if((controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L2) == 1) && drivingVar){
+            motor_move(MOTOR_BACK_LEFT, leftMotorSpeed / 4);
+            motor_move(MOTOR_FRONT_LEFT, leftMotorSpeed / 4);
+            motor_move(MOTOR_BACK_RIGHT, rightMotorSpeed / 4);
+            motor_move(MOTOR_FRONT_RIGHT, rightMotorSpeed / 4);
+          }
 
-        motor_move(MOTOR_BACK_LEFT, leftStickValueX);
-        motor_move(MOTOR_FRONT_LEFT, leftStickValueX);
-        motor_move(MOTOR_BACK_RIGHT, leftStickValueX * -1);
-        motor_move(MOTOR_FRONT_RIGHT, leftStickValueX * -1);
-      }*/
-    }
+          /* Quick Drive, Slow Hold Disabled */
+          else if(drivingVar){
+            motor_move(MOTOR_BACK_LEFT, leftMotorSpeed);
+            motor_move(MOTOR_FRONT_LEFT, leftMotorSpeed);
+            motor_move(MOTOR_BACK_RIGHT, rightMotorSpeed);
+            motor_move(MOTOR_FRONT_RIGHT, rightMotorSpeed);
+          }
+
+          break;
+
+        }
+      }
+
     else{
       motor_move(MOTOR_BACK_LEFT, 0);
       motor_move(MOTOR_FRONT_LEFT, 0);
@@ -817,7 +771,6 @@ delay(500);
 
     /* Shoot */
     if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2) == 1){
-      printf("R2\n");
       motor_move(MOTOR_CATAPULT_LEFT, 127);
       motor_move(MOTOR_CATAPULT_RIGHT, 127);
       motor_move(MOTOR_BACK_LEFT, 0);
@@ -838,7 +791,6 @@ delay(500);
 
     /* Cancell Shooting */
     if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_B) == 1){
-      printf("B\n");
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
       drivingVar = 1;
@@ -846,7 +798,6 @@ delay(500);
 
     /* Intake Hold */
     if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_L1) == 1){
-      printf("L1");
       motor_move(MOTOR_INTAKE, 127);
       motor_move(MOTOR_FRONT_INTAKE, 127);
       motor_move(MOTOR_BELT, 127);
@@ -860,7 +811,6 @@ delay(500);
     /* Flapper - Dump */
     if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_RIGHT) == 1)
     {
-      printf("Right\n");
       while(adi_digital_read('H') == 0) {
         motor_move(MOTOR_CATAPULT_LEFT, 127);
         motor_move(MOTOR_CATAPULT_RIGHT, 127);
@@ -869,23 +819,22 @@ delay(500);
       motor_move(MOTOR_CATAPULT_RIGHT, 3);
       delay(300);
       // dump balls
-      motor_move(MOTOR_FLAPPER,75);
+      motor_move(MOTOR_FLAPPER,-20);
       delay(750);
-      motor_move(MOTOR_FLAPPER,-75);
+      motor_move(MOTOR_FLAPPER,20);
       delay(750);
       motor_move(MOTOR_FLAPPER,0);
+      motor_move(MOTOR_CATAPULT_LEFT, -35);
+      motor_move(MOTOR_CATAPULT_RIGHT, -35);
+      delay(400);
       motor_move(MOTOR_CATAPULT_LEFT, 0);
       motor_move(MOTOR_CATAPULT_RIGHT, 0);
-
     }
 
-    //double leftPower = motor_get_power(MOTOR_CATAPULT_LEFT);
-    //double rightPower = motor_get_power(MOTOR_CATAPULT_RIGHT);
-    //printf("LEFT: %lf   RIGHT: %lf\n", leftPower, rightPower);
-
-
-
-
+    if(controller_get_digital(E_CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_LEFT) == 1)
+    {
+      driveToggle = (++driveToggle) % 3;
+    }
   }
 }
 /******
