@@ -98,8 +98,8 @@ void opcontrol() {
           /* Modified Arcade Drive A.K.A. Halo Drive */
 
           /* Calculate motor speed. */
-          leftMotorSpeed = leftStickValueY + (rightStickValueX * (leftStickValueY/(abs(leftStickValueY))));
-          rightMotorSpeed = leftStickValueY - (rightStickValueX * (leftStickValueY/(abs(leftStickValueY))));
+          leftMotorSpeed = leftStickValueY + (rightStickValueX);// * (leftStickValueY/(abs(leftStickValueY))));
+          rightMotorSpeed = leftStickValueY - (rightStickValueX);// * (leftStickValueY/(abs(leftStickValueY))));
 
           /* Caps the motor speed to 127 to maintain functionality */
           if(leftMotorSpeed > 127)
@@ -147,8 +147,8 @@ void opcontrol() {
         /* Classic Arcade Drive */
 
           /* Calculate motor speed. */
-          leftMotorSpeed = leftStickValueY + (leftStickValueX * (leftStickValueY/(abs(leftStickValueY))));
-          rightMotorSpeed = leftStickValueY - (leftStickValueX * (leftStickValueY/(abs(leftStickValueY))));
+          leftMotorSpeed = leftStickValueY + (leftStickValueX);// * (leftStickValueY/(abs(leftStickValueY))));
+          rightMotorSpeed = leftStickValueY - (leftStickValueX);// * (leftStickValueY/(abs(leftStickValueY))));
 
           /* Caps the motor speed to 127 to maintain functionality*/
           if(leftMotorSpeed > 127)
@@ -268,9 +268,9 @@ void opcontrol() {
       motor_move(MOTOR_CATAPULT_RIGHT, 3);
       delay(300);
       // dump balls
-      motor_move(MOTOR_FLAPPER, -10);
+      motor_move(MOTOR_FLAPPER, 60);
       delay(1000);
-      motor_move(MOTOR_FLAPPER, 75);
+      motor_move(MOTOR_FLAPPER, -75);
       delay(200);
       motor_move(MOTOR_FLAPPER, 0);
       motor_move(MOTOR_CATAPULT_LEFT, -35);
