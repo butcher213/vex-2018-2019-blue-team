@@ -32,26 +32,26 @@ void autonomous() {
 
 
 void preload_shooter() {
-    moveMats(-1.5);
-    moveMats(2.5);
-    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+    moveMats(.75);
+	moveArmTo(CAP_FLIP_HEIGHT);
+    moveMats(-1.7);
+    rotateTo(ROBOT_ROTATION_TURN_RIGHT * 65);
 }
 
 void get_pole_side_blue_cap() {
-    moveMats(1.5);// moveMats(2);
+    moveMats(2.5);
     getCap();
 }
 
 void give_pole_side_blue_cap_balls_to_shooter() {
-    moveMats(-2);
-    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
-    moveMats(3);
+    rotateTo(ROBOT_ROTATION_TURN_LEFT * 142.5);
+    moveMats(2.5);
     flipCap();
 }
 
 void place_first_cap_on_pole() {
-    moveMats(-1.5); // moveMats(-2.5); (OLD)
-    rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
+    // moveMats(-1.5); // moveMats(-2.5); (OLD)
+    // rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
     // moveMats(.5);
     putOnSmallPole();
 }
@@ -120,6 +120,7 @@ void getCap(){
     // openClaw();
     moveArmTo(CAP_HEIGHT);
     moveMats(CAP_LINE_UP);
+	moveArmTo(CAP_FLIP_HEIGHT);
     // closeClaw();
 }
 

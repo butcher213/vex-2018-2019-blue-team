@@ -15,10 +15,10 @@
  */
 
 void armControl() {
-    int _armSpeed = 127 * ARM_UP * controller_get_digital(ARM_CONTROLLER, ARM_UP_BTN);
-    _armSpeed += 127 * ARM_DOWN * controller_get_digital(ARM_CONTROLLER, ARM_DN_BTN);
+    int _armSpeed = ARM_UP * controller_get_digital(ARM_CONTROLLER, ARM_UP_BTN);
+    _armSpeed += ARM_DOWN * controller_get_digital(ARM_CONTROLLER, ARM_DN_BTN);
 
-    printf("%d\n", _armSpeed);
+    // printf("%d\n", _armSpeed);
     armSpeed(_armSpeed);
 }
 
@@ -35,16 +35,16 @@ void driveControl() {
     // rightDrive(driveScaledR);
 
 //---- ARCADE DRIVE [R] (RIGHT DRIVE, LEFT TURN)
-    // int turningScaled = (leftX * leftX * leftX) / (127 * 127);
-    // int driveScaled = (rightY * rightY * rightY) / (127 * 127);
-    // leftDrive(driveScaled + turningScaled);
-    // rightDrive(driveScaled - turningScaled);
+    int turningScaled = (leftX * leftX * leftX) / (127 * 127);
+    int driveScaled = (rightY * rightY * rightY) / (127 * 127);
+    leftDrive(driveScaled + turningScaled);
+    rightDrive(driveScaled - turningScaled);
 
 //---- ARCADE DRIVE [L] (LEFT DRIVE, RIGHT TURN)
-    int turningScaled = (rightX * rightX * rightX) / (127 * 127);
-    int driveScaled = (leftY * leftY * leftY) / (127 * 127);
-    leftDrive(driveScaled - turningScaled);
-    rightDrive(driveScaled + turningScaled);
+    // int turningScaled = (rightX * rightX * rightX) / (127 * 127);
+    // int driveScaled = (leftY * leftY * leftY) / (127 * 127);
+    // leftDrive(driveScaled - turningScaled);
+    // rightDrive(driveScaled + turningScaled);
 }
 
 void clawControl() {
@@ -63,7 +63,6 @@ void clawControl() {
 }
 
 void opcontrol() {
-    moveIn(18,18);
     while (1) {
         armControl();
         driveControl();

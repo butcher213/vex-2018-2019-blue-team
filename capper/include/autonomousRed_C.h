@@ -6,7 +6,7 @@
 // line up vars measured in mats
 #define CAP_LINE_UP     0
 #define CAP_HEIGHT      5
-#define CAP_FLIP_HEIGHT 0
+#define CAP_FLIP_HEIGHT 100
 int capFlipState = -1;
 
 #define POLE_PREPARE_HEIGHT 575

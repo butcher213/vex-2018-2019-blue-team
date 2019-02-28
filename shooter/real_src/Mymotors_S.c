@@ -11,8 +11,10 @@ void initMotors(int motor, int gearset, bool reversed) {
    motor_set_gearing(motor, gearset);
    motor_set_reversed(motor, reversed);
    motor_set_encoder_units(motor, E_MOTOR_ENCODER_DEGREES);
+
   // motor_tare_position(motor);
  }
+
 
 
 /* Function:		initDrive
@@ -52,7 +54,7 @@ leftMotors = createPID(0.5, 0.0001, 0.09, leftMotorPorts, 2, 40);
 }
 
 
-/*void moveIn(double left, double right) {
+void moveIn(double left, double right) {
 //  left *=0.5;
 //  right *=0.5;
   PID_properties_t a[2] = {generateMovedPID(leftMotors, 360/(4*PI)*left), generateMovedPID(rightMotors, 360/(4*PI)*right)};
@@ -62,15 +64,10 @@ leftMotors = createPID(0.5, 0.0001, 0.09, leftMotorPorts, 2, 40);
   //a[0].error = a[1].error;
   leftMotors = a[0];
   rightMotors = a[1];
-    if(!atTarget(a[0])){
-      a[0] = generateNextPID(a[0]);
-    }
-    if(!atTarget(a[1])){
-      a[1] = generateNextPID(a[1]);
-    }
-    if(atTarget(a[0]) & atTarget(a[1])){
-      break;
-    }
+  while (!atTarget(a[0]) && !atTarget(a[1])) {
+     a[0] = generateNextPID(a[0]);
+     a[1] = generateNextPID(a[1]);
+  }
   leftMotors = a[0];
   rightMotors = a[1];
   motor_move(MOTOR_FRONT_LEFT, 0);
@@ -135,6 +132,7 @@ void spinIntake(double multiplier) {
 motor_move(MOTOR_INTAKE, 127 * multiplier);
 motor_move(MOTOR_FRONT_INTAKE, 127 * multiplier);
 motor_move(MOTOR_BELT, 127 * multiplier);
+motor_move(MOTOR_FEEDER, 127 * multiplier);
 
 }
 
@@ -149,16 +147,16 @@ void loadBallsIntoCatapult(void) {
     motor_move(MOTOR_CATAPULT_LEFT, 127);
     motor_move(MOTOR_CATAPULT_RIGHT, 127);
   }
-  delay(100);
+  delay(25);
   motor_move(MOTOR_CATAPULT_LEFT, 10);
   motor_move(MOTOR_CATAPULT_RIGHT,10);
   delay(100);
   // dump balls
-  motor_move(MOTOR_FLAPPER, -50);
+  motor_move(MOTOR_FLAPPER, 50);
   delay(750);
   motor_move(MOTOR_FLAPPER, 0);
   delay(500);
-  motor_move(MOTOR_FLAPPER, 50);
+  motor_move(MOTOR_FLAPPER, -50);
   delay(750);
   motor_move(MOTOR_FLAPPER,0);
   motor_move(MOTOR_CATAPULT_LEFT, 0);

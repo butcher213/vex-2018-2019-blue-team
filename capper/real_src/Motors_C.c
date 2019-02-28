@@ -43,7 +43,7 @@ void clawRotatePos(int pos, int speed) {
 
 void moveArmTo(int pos) {
     if (pos < armPosAvg()) {
-        armSpeed(ARM_UP * .5);
+        armSpeed(ARM_UP);
 
         while (armPosAvg() < pos)
             /* do  nothing */;
@@ -51,7 +51,7 @@ void moveArmTo(int pos) {
         armSpeed(0);
     }
     else {
-        armSpeed(ARM_DOWN * .5);
+        armSpeed(ARM_DOWN);
 
         while (armPosAvg() > pos)
             /* do  nothing */;
