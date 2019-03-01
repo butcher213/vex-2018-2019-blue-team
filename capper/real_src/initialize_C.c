@@ -14,42 +14,44 @@ void initialize() {
     printf("\n\nINIT START\n");
     initializePIDs();
     initializeMotors();
-	adi_pin_mode(1, INPUT_ANALOG);
-/*
+	adi_port_set_config(ARM_POTENTIOMETER_PORT, E_ADI_ANALOG_IN);
+
  #warning "Testing for moveIn() enabled"
     // moveIn(36);
     // moveMats(1);
     // rotateTo(ROBOT_ROTATION_TURN_RIGHT * 180);
+	
 
-    // moveArmTo(CAP_FLIP_HEIGHT);
-
-	preload_shooter();
-	get_pole_side_blue_cap();
-	give_pole_side_blue_cap_balls_to_shooter();
-	place_first_cap_on_pole();
-*/
-moveMats(.75);
-//moveArmTo(CAP_FLIP_HEIGHT);
-moveMats(-1.7);
-rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
-moveMats(2);
-// GRAB CAP
-// FLIP CAP
-moveMats(-1);
-//LIFT TO HEIGHT
-rotateTo(ROBOT_ROTATION_TURN_LEFT * 90);
-//PLACE CAP
+	// preload_shooter();
+	// get_pole_side_blue_cap();
+	// give_pole_side_blue_cap_balls_to_shooter();
+	// place_first_cap_on_pole();
+	// autonomous();
+	
+	moveArmTo(CAP_FLIP_HEIGHT);
+	delay(1000);
+	
     printf("\n\nINIT END\n");
 
-    // while (1) {
-        // printf("%ld | %lf | %lf | %lf    \n",
-                // adi_analog_read(1),
-                // motor_get_position(15),
-                // motor_get_position(5),
-                // motor_get_position(15));
-
-        // delay(1000);
-	// }
+    while (1) {
+		// moveArmTo(CAP_HEIGHT);
+		// delay(1000);
+		// moveArmTo(CAP_FLIP_HEIGHT);
+		// delay(1000);
+		// moveArmTo(POLE_SMALL_HEIGHT);
+		// delay(1000);
+		// moveArmTo(POLE_BIG_HEIGHT);
+		// delay(1000);
+		// moveArmTo(POLE_PREPARE_HEIGHT);
+		// delay(1000);
+		
+        printf("%ld | %lf | %lf | %lf    \n",
+                adi_analog_read(ARM_POTENTIOMETER_PORT),
+                motor_get_position(15),
+                motor_get_position(5),
+                motor_get_position(15));
+        delay(1000);
+	}
 }
 
 /**

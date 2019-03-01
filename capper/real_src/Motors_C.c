@@ -42,22 +42,31 @@ void clawRotatePos(int pos, int speed) {
 // }
 
 void moveArmTo(int pos) {
-    if (pos < armPosAvg()) {
-        armSpeed(ARM_UP);
+	int lastPos = armPosAvg();
+	
+	for (int i = 0; armPosAvg() < pos && i < 1000;) {
+		armSpeed(ARM_UP);
+		
+		// if (lastPos == armPosAvg())
+			// i++;
+		// else
+			// i = 0;
+		
+		lastPos = armPosAvg();
+	}
+	
+	for (int i = 0; armPosAvg() > pos && i < 1000;) {
+		armSpeed(ARM_DOWN);
+		
+		// if (lastPos == armPosAvg())
+			// i++;
+		// else
+			// i = 0;
+		
+		lastPos = armPosAvg();
+	}
 
-        while (armPosAvg() < pos)
-            /* do  nothing */;
-
-        armSpeed(0);
-    }
-    else {
-        armSpeed(ARM_DOWN);
-
-        while (armPosAvg() > pos)
-            /* do  nothing */;
-
-        armSpeed(0);
-    }
+	armSpeed(0);
 }
 
 void claw180Rotate() {
